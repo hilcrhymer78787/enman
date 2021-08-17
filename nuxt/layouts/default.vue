@@ -1,5 +1,58 @@
 <template>
-    <div>
+  <v-app>
+    <v-main>
+      <v-container>
         <Nuxt />
-    </div>
+      </v-container>
+    </v-main>
+
+    <v-footer fixed app>
+      <v-list>
+        <v-list-item v-for="(item, i) in items" :key="i" :to="item.to" router exact>
+          <v-icon>{{ item.icon }}</v-icon>
+        </v-list-item>
+      </v-list>
+    </v-footer>
+  </v-app>
 </template>
+
+<script>
+export default {
+  data() {
+    return {
+      items: [
+        // https://materialdesignicons.com/
+        {
+          icon: "mdi-playlist-check ",
+          to: "/",
+        },
+        {
+          icon: "mdi-calendar-check",
+          to: "/calendar",
+        },
+        {
+          icon: "mdi-apps",
+          to: "/inspire",
+        },
+        {
+          icon: "mdi-clock-outline ",
+          to: "/time",
+        },
+      ],
+    };
+  },
+};
+</script>
+<style lang="scss">
+.v-footer {
+  padding: 10px;
+}
+.v-list {
+  padding: 0;
+  display: flex;
+  background: none !important;
+}
+.v-list-item {
+  margin-right: 10px;
+}
+</style>

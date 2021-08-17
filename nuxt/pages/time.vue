@@ -1,5 +1,5 @@
 <template>
-  <div>inspire</div>
+  <div>time</div>
 </template>
 
 <script>
