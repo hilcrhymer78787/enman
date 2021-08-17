@@ -31,12 +31,12 @@ export default {
           to: "/calendar",
         },
         {
-          icon: "mdi-apps",
+          icon: "mdi-cog",
           to: "/inspire",
         },
         {
-          icon: "mdi-clock-outline ",
-          to: "/time",
+          icon: "mdi-account",
+          to: "/account",
         },
       ],
     };

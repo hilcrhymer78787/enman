@@ -9,8 +9,8 @@
                 <v-icon>mdi-chevron-right</v-icon>
             </v-btn>
         </v-sheet>
-        <v-sheet height="63vh">
-            <v-calendar @click:date="onClickCalendar" v-model="focusDay" ref="calendar" color="blue" :events="events" @change="getEvents"></v-calendar>
+        <v-sheet height="500px">
+            <v-calendar @click:day="onClickCalendar" @click:date="onClickCalendar" v-model="focusDay" ref="calendar" color="primary" :events="events" @change="getEvents"></v-calendar>
         </v-sheet>
         <v-dialog v-model="dialog" scrollable>
             <v-card>
@@ -42,7 +42,7 @@ export default {
     methods: {
         onClickCalendar({ date }) {
             this.dialog = true;
-            console.log(date);
+            this.focusDay = date
         },
         getEvents() {
             let events = [
@@ -54,7 +54,7 @@ export default {
                 {
                     name: "46%",
                     start: "2021-08-01", 
-                    color: "blue",
+                    color: "primary",
                 },
             ];
             this.events = events;
