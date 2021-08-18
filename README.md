@@ -14,6 +14,6 @@ http://localhost:8000/
 
 
 
-【バックエンド 開発環境(php muadmin)】
+【バックエンド 開発環境(php myadmin)】
 
 http://localhost:8080/
