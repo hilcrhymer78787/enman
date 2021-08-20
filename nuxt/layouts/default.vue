@@ -5,16 +5,12 @@
                 <Nuxt />
             </v-container>
         </v-main>
-
-        <v-footer fixed app class="pa-0">
-            <v-container style="max-width:500px;">
-                <v-list class="d-flex pa-0">
-                    <v-list-item style="justify-content: center;" v-for="(item, i) in items" :key="i" :to="item.to" router exact>
-                        <v-icon>{{ item.icon }}</v-icon>
-                    </v-list-item>
-                </v-list>
-            </v-container>
-        </v-footer>
+        <v-bottom-navigation app dark fixed>
+            <v-btn v-for="(item, i) in items" :key="i" :to="item.to" router dark exact>
+                <span>{{ item.txt }}</span>
+                <v-icon>{{ item.icon }}</v-icon>
+            </v-btn>
+        </v-bottom-navigation>
     </v-app>
 </template>
 
@@ -26,18 +22,22 @@ export default {
                 // https://materialdesignicons.com/
                 {
                     icon: "mdi-playlist-check ",
+                    txt: "タスク",
                     to: "/",
                 },
                 {
                     icon: "mdi-calendar-check",
+                    txt: "カレンダー",
                     to: "/calendar",
                 },
                 {
                     icon: "mdi-cog",
+                    txt: "テキスト",
                     to: "/inspire",
                 },
                 {
                     icon: "mdi-account",
+                    txt: "テキスト",
                     to: "/account",
                 },
             ],

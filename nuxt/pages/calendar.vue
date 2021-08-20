@@ -23,6 +23,7 @@
                 </v-card-text>
                 <v-divider></v-divider>
                 <v-card-actions>
+                    <v-spacer></v-spacer>
                     <v-btn @click="dialog = false">Close</v-btn>
                 </v-card-actions>
             </v-card>
@@ -67,6 +68,12 @@ export default {
     .v-btn--fab.v-size--small {
         width: 25px;
         height: 25px;
+    }
+    .v-calendar-weekly__day{
+        cursor: pointer;
+        &:hover{
+            background-color: rgba(0, 0, 0, .5);
+        }
     }
 }
 </style>

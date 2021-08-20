@@ -45,6 +45,16 @@ export const actions = {
                 room_id: 1,
             });
         }
+        for (let i = 1; i <= 3; i++) {
+            tasks.push({
+                id: i + 7,
+                name: "title of task" + Number(i + 7),
+                defaultMinute: 5,
+                pointPerMinute: 1,
+                is_everyDay: false,
+                room_id: 1,
+            });
+        }
         commit('setTasks', tasks)
     },
     setWorks({ commit }) {
