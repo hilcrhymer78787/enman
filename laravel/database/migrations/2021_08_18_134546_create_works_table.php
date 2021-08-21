@@ -18,8 +18,7 @@ class CreateWorksTable extends Migration
             $table->integer('work_room_id');
             $table->integer('work_task_id');
             $table->integer('work_user_id');
-            $table->integer('work_room_id');
-            $table->integer('work_minute_id');
+            $table->integer('work_minute');
             $table->timestamps();
         });
     }

@@ -13,7 +13,6 @@ class works extends Model
       'work_room_id',
       'work_task_id',
       'work_user_id',
-      'work_room_id',
       'work_minute_id',
     ];
 }
