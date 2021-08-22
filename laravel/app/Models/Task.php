@@ -10,7 +10,11 @@ class Task extends Model
     use HasFactory;
 
     protected $fillable = [
-        'emergency',
-        'content',
+        'task_room_id',
+        'task_name',
+        'task_status',
+        'task_default_minute',
+        'point_per_minute',
+        'is_everyday',
     ];
 }
