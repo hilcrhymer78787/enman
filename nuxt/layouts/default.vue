@@ -6,7 +6,7 @@
             </v-container>
         </v-main>
         <v-bottom-navigation app dark fixed>
-            <v-btn v-for="(item, i) in items" :key="i" :to="item.to" router dark exact>
+            <v-btn style="width:25%; height:100%;" v-for="(item, i) in items" :key="i" :to="item.to" router dark exact>
                 <span>{{ item.txt }}</span>
                 <v-icon>{{ item.icon }}</v-icon>
             </v-btn>
