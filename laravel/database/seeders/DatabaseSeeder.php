@@ -13,9 +13,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        \App\Models\User::factory(20)->create();
-        \App\Models\Room::factory(10)->create();
-        \App\Models\Task::factory(20)->create();
-        \App\Models\Work::factory(20)->create();
+      $this->call(usersTableSeeder::class);
+      $this->call(roomsTableSeeder::class);
+      $this->call(tasksTableSeeder::class);
+      $this->call(worksTableSeeder::class);
     }
 }

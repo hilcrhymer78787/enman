@@ -17,10 +17,10 @@ class CreateTasksTable extends Migration
             $table->id('task_id');
             $table->integer('task_room_id');
             $table->string('task_name');
-            $table->integer('task_status');
+            $table->integer('task_status')->nullable();
             $table->integer('task_default_minute');
             $table->integer('point_per_minute');
-            $table->boolean('is_everyday');
+            $table->boolean('is_everyday')->nullable();
             $table->timestamps();
         });
     }

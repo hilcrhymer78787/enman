@@ -22,7 +22,7 @@ class RoomFactory extends Factory
     public function definition()
     {
         return [
-            'room_name' => $this->faker->lastname().'家',
+            // 'room_name' => $this->faker->lastname().'家',
         ];
     }
 }

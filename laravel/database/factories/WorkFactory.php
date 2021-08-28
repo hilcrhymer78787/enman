@@ -22,10 +22,10 @@ class WorkFactory extends Factory
     public function definition()
     {
         return [
-            'work_room_id' => $this->faker->numberBetween(1,10),
-            'work_task_id' => $this->faker->numberBetween(1,20),
-            'work_user_id' => $this->faker->numberBetween(1,20),
-            'work_minute' => $this->faker->numberBetween(1,60),
+            'work_room_id' => '1',
+            'work_task_id' => $this->faker->numberBetween(1,10),
+            'work_user_id' => $this->faker->numberBetween(1,2),
+            'work_minute' => $this->faker->numberBetween(1,30),
         ];
     }
 }
