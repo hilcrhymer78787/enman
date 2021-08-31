@@ -1,10 +1,10 @@
 <template>
     <div>
-        <pre>{{$data}}</pre>
-        <!-- <v-app-bar app dark>
+        <pre>{{$store.state.everyDayTasks}}</pre>
+        <v-app-bar app dark>
             <v-tabs dark v-model="tab">
-                <v-tab style="width:calc(100% / 2);">今日のタスク</v-tab>
-                <v-tab style="width:calc(100% / 2);">大型タスク</v-tab>
+                <v-tab style="width:50%;">今日のタスク</v-tab>
+                <v-tab style="width:50%;">大型タスク</v-tab>
             </v-tabs>
         </v-app-bar>
 
@@ -13,28 +13,18 @@
                 <IndexTodayTask/>
             </v-tab-item>
             <v-tab-item>
-                <IndexBigTask/>
+                <!-- <IndexBigTask/> -->
             </v-tab-item>
-        </v-tabs-items> -->
+        </v-tabs-items>
     </div>
 </template>
 <script>
-import axios from 'axios';
 export default {
     data: () => ({
         items: [],
+        works: [],
+        tab:""
     }),
-    mounted() {
-        axios
-            .get("http://localhost:8000/api/task/read")
-            .then((res) => {
-                this.items = res.data;
-            })
-            .catch((err) => {
-                alert("エラーです");
-            })
-            // .finally(() => (this.$store.state.userLoading = false));
-    },
 };
 </script>
 

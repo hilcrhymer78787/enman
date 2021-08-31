@@ -1,9 +1,11 @@
 import moment from 'moment'
+import axios from 'axios';
 
 export const state = () => ({
     users: [],
     tasks: [],
     works: [],
+    everydayTasks: [],
 })
 
 export const mutations = {
@@ -15,6 +17,9 @@ export const mutations = {
     },
     setWorks(state, works) {
         state.works = works
+    },
+    setEverydayTasks(state, everydayTasks) {
+        state.everydayTasks = everydayTasks
     },
 }
 
@@ -33,52 +38,40 @@ export const actions = {
         }
         commit('setUsers', users)
     },
-    setTasks({ commit }) {
-        let tasks = []
-        for (let i = 1; i <= 7; i++) {
-            tasks.push({
-                id: i,
-                name: "title of task" + i,
-                defaultMinute: 5,
-                pointPerMinute: 1,
-                is_everyDay: true,
-                room_id: 1,
-            });
-        }
-        for (let i = 1; i <= 3; i++) {
-            tasks.push({
-                id: i + 7,
-                name: "title of task" + Number(i + 7),
-                defaultMinute: 5,
-                pointPerMinute: 1,
-                is_everyDay: false,
-                room_id: 1,
-            });
-        }
-        commit('setTasks', tasks)
+    async setTasks({ commit }) {
+        return axios
+            .get("http://localhost:8000/api/task/read")
+            .then((res) => {
+                commit('setTasks', res.data)
+            })
+            .catch((err) => {
+                alert("エラーです");
+            })
     },
-    setWorks({ commit }) {
-        let works = []
-        for (let i = 1; i <= 5; i++) {
-            works.push({
-                id: i,
-                task_id: i,
-                user_id: (i % 3) + 1,
-                minute: i * 5,
-                room_id: 1,
-                date: moment(new Date()).format('YYYY-MM-DD'),
-            });
-        }
-        for (let i = 1; i <= 2; i++) {
-            works.push({
-                id: i,
-                task_id: i,
-                user_id: i,
-                minute: i * 5,
-                room_id: 1,
-                date: moment(new Date()).format('YYYY-MM-DD'),
-            });
-        }
-        commit('setWorks', works)
+    async setWorks({ state, commit }) {
+        return axios
+            .get("http://localhost:8000/api/work/read")
+            .then((res) => {
+                commit('setWorks', res.data)
+                let works = res.data
+                let tasks = state.tasks
+
+                let everydayTasks = []
+
+                tasks = tasks.filter(task => task.is_everyday == 1)
+                // tasks.sort((a, b) => {
+                //     return (a.works.length - b.works.length)
+                // });
+
+                tasks.forEach(task => {
+                    task.works = works.filter(work => work.work_task_id == task.task_id);
+                    everydayTasks.push(task)
+                });
+                commit('setEverydayTasks', everydayTasks)
+                // console.log(everydayTasks)
+            })
+            .catch((err) => {
+                alert("エラーです");
+            })
     },
 }

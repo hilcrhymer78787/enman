@@ -43,5 +43,14 @@ export default {
             ],
         };
     },
+    methods: {
+        async mountedFunc(){
+            await this.$store.dispatch("setTasks");
+            await this.$store.dispatch("setWorks");
+        }
+    },
+    mounted() {
+        this.mountedFunc()
+    },
 };
 </script>
