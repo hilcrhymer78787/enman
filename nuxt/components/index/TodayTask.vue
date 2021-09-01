@@ -1,6 +1,7 @@
 <template>
     <div>
-        <v-card v-for="(task,taskIndex) in everyDayTasks" :key="taskIndex" :class="task.works.length ? 'blue' : 'grey'" class="lighten-5 mb-4 px-2 pb-1 pt-2">
+        <!-- <pre>{{$store.state.everydayTasks}}</pre> -->
+        <v-card v-for="(task,taskIndex) in everydayTasks" :key="taskIndex" :class="task.works.length ? 'blue' : 'grey'" class="lighten-5 mb-4 px-2 pb-1 pt-2">
             <v-card-title class="d-flex align-start pa-0">
                 <span style="width:calc(100% - 25px);">{{task.name}}</span>
                 <v-icon v-if="task.works.length" @click="onClickCheckboxMarked(taskIndex)" color="blue">mdi-checkbox-marked-outline</v-icon>
@@ -14,7 +15,7 @@
             </v-card>
         </v-card>
 
-        <v-btn @click="dialog = true" style="bottom:70px;" fixed right fab dark>
+        <!-- <v-btn @click="dialog = true" style="bottom:70px;" fixed right fab dark>
             <v-icon dark>mdi-plus</v-icon>
         </v-btn>
 
@@ -32,12 +33,13 @@
                     <v-btn @click="dialog = false">Add</v-btn>
                 </v-card-actions>
             </v-card>
-        </v-dialog>
+        </v-dialog> -->
         <pre>{{$data}}</pre>
     </div>
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
     data() {
         return {
@@ -46,14 +48,7 @@ export default {
         };
     },
     computed: {
-        everyDayTasks() {
-            let outPutData = this.tasks;
-            outPutData.filter((task) => task.is_everyDay);
-            outPutData.sort((a, b) => {
-                return (a.works.length - b.works.length)
-            });
-            return outPutData;
-        },
+        ...mapState(["everydayTasks"]),
     },
     methods: {
         onClickCheckboxBlank(taskIndex) {
@@ -69,25 +64,19 @@ export default {
         },
     },
     mounted() {
-        this.$store.dispatch("setUsers");
-        this.$store.dispatch("setTasks");
-        this.$store.dispatch("setWorks");
-        this.$store.state.tasks.forEach((task, i) => {
+        this.everydayTasks.forEach((task, i) => {
             let obj = {};
             // タスクセット
             Object.keys(task).forEach((key) => {
                 this.$set(obj, key, task[key]);
             });
-            // 実績セット
-            let works = this.$store.state.works.filter(
-                (work) => work.task_id == task.id
-            );
             let array = [];
-            if (works.length) {
-                works.forEach((work) => {
+            if (task.works.length) {
+                task.works.forEach((work) => {
                     let workObj = {};
-                    this.$set(workObj, "user_id", work.user_id);
-                    this.$set(workObj, "minute", work.minute);
+                    Object.keys(work).forEach((key) => {
+                        this.$set(workObj, key, work[key]);
+                    });
                     array.push(workObj);
                 });
             }

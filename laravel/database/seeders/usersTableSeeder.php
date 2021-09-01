@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class usersTableSeeder extends Seeder
 {
@@ -20,6 +21,7 @@ class usersTableSeeder extends Seeder
             'name' => 'yusan',
             'email' => 'yusan@gmail.com',
             'password' => 'password',
+            'token' => '1'.Str::random(100),
             'user_room_id' => '1',
             'created_at' => date('Y-m-d H:i:s'),
             'updated_at' => date('Y-m-d H:i:s'),
@@ -29,6 +31,7 @@ class usersTableSeeder extends Seeder
             'name' => 'kottan',
             'email' => 'kottan@gmail.com',
             'password' => 'password',
+            'token' => '2'.Str::random(100),
             'user_room_id' => '1',
             'created_at' => date('Y-m-d H:i:s'),
             'updated_at' => date('Y-m-d H:i:s'),

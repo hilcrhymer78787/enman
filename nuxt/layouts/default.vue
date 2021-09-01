@@ -16,6 +16,15 @@
 
 <script>
 export default {
+    async middleware({ store, redirect }) {
+        if (store.state.loginInfo.id) {
+            return;
+        }
+        await store.dispatch("setLoginInfoByToken")
+        if (!store.state.loginInfo.id) {
+            redirect("/login");
+        }
+    },
     data() {
         return {
             items: [
@@ -37,11 +46,20 @@ export default {
                 },
                 {
                     icon: "mdi-account",
-                    txt: "テキスト",
+                    txt: "マイページ",
                     to: "/account",
                 },
             ],
         };
+    },
+    methods: {
+        mountedFunc() {
+            // this.$store.dispatch("setTasks");
+            // await this.$store.dispatch("setWorks");
+        },
+    },
+    mounted() {
+        this.mountedFunc();
     },
 };
 </script>
