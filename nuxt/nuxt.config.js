@@ -18,16 +18,13 @@ export default {
             { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
         ]
     },
-    server: {
-        port: 4000 // デフォルト: 3000
-    },
     // Global CSS: https://go.nuxtjs.dev/config-css
     css: [
     ],
 
     // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
     plugins: [
-        { src: '~/plugins/constants.js' }
+        { src: '~/plugins/constants.js' },
     ],
 
     // Auto import components: https://go.nuxtjs.dev/config-components
@@ -39,7 +36,8 @@ export default {
         '@nuxt/typescript-build',
         // https://go.nuxtjs.dev/vuetify
         '@nuxtjs/vuetify',
-        '@nuxtjs/moment'
+        '@nuxtjs/moment',
+        'cookie-universal-nuxt',
     ],
 
     // Modules: https://go.nuxtjs.dev/config-modules
@@ -51,7 +49,9 @@ export default {
     ],
 
     // Axios module configuration: https://go.nuxtjs.dev/config-axios
-    axios: {},
+    axios: {
+        baseURL: 'http://localhost:8000'
+    },
 
     // PWA module configuration: https://go.nuxtjs.dev/pwa
     pwa: {

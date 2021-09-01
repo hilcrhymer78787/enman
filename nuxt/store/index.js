@@ -1,7 +1,8 @@
 import moment from 'moment'
-import axios from 'axios';
+
 
 export const state = () => ({
+    loginInfo: {},
     users: [],
     tasks: [],
     works: [],
@@ -9,6 +10,9 @@ export const state = () => ({
 })
 
 export const mutations = {
+    setLoginInfo(state, loginInfo) {
+        state.loginInfo = loginInfo
+    },
     setUsers(state, users) {
         state.users = users
     },
@@ -24,6 +28,33 @@ export const mutations = {
 }
 
 export const actions = {
+    async setLoginInfo({ commit }, form) {
+        const email = form.email
+        const password = form.password
+        await this.$axios.get(`/api/user/read?email=${email}&password=${password}`)
+            .then((res) => {
+                commit('setLoginInfo', res.data)
+                this.$cookies.set("token", res.data.token, {
+                    maxAge: 60 * 60 * 24 * 30,
+                });
+            })
+            .catch((err) => {
+                alert("エラーです");
+            })
+    },
+    async setLoginInfoByToken({ commit }) {
+        const token = this.$cookies.get("token")
+        if(!token){
+            return
+        }
+        await this.$axios.get(`/api/user/read?token=${token}`)
+            .then((res) => {
+                commit('setLoginInfo', res.data)
+            })
+            .catch((err) => {
+                alert("エラーです");
+            })
+    },
     setUsers({ commit }) {
         let users = []
         for (let i = 1; i <= 3; i++) {
@@ -38,11 +69,12 @@ export const actions = {
         }
         commit('setUsers', users)
     },
-    async setTasks({ commit }) {
-        return axios
-            .get("http://localhost:8000/api/task/read")
+    setTasks({ state, commit }) {
+        this.$axios
+            .get(`/api/task/read?year=2021&month=8&day=31&token=${state.loginInfo.token}`)
             .then((res) => {
-                commit('setTasks', res.data)
+                // commit('setTasks', res.data)
+                console.log(res.data)
             })
             .catch((err) => {
                 alert("エラーです");
@@ -50,7 +82,7 @@ export const actions = {
     },
     async setWorks({ state, commit }) {
         return axios
-            .get("http://localhost:8000/api/work/read")
+            .get("/api/work/read")
             .then((res) => {
                 commit('setWorks', res.data)
                 let works = res.data

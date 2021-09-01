@@ -21,7 +21,7 @@ export default {
     },
 
     mounted() {
-        axios.get("http://localhost:8000/api/task/read").then((res) => {
+        axios.get("/api/task/read").then((res) => {
             this.tasks = res.data;
         });
     },
