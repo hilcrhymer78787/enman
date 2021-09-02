@@ -2,18 +2,12 @@
     <v-card max-width="350" class="login-card mx-auto">
         <v-card-title>ログイン</v-card-title>
         <v-card-text>
-            <v-alert text v-show="error">
-                メールアドレスかパスワードが異なります。
-            </v-alert>
             <v-form v-model="noError" ref="form">
-                <v-text-field :rules="valid ? emailRules : []" required label="メールアドレス" placeholder="メールアドレス" prepend-inner-icon="mdi-account-circle" outlined v-model="form.email"></v-text-field>
-
-                <v-text-field :rules="valid ? passwordRules : []" required label="パスワード" placeholder="パスワード" prepend-inner-icon="mdi-lock" :append-icon="passwordShow ? 'mdi-eye' : 'mdi-eye-off'" :type="passwordShow ? 'text' : 'password'" outlined v-model="form.password" @click:append="passwordShow = !passwordShow"></v-text-field>
-
-                <v-btn block x-large @click="login">ログイン</v-btn>
+                <v-text-field @keyup.enter="login" :rules="emailRules" required label="メールアドレス" placeholder="メールアドレス" prepend-inner-icon="mdi-email" outlined v-model="form.email" color="teal"></v-text-field>
+                <v-text-field @keyup.enter="login" :rules="passwordRules" required label="パスワード" placeholder="パスワード" prepend-inner-icon="mdi-lock" :append-icon="passwordShow ? 'mdi-eye' : 'mdi-eye-off'" :type="passwordShow ? 'text' : 'password'" outlined v-model="form.password" @click:append="passwordShow = !passwordShow" color="teal"></v-text-field>
+                <v-btn :loading="loading" color="teal" dark block x-large @click="login">ログイン</v-btn>
             </v-form>
         </v-card-text>
-        <pre>{{noError}}</pre>
     </v-card>
 </template>
 
@@ -23,8 +17,8 @@ export default {
     layout: "login",
     data() {
         return {
+            loading: false,
             noError: false,
-            valid: false,
             form: {
                 email: "",
                 password: "",
@@ -40,7 +34,6 @@ export default {
                     "Name must be less than 10 characters",
             ],
             passwordShow: false,
-            error: false,
         };
     },
     computed: {
@@ -48,15 +41,16 @@ export default {
     },
     methods: {
         async login() {
-            this.valid = true;
             this.$refs.form.validate();
-            console.log(this.noError)
-            if (this.noError) {
-                await this.$store.dispatch("setLoginInfo", this.form);
-                if (this.loginInfo.id) {
-                    this.$router.push("/");
-                }
+            if (!this.noError) {
+                return;
             }
+            this.loading = true;
+            await this.$store.dispatch("setLoginInfo", this.form);
+            if (this.loginInfo.id) {
+                this.$router.push("/");
+            }
+            this.loading = false;
         },
     },
 };

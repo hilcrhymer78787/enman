@@ -5,10 +5,10 @@
                 <Nuxt />
             </v-container>
         </v-main>
-        <v-bottom-navigation app dark fixed>
-            <v-btn style="width:25%; height:100%;" v-for="(item, i) in items" :key="i" :to="item.to" router dark exact>
-                <span>{{ item.txt }}</span>
-                <v-icon>{{ item.icon }}</v-icon>
+        <v-bottom-navigation app fixed color="teal">
+            <v-btn :style="`width:calc(100% / ${navs.length}); height:100%;`" v-for="(nav, i) in navs" :key="i" :to="nav.to" router dark exact>
+                <span>{{ nav.txt }}</span>
+                <v-icon>{{ nav.icon }}</v-icon>
             </v-btn>
         </v-bottom-navigation>
     </v-app>
@@ -20,18 +20,18 @@ export default {
         if (store.state.loginInfo.id) {
             return;
         }
-        await store.dispatch("setLoginInfoByToken")
+        await store.dispatch("setLoginInfoByToken");
         if (!store.state.loginInfo.id) {
             redirect("/login");
         }
     },
     data() {
         return {
-            items: [
+            navs: [
                 // https://materialdesignicons.com/
                 {
                     icon: "mdi-playlist-check ",
-                    txt: "タスク",
+                    txt: "毎日タスク",
                     to: "/",
                 },
                 {
@@ -40,14 +40,9 @@ export default {
                     to: "/calendar",
                 },
                 {
-                    icon: "mdi-cog",
-                    txt: "テキスト",
-                    to: "/inspire",
-                },
-                {
                     icon: "mdi-account",
                     txt: "マイページ",
-                    to: "/account",
+                    to: "/mypage",
                 },
             ],
         };
@@ -63,3 +58,14 @@ export default {
     },
 };
 </script>
+<style lang="scss">
+.v-dialog{
+    max-width: 476px !important;
+}
+ul{
+    padding: 0;
+}
+li {
+    list-style: none;
+}
+</style>
