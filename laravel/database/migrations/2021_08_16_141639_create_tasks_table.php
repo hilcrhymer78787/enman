@@ -19,8 +19,8 @@ class CreateTasksTable extends Migration
             $table->string('task_name');
             $table->integer('task_status')->nullable();
             $table->integer('task_default_minute');
-            $table->integer('point_per_minute');
-            $table->boolean('is_everyday')->nullable();
+            $table->integer('task_point_per_minute');
+            $table->boolean('task_is_everyday')->nullable();
             $table->timestamps();
         });
     }

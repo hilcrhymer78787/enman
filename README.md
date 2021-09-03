@@ -25,43 +25,50 @@ request
     method
         get
     url
-        /auth_info/bytoken/?token=<string>
-response
-    {
-        id:<int>,
-        name:<string>,
-        email:<string>,
-        token:<string>,
-    }
-
-
-request
-    method
-        get
-    url
-        /auth_info/bybasic/?email=<string>&?password=<string>
-response
-    {
-        id:<int>,
-        name:<string>,
-        email:<string>,
-        token:<string>,
-    }
-
-
-request
-    method
-        get
-    url
-        /work/read/?token=<string>?year=<int>?&month=<int>?&day=<int>
+        /task/read/?year=<int>&month=<int>&day=<int>&token=<string>
 response
     [
-        date:<string>,
-        works:[
-            {
-                user_id:<int>,
-                user_id:<int>,
-                minute:<string>,
-            },
-        ]
+        {
+            date:<string>,
+            users:[
+                {
+                    user_id:<int>,
+                    user_name:<int>,
+                    ★★★user_sum_minute:<int>,
+                    ★★★user_sum_point:<int>,
+                },
+            ],
+            everydayTasks:[
+                task_id:<int>,
+                task_name:<string>,
+                task_point_per_minute:<int>,
+                task_default_minute:<int>,
+                ...
+                works:[
+                    {
+                        work_id:<int>,
+                        user_id:<int>,
+                        user_name:<string>,
+                        user_img:<int>,
+                        minute:<string>,
+                    },
+                ]
+            ],
+            bigTasks:[
+                task_id:<int>,
+                task_name:<string>,
+                task_point_per_minute:<int>,
+                task_default_minute:<int>,
+                ...
+                works:[
+                    {
+                        work_id:<int>,
+                        user_id:<int>,
+                        user_name:<string>,
+                        user_img:<int>,
+                        minute:<string>,
+                    },
+                ]
+            ],
+        }
     ]

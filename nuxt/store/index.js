@@ -39,7 +39,7 @@ export const actions = {
                 });
             })
             .catch((err) => {
-                alert("エラーです");
+                console.log(err)
             })
     },
     async setLoginInfoByToken({ commit }) {
@@ -52,7 +52,7 @@ export const actions = {
                 commit('setLoginInfo', res.data)
             })
             .catch((err) => {
-                alert("エラーです");
+                console.log(err)
             })
     },
     setUsers({ commit }) {
@@ -77,7 +77,7 @@ export const actions = {
                 console.log(res.data)
             })
             .catch((err) => {
-                alert("エラーです");
+                console.log(err)
             })
     },
     async setWorks({ state, commit }) {
@@ -90,7 +90,7 @@ export const actions = {
 
                 let everydayTasks = []
 
-                tasks = tasks.filter(task => task.is_everyday == 1)
+                tasks = tasks.filter(task => task.task_is_everyday == 1)
                 // tasks.sort((a, b) => {
                 //     return (a.works.length - b.works.length)
                 // });
@@ -103,7 +103,7 @@ export const actions = {
                 // console.log(everydayTasks)
             })
             .catch((err) => {
-                alert("エラーです");
+                console.log(err)
             })
     },
 }

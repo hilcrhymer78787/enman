@@ -14,7 +14,7 @@ class Task extends Model
         'task_name',
         'task_status',
         'task_default_minute',
-        'point_per_minute',
-        'is_everyday',
+        'task_point_per_minute',
+        'task_is_everyday',
     ];
 }
