@@ -18,6 +18,9 @@ export default {
             { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
         ]
     },
+    // server: {
+    //     host: '0.0.0.0'
+    // },
     // Global CSS: https://go.nuxtjs.dev/config-css
     css: [
     ],
@@ -50,6 +53,7 @@ export default {
 
     // Axios module configuration: https://go.nuxtjs.dev/config-axios
     axios: {
+        // baseURL: 'http://192.168.3.5:8000'
         baseURL: 'http://localhost:8000'
     },
 

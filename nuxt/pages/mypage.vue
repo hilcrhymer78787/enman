@@ -8,7 +8,7 @@
                 </v-toolbar>
                 <v-card-text class="d-flex align-center">
                     <div class="pb-2" style="width:30%;">
-                        <v-img @click="onClickMainImg" :v-ripple="edit" :src="editloginInfo.img" aspect-ratio="1" class="rounded-circle main_img"></v-img>
+                        <v-img @click="onClickMainImg()" :v-ripple="edit" :src="editloginInfo.user_img" aspect-ratio="1" class="rounded-circle main_img"></v-img>
                     </div>
                     <v-spacer></v-spacer>
                     <div class="pt-2" style="width:65%;">
@@ -20,7 +20,7 @@
                 <div class="d-flex pa-3">
                     <v-spacer></v-spacer>
                     <v-btn @click="onCloseEdit()" v-if="edit" class="mr-2">編集取消</v-btn>
-                    <v-btn @click="onSubmit" v-if="edit" dark color="teal lighten-1">確定</v-btn>
+                    <v-btn @click="onSubmit()" v-if="edit" dark color="teal lighten-1">確定</v-btn>
                     <v-btn @click="logout()" v-if="!edit" class="mr-2">ログアウト</v-btn>
                     <v-btn @click="edit = true" v-if="!edit" dark color="orange lighten-1">編集</v-btn>
                 </div>
@@ -61,9 +61,7 @@ export default {
             dialog: false,
             noError: false,
             edit: false,
-            editloginInfo: {
-                img: "https://picsum.photos/500/300?image=20",
-            },
+            editloginInfo: {},
         };
     },
     computed: {
@@ -77,11 +75,16 @@ export default {
             this.dialog = true;
         },
         onSelectedImg(n) {
-            this.editloginInfo.img = `https://picsum.photos/500/300?image=${n}`;
+            this.editloginInfo.user_img = `https://picsum.photos/500/300?image=${n}`;
             this.dialog = false;
         },
         onSubmit() {
             this.$refs.form.validate();
+            if (!this.noError) {
+                return;
+            }
+            alert("送信されました");
+            this.edit = false;
         },
         logout() {
             if (confirm("ログアウトしますか？")) {
@@ -91,8 +94,9 @@ export default {
             }
         },
         setLoginInfo() {
-            this.$set(this.editloginInfo, "name", this.loginInfo.name);
-            this.$set(this.editloginInfo, "email", this.loginInfo.email);
+            for (const [key, value] of Object.entries(this.loginInfo)) {
+                this.$set(this.editloginInfo, key, value);
+            }
         },
         onCloseEdit() {
             this.setLoginInfo();

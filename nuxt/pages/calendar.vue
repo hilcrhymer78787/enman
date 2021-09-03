@@ -26,6 +26,9 @@
 
                 <li v-for="(calendar, index) in calendars" :key="calendar.date" v-ripple class="content_item main">
                     <div class="content_item_icn">{{ index + 1 }}</div>
+                    <v-responsive class="pa-2" aspect-ratio="1">
+                        <PieGraph />
+                    </v-responsive>
                 </li>
 
                 <li v-for="n in lastDayCount" :key="n + 100" class="content_item blank"></li>
@@ -154,7 +157,6 @@ h1 {
     background-color: white;
     &_item {
         width: calc(100% / 7);
-        height: 70px;
         border-right: 1px solid #e0e0e0;
         border-top: 1px solid #e0e0e0;
         overflow: hidden;
