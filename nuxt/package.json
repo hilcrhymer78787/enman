@@ -23,6 +23,7 @@
     "@nuxt/types": "^2.15.7",
     "@nuxt/typescript-build": "^2.1.0",
     "@nuxtjs/vuetify": "^1.12.1",
+    "vuedraggable": "^2.24.3",
     "webpack-cli": "^4.8.0"
   }
 }

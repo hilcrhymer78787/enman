@@ -44,6 +44,11 @@ export default {
                     txt: "マイページ",
                     to: "/mypage",
                 },
+                {
+                    icon: "mdi-ab-testing",
+                    txt: "test",
+                    to: "/test",
+                },
             ],
         };
     },

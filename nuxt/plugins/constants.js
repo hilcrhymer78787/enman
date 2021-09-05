@@ -13,7 +13,20 @@ const MINUTE = [
     { txt: "55分", val: 55 },
     { txt: "60分", val: 60 },
 ]
+const POINTS = [
+    { txt: "1pt", val: 1 },
+    { txt: "2pt", val: 2 },
+    { txt: "3pt", val: 3 },
+    { txt: "4pt", val: 4 },
+    { txt: "5pt", val: 5 },
+    { txt: "6pt", val: 6 },
+    { txt: "7pt", val: 7 },
+    { txt: "8pt", val: 8 },
+    { txt: "9pt", val: 9 },
+    { txt: "10pt", val: 10 },
+]
 
 export default (context, inject) => {
     inject('MINUTE', MINUTE)
+    inject('POINTS', POINTS)
 }

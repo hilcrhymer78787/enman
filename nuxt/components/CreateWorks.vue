@@ -9,7 +9,7 @@
                 <v-card v-for="(work,workIndex) in focusTask.works" :key="workIndex" class="d-flex align-center mb-4" style="height:70px;overflow: hidden;">
                     <v-select class="pt-3 pl-3" style="width:46%;" label="担当者" :items="users" v-model="work.user_id" item-value="val" item-text="txt" :rules="[v => !!v || 'Item is required']" dense></v-select>
                     <v-spacer></v-spacer>
-                    <v-select class="pt-3" style="width:30%;" label="稼働時間" :items="minutes" v-model="work.minute" item-value="val" item-text="txt" :rules="[v => !!v || 'Item is required']" dense></v-select>
+                    <v-select class="pt-3" style="width:30%;" label="稼働時間" :items="$MINUTE" v-model="work.minute" item-value="val" item-text="txt" :rules="[v => !!v || 'Item is required']" dense></v-select>
                     <v-spacer></v-spacer>
                     <v-btn @click="removeWork(workIndex)" class="close_wrap" v-ripple style="width:12%;" icon>
                         <v-icon color="white">mdi-close</v-icon>
@@ -38,14 +38,6 @@ export default {
     data() {
         return {
             noError: false,
-            minutes: [
-                { val: 5, txt: "5分" },
-                { val: 10, txt: "10分" },
-                { val: 15, txt: "15分" },
-                { val: 20, txt: "20分" },
-                { val: 25, txt: "25分" },
-                { val: 30, txt: "30分" },
-            ],
             users: [
                 { val: 1, txt: "user1" },
                 { val: 2, txt: "user2" },

@@ -1,12 +1,5 @@
 <template>
     <div class="crud">
-        <ul>
-            <li v-for="(task,taskIndex) in tasks" :key="taskIndex">
-                <h2><input type="checkbox" v-model="task.emergency"> {{task.content}}</h2>
-                <h5>作成日：{{task.created_at}}</h5>
-                <h5>更新日：{{task.updated_at}}</h5>
-            </li>
-        </ul>
         <pre>{{$data}}</pre>
     </div>
 </template>
@@ -21,8 +14,9 @@ export default {
     },
 
     mounted() {
-        axios.get("/api/task/read").then((res) => {
+        this.$axios.get(`/api/task/show?token=${this.$store.state.loginInfo.token}`).then((res) => {
             this.tasks = res.data;
+            console.log(res.data)
         });
     },
 };
