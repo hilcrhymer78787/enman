@@ -23,6 +23,9 @@ Route::get('/task/show', 'TaskController@show');
 Route::post('/task/create', 'TaskController@create');
 
 
+Route::get('/user/login_info', 'UserController@login_info');
 Route::get('/user/read', 'UserController@read');
 Route::get('/room/read', 'RoomController@read');
+
 Route::get('/work/read', 'WorkController@read');
+Route::post('/work/create', 'WorkController@create');

@@ -14,10 +14,18 @@ export default {
     },
 
     mounted() {
-        this.$axios.get(`/api/task/show?token=${this.$store.state.loginInfo.token}`).then((res) => {
-            this.tasks = res.data;
-            console.log(res.data)
-        });
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = today.getMonth() + 1;
+        const day = today.getDate();
+        this.$axios
+            .get(
+                `/api/task/show?year=${year}&month=${month}&day=${day}&token=${this.$store.state.loginInfo.token}`
+            )
+            .then((res) => {
+                this.tasks = res.data;
+                console.log(res.data);
+            });
     },
 };
 </script>

@@ -17,33 +17,44 @@ class TaskController extends Controller
     }
     public function show(Request $request)
     {
-        //ログインユーザのルームID        
         $userRoomId = User::where('token', $request->token)
         ->get()[0]->user_room_id;
         
-        //ログインユーザと同じルームに属するタスクのみ取得
-        //とりあえず毎日タスク（task_is_everydayが１）だけ取得
-        $datas = Task::where('task_room_id', $userRoomId)
+        $tasks = Task::where('task_room_id', $userRoomId)
         ->where('task_is_everyday',1)->get(); 
-        
-        dd($datas);
-        
-        
-        foreach($datas as $data){
-            //ログインユーザと同じルームに属するworkの中から
+
+        foreach($tasks as $task){
+
             $works = Work::where('work_room_id', $userRoomId)
-            ->where('work_task_id', $data['task_id'])
-            ->get();
+            ->where('work_task_id', $task['task_id']);
+
             
-            foreach($works as $work){
-                $work['work_user_name'] = USER::find($work['work_user_id'])->name;
+            if(isset($request['year'])){
+                $works = $works->whereYear('work_date', $request['year']);
+            }
+
+            if(isset($request['month'])){
+                $works = $works->whereMonth('work_date', $request['month']);
+            }
+
+            if(isset($request['day'])){
+                $works = $works->whereDay('work_date', $request['day']);
             }
             
-            $data['works'] = $works;
+            $works = $works->get();
 
-            return $data;
+            foreach($works as $work){
+                $work['work_user_name'] = USER::find($work['work_user_id'])->name;
+                $work['work_user_img'] = USER::find($work['work_user_id'])->user_img;
+            }
+
+            $task['works'] = $works;
 
         }
+
+
+
+        return $tasks;
     }
     public function create(Request $request)
     {

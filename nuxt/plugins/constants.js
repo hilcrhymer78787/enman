@@ -1,5 +1,4 @@
 const MINUTE = [
-    { txt: "0分", val: 0 },
     { txt: "5分", val: 5 },
     { txt: "10分", val: 10 },
     { txt: "15分", val: 15 },

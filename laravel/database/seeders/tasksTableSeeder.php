@@ -49,7 +49,7 @@ class tasksTableSeeder extends Seeder
             'task_status' => null,
             'task_default_minute' => '5',
             'task_point_per_minute' => '1',
-            'task_is_everyday' => null,
+            'task_is_everyday' => 1,
           ],
           [
             'task_id' => '5',
@@ -58,7 +58,7 @@ class tasksTableSeeder extends Seeder
             'task_status' => null,
             'task_default_minute' => '10',
             'task_point_per_minute' => '1',
-            'task_is_everyday' => null,
+            'task_is_everyday' => 1,
           ],
           [
             'task_id' => '6',
@@ -67,7 +67,7 @@ class tasksTableSeeder extends Seeder
             'task_status' => null,
             'task_default_minute' => '5',
             'task_point_per_minute' => '1',
-            'task_is_everyday' => null,
+            'task_is_everyday' => 1,
           ],
           [
             'task_id' => '7',
@@ -76,7 +76,7 @@ class tasksTableSeeder extends Seeder
             'task_status' => null,
             'task_default_minute' => '5',
             'task_point_per_minute' => '1',
-            'task_is_everyday' => null,
+            'task_is_everyday' => 1,
           ],
           [
             'task_id' => '8',

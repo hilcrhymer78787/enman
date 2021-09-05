@@ -16,13 +16,14 @@
         <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn class="mr-2" @click="$emit('onCloseTaskDialog')">close</v-btn>
-            <v-btn color="teal" dark @click="submit()">SAVE</v-btn>
+            <v-btn color="teal" :loading="loading" dark @click="submit()">SAVE</v-btn>
         </v-card-actions>
     </v-card>
 </template>
 <script>
 export default {
     data: () => ({
+        loading: false,
         noError: false,
         form: {
             taskName: "",
@@ -38,14 +39,21 @@ export default {
             if (!this.noError) {
                 return;
             }
+            this.loading = true;
             await this.$axios
-                .post(`/api/task/create?token=${this.$store.state.loginInfo.token}`,this.form)
+                .post(
+                    `/api/task/create?token=${this.$store.state.loginInfo.token}`,
+                    this.form
+                )
                 .then((res) => {
-                    console.log(res.data)
-                    // commit("setLoginInfo", res.data);
+                    this.$store.dispatch("setTasks");
                 })
                 .catch((err) => {
                     console.log(err);
+                })
+                .finally(() => {
+                    this.loading = false;
+                    this.$emit("onCloseTaskDialog");
                 });
         },
     },

@@ -18,6 +18,7 @@ class worksTableSeeder extends Seeder
         DB::table('works')->insert([
             [
               'work_room_id' => 1,
+              'work_date'=>date('Y-m-d', strtotime('+1 day')),
               'work_task_id' => 1,
               'work_user_id' => 1,
               'work_minute' => 5,
@@ -26,6 +27,16 @@ class worksTableSeeder extends Seeder
             ],
             [
               'work_room_id' => 1,
+              'work_date'=>date("Y-m-d H:i:s"),
+              'work_task_id' => 1,
+              'work_user_id' => 1,
+              'work_minute' => 10,
+              'created_at' => date('Y-m-d H:i:s'),
+              'updated_at' => date('Y-m-d H:i:s'),
+            ],
+            [
+              'work_room_id' => 1,
+              'work_date'=>date("Y-m-d H:i:s"),
               'work_task_id' => 2,
               'work_user_id' => 2,
               'work_minute' => 10,
@@ -34,6 +45,7 @@ class worksTableSeeder extends Seeder
             ],
             [
               'work_room_id' => 1,
+              'work_date'=>date("Y-m-d H:i:s"),
               'work_task_id' => 3,
               'work_user_id' => 1,
               'work_minute' => 5,
@@ -42,6 +54,7 @@ class worksTableSeeder extends Seeder
             ],
             [
               'work_room_id' => 1,
+              'work_date'=>date("Y-m-d H:i:s"),
               'work_task_id' => 3,
               'work_user_id' => 2,
               'work_minute' => 10,

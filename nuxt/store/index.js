@@ -4,6 +4,7 @@ import moment from 'moment'
 export const state = () => ({
     loginInfo: {},
     users: [],
+    todayTasks: [],
     tasks: [],
     works: [],
     everydayTasks: [],
@@ -16,7 +17,22 @@ export const mutations = {
     setUsers(state, users) {
         state.users = users
     },
+    setTodayTasks(state, todayTasks) {
+        todayTasks.forEach((task) => {
+            let minute = task.works.reduce(function (sum, work) {
+                return sum + work.work_minute;
+            }, 0);
+            task.minute = minute
+        });
+        state.todayTasks = todayTasks
+    },
     setTasks(state, tasks) {
+        tasks.forEach((task) => {
+            let minute = task.works.reduce(function (sum, work) {
+                return sum + work.work_minute;
+            }, 0);
+            task.minute = minute
+        });
         state.tasks = tasks
     },
     setWorks(state, works) {
@@ -31,7 +47,7 @@ export const actions = {
     async setLoginInfo({ commit }, form) {
         const email = form.email
         const password = form.password
-        await this.$axios.get(`/api/user/read?email=${email}&password=${password}`)
+        await this.$axios.get(`/api/user/login_info?email=${email}&password=${password}`)
             .then((res) => {
                 commit('setLoginInfo', res.data)
                 this.$cookies.set("token", res.data.token, {
@@ -44,10 +60,10 @@ export const actions = {
     },
     async setLoginInfoByToken({ commit }) {
         const token = this.$cookies.get("token")
-        if(!token){
+        if (!token) {
             return
         }
-        await this.$axios.get(`/api/user/read?token=${token}`)
+        await this.$axios.get(`/api/user/login_info?token=${token}`)
             .then((res) => {
                 commit('setLoginInfo', res.data)
             })
@@ -55,30 +71,29 @@ export const actions = {
                 console.log(err)
             })
     },
-    setUsers({ commit }) {
-        let users = []
-        for (let i = 1; i <= 3; i++) {
-            users.push({
-                id: i,
-                name: 'name' + i,
-                email: 'email' + i,
-                password: 'password' + i,
-                color: 'color' + i,
-                room_id: 1,
-            });
-        }
-        commit('setUsers', users)
-    },
-    setTasks({ state, commit }) {
-        this.$axios
-            .get(`/api/task/read?year=2021&month=8&day=31&token=${state.loginInfo.token}`)
+    setUsers({ state, commit }) {
+        this.$axios.get(`/api/user/read?token=${state.loginInfo.token}`)
             .then((res) => {
-                // commit('setTasks', res.data)
-                console.log(res.data)
+                commit('setUsers', res.data)
+
             })
             .catch((err) => {
                 console.log(err)
             })
+    },
+    setTodayTasks({ state, commit }) {
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = today.getMonth() + 1;
+        const day = today.getDate();
+        this.$axios
+            .get(
+                `/api/task/show?year=${year}&month=${month}&day=${day}&token=${state.loginInfo.token}`
+            )
+            .then((res) => {
+                commit('setTodayTasks', res.data)
+                console.log('tasks', res.data)
+            });
     },
     async setWorks({ state, commit }) {
         return axios
