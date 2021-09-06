@@ -18,6 +18,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::get('/test', 'UserController@test');
+
 Route::get('/task/read', 'TaskController@read');
 Route::get('/task/show', 'TaskController@show');
 Route::post('/task/create', 'TaskController@create');
@@ -29,3 +31,4 @@ Route::get('/room/read', 'RoomController@read');
 
 Route::get('/work/read', 'WorkController@read');
 Route::post('/work/create', 'WorkController@create');
+Route::delete('/work/delete', 'WorkController@delete');

@@ -1,11 +1,11 @@
 <template>
-    <v-form ref="form" v-model="noError">
-        <v-card>
-            <v-toolbar color="teal" dark style="box-shadow:none;">
-                <v-toolbar-title>{{task.task_name}}</v-toolbar-title>
-            </v-toolbar>
-            <v-divider></v-divider>
-            <v-card-text class="pa-3" style="min-height:35vh;">
+    <v-card>
+        <v-toolbar color="teal" dark style="box-shadow:none;">
+            <v-toolbar-title>{{task.task_name}}</v-toolbar-title>
+        </v-toolbar>
+        <v-divider></v-divider>
+        <v-card-text class="pa-3" style="min-height:35vh;">
+            <v-form ref="form" v-model="noError">
                 <v-card v-for="(work,workIndex) in task.works" :key="workIndex" class="d-flex align-center mb-4" style="height:70px;overflow: hidden;">
                     <v-select class="pt-3 pl-3" style="width:46%;" label="担当者" :items="users" v-model="work.work_user_id" item-value="val" item-text="txt" :rules="[v => !!v || 'Item is required']" dense></v-select>
                     <v-spacer></v-spacer>
@@ -18,24 +18,24 @@
                 <v-btn @click="addWork()" icon class="d-block mx-auto">
                     <v-icon style="font-size:35px;">mdi-plus</v-icon>
                 </v-btn>
-                <pre>{{task}}</pre>
-            </v-card-text>
-            <v-divider></v-divider>
-            <v-card-actions>
-                <v-btn icon>
-                    <v-icon>mdi-cog</v-icon>
-                </v-btn>
-                <v-spacer></v-spacer>
-                <v-btn color="error" @click="$emit('onCloseModal')">delete</v-btn>
-                <v-btn color="teal" :loading="loading" dark @click="onClickSave()">Save</v-btn>
-            </v-card-actions>
-        </v-card>
-    </v-form>
+            </v-form>
+        </v-card-text>
+        <v-divider></v-divider>
+        <v-card-actions>
+            <v-btn icon>
+                <v-icon>mdi-cog</v-icon>
+            </v-btn>
+            <v-spacer></v-spacer>
+            <v-btn color="error" @click="$emit('onCloseModal')">delete</v-btn>
+            <v-btn color="teal" :loading="loading" dark @click="onClickSave()">Save</v-btn>
+        </v-card-actions>
+    </v-card>
 </template>
 
 <script>
 export default {
-    props: ["focusTask"],
+    props: ["focusTask", "date"],
+
     data() {
         return {
             loading: false,
@@ -58,37 +58,43 @@ export default {
             if (!this.noError) {
                 return;
             }
-            this.focusTask.works.push({
+            this.task.works.push({
                 user_id: 0,
                 minute: 0,
             });
         },
         removeWork(workIndex) {
-            if (this.focusTask.works.length == 1) {
+            if (this.task.works.length == 1) {
                 return;
             }
-            this.focusTask.works.splice(workIndex, 1);
+            this.task.works.splice(workIndex, 1);
         },
         async onClickSave() {
+            this.$refs.form.validate();
+            if (!this.noError) {
+                return;
+            }
+            this.loading = true;
             await this.$axios
                 .post(
                     `/api/work/create?token=${this.$store.state.loginInfo.token}`,
                     this.task
                 )
                 .then((res) => {
-                    console.log(res.data)
-                    // this.$store.dispatch("setTasks");
+                    console.log(res.data);
+                    this.$store.dispatch("setTodayTasks");
                 })
                 .catch((err) => {
                     console.log(err);
                 })
                 .finally(() => {
-                    // this.loading = false;
-                    // this.$emit("onCloseModal");
+                    this.loading = false;
+                    this.$emit("onCloseModal");
                 });
         },
     },
     mounted() {
+        this.$set(this.task, "date", this.date);
         for (const [key, value] of Object.entries(this.focusTask)) {
             if (Array.isArray(value)) {
                 let array = [];

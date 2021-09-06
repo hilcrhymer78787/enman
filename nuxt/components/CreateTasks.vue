@@ -46,7 +46,7 @@ export default {
                     this.form
                 )
                 .then((res) => {
-                    this.$store.dispatch("setTasks");
+                    this.$store.dispatch("setTodayTasks");
                 })
                 .catch((err) => {
                     console.log(err);

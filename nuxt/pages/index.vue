@@ -1,5 +1,5 @@
 <template>
-    <Tasks :tasks="$store.state.todayTasks" />
+    <Tasks :date="date" :tasks="$store.state.todayTasks" />
 </template>
 <script>
 import moment from "moment";
@@ -8,6 +8,9 @@ export default {
         date() {
             return moment(new Date()).format("YYYY-MM-DD");
         },
+    },
+    mounted() {
+        this.$store.dispatch("setTodayTasks");
     },
 };
 </script>

@@ -7,6 +7,17 @@ use App\Models\User;
 
 class UserController extends Controller
 {
+    public function test()
+    {
+        $data = [
+            "test1",
+            "test2",
+            "test3",
+            "test4",
+            "test5",
+        ];
+        return $data;
+    }
     public function login_info(Request $request)
     {
         if($request->token){

@@ -26,22 +26,11 @@ class TaskController extends Controller
         foreach($tasks as $task){
 
             $works = Work::where('work_room_id', $userRoomId)
-            ->where('work_task_id', $task['task_id']);
-
-            
-            if(isset($request['year'])){
-                $works = $works->whereYear('work_date', $request['year']);
-            }
-
-            if(isset($request['month'])){
-                $works = $works->whereMonth('work_date', $request['month']);
-            }
-
-            if(isset($request['day'])){
-                $works = $works->whereDay('work_date', $request['day']);
-            }
-            
-            $works = $works->get();
+            ->where('work_task_id', $task['task_id'])
+            ->whereYear('work_date', $request['year'])
+            ->whereMonth('work_date', $request['month'])
+            ->whereDay('work_date', $request['day'])
+            ->get();
 
             foreach($works as $work){
                 $work['work_user_name'] = USER::find($work['work_user_id'])->name;
@@ -51,8 +40,6 @@ class TaskController extends Controller
             $task['works'] = $works;
 
         }
-
-
 
         return $tasks;
     }
@@ -69,6 +56,6 @@ class TaskController extends Controller
         $task["task_room_id"] = $userRoomId;
         $task->save();
 
-        return;
+        return $request;
     }
 }

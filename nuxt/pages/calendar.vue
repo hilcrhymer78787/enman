@@ -24,7 +24,7 @@
             <ul class="content">
                 <li v-for="n in first_day" :key="n" class="content_item blank"></li>
 
-                <li v-for="(calendar, index) in calendars" :key="calendar.date" v-ripple class="content_item main">
+                <li @click="onClickCalendar(calendar.date)" v-for="(calendar, index) in calendars" :key="calendar.date" v-ripple class="content_item main">
                     <div class="content_item_icn">{{ index + 1 }}</div>
                     <v-responsive class="pa-2" aspect-ratio="1">
                         <PieGraph />
@@ -35,6 +35,10 @@
             </ul>
 
         </v-card>
+
+        <v-dialog v-model="dialog" scrollable>
+            <Tasks v-if="!dialogLoading" :date="date" :tasks="tasks" />
+        </v-dialog>
     </div>
 </template>
 <script>
@@ -42,7 +46,7 @@ import moment from "moment";
 export default {
     middleware({ redirect, route }) {
         let year = new Date().getFullYear();
-        let month = new Date().getMonth();
+        let month = new Date().getMonth() + 1;
         if (!route.query.year || !route.query.month) {
             redirect(`/calendar?year=${year}&month=${month}`);
         }
@@ -50,6 +54,10 @@ export default {
     data() {
         return {
             week: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+            dialog: false,
+            dialogLoading: false,
+            date: "",
+            tasks: [],
         };
     },
     computed: {
@@ -125,6 +133,24 @@ export default {
                     }`
                 );
             }
+        },
+        async onClickCalendar(date) {
+            this.dialog = true;
+            this.dialogLoading = true;
+            await this.getTasks(date);
+            this.dialogLoading = false;
+        },
+        async getTasks(date) {
+            this.date = date;
+            const day = moment(date).format("D");
+            await this.$axios
+                .get(
+                    `/api/task/show?year=${this.year}&month=${this.month}&day=${day}&token=${this.$store.state.loginInfo.token}`
+                )
+                .then((res) => {
+                    this.tasks = res.data;
+                })
+                .finally(() => {});
         },
     },
 };

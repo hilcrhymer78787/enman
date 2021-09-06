@@ -54,7 +54,6 @@ export default {
     },
     methods: {
         mountedFunc() {
-            this.$store.dispatch("setTodayTasks");
             this.$store.dispatch("setUsers");
             // await this.$store.dispatch("setWorks");
         },

@@ -1,10 +1,16 @@
 <template>
     <div>
         <v-card>
-            <v-toolbar color="teal" dark style="box-shadow:none;">
+            <v-toolbar color="teal" height="70px" dark class="d-block" style="box-shadow:none;">
                 <v-toolbar-title>毎日タスク</v-toolbar-title>
+                <v-spacer></v-spacer>
+                <span class="pt-1 mr-3">{{date}}</span>
+                <v-btn v-if="$route.name == 'index'" @click="taskDialog = true" light height="35px" width="35px" fab elevation="0">
+                    <v-icon color="teal">mdi-plus</v-icon>
+                </v-btn>
             </v-toolbar>
-            <vuedraggable :options="{animation: 200,  delay: 50 }" v-model="tasks">
+            <v-card-text :style="$route.name != 'index' ? 'height: 300px;overflow-y:scroll;':''" class="pa-0">
+                <!-- <vuedraggable :options="{animation: 200,  delay: 50 }" v-model="tasks"> -->
                 <div v-for="(task,taskIndex) in tasks" :key="taskIndex">
                     <v-list-item v-ripple class="pl-2 pr-0" style="height:60px;overflow:hidden;">
                         <v-list-item-avatar @click="onFocusTask(task)">
@@ -21,23 +27,25 @@
                                 <span v-if="task.works.length >= 2">担当:複数人</span>
                             </v-list-item-subtitle>
                         </v-list-item-content>
-                        <v-btn class="check" @click="onClickCheckBox(task)" icon>
-                            <v-icon style="font-size: 25px;" v-if="task.works.length">mdi-checkbox-marked-outline</v-icon>
-                            <v-icon style="font-size: 25px;" v-else>mdi-checkbox-blank-outline</v-icon>
+                        <v-btn :loading="loadings[taskIndex]" class="check" icon>
+                            <v-icon @click="onClickCheckBoxMarked(task,taskIndex)" style="font-size: 25px;" v-if="task.works.length">mdi-checkbox-marked-outline</v-icon>
+                            <v-icon @click="onClickCheckBoxBlank(task,taskIndex)" style="font-size: 25px;" v-else>mdi-checkbox-blank-outline</v-icon>
                         </v-btn>
                     </v-list-item>
                     <v-divider v-if="taskIndex + 1 != tasks.length"></v-divider>
                 </div>
-            </vuedraggable>
+                <!-- </vuedraggable> -->
+            </v-card-text>
+            <v-divider></v-divider>
+            <v-card-actions v-if="$route.name != 'index'">
+                <v-spacer></v-spacer>
+                <v-btn>close</v-btn>
+            </v-card-actions>
         </v-card>
 
         <v-dialog v-model="dialog" scrollable>
-            <CreateWorks @onCloseModal="onCloseModal" :focusTask="focusTask" v-if="dialog" />
+            <CreateWorks @onCloseModal="onCloseModal" :date="date" :focusTask="focusTask" v-if="dialog" />
         </v-dialog>
-
-        <v-btn @click="taskDialog = true" style="bottom:70px;" fixed right fab elevation="2">
-            <v-icon>mdi-plus</v-icon>
-        </v-btn>
 
         <v-dialog v-model="taskDialog" scrollable>
             <CreateTasks @onCloseTaskDialog="onCloseTaskDialog" v-if="taskDialog" />
@@ -49,7 +57,7 @@
 <script>
 import vuedraggable from "vuedraggable";
 export default {
-    props: ["tasks"],
+    props: ["tasks", "date"],
     components: {
         vuedraggable: vuedraggable,
     },
@@ -58,6 +66,7 @@ export default {
             taskDialog: false,
             dialog: false,
             focusTask: {},
+            loadings:[]
         };
     },
     methods: {
@@ -65,9 +74,37 @@ export default {
             this.dialog = true;
             this.focusTask = task;
         },
-        onClickCheckBox(task) {
-            alert();
-            console.log(task);
+        async onClickCheckBoxBlank(task,taskIndex) {
+            this.$set(this.loadings, taskIndex, true);
+            await this.$axios.post(
+                `/api/work/create?token=${this.$store.state.loginInfo.token}`,
+                {
+                    date: this.date,
+                    task_id: task.task_id,
+                    works: [
+                        {
+                            work_user_id: this.$store.state.loginInfo.id,
+                            work_minute: task.task_default_minute,
+                        },
+                    ],
+                }
+            );
+            await this.$store.dispatch("setTodayTasks");
+            this.$set(this.loadings, taskIndex, false);
+        },
+        async onClickCheckBoxMarked(task,taskIndex) {
+            this.$set(this.loadings, taskIndex, true);
+            const date = this.date;
+            const task_id = task.task_id;
+            await this.$axios
+                .delete(
+                    `/api/work/delete?token=${this.$store.state.loginInfo.token}&date=${date}&task_id=${task_id}`
+                )
+                .then((res) => {
+                    console.log(res.data);
+                });
+            await this.$store.dispatch("setTodayTasks");
+            this.$set(this.loadings, taskIndex, false);
         },
         onCloseModal() {
             this.dialog = false;
@@ -76,7 +113,6 @@ export default {
             this.taskDialog = false;
         },
     },
-    mounted() {},
 };
 </script>
 <style lang="scss" scoped>
