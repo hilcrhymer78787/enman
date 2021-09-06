@@ -83,7 +83,7 @@ export default {
             if (!this.noError) {
                 return;
             }
-            alert("送信されました");
+            alert("まだ実装されていません");
             this.edit = false;
         },
         logout() {

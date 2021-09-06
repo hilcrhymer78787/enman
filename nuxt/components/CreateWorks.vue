@@ -26,7 +26,7 @@
                 <v-icon>mdi-cog</v-icon>
             </v-btn>
             <v-spacer></v-spacer>
-            <v-btn color="error" @click="$emit('onCloseModal')">delete</v-btn>
+            <v-btn color="error" @click="onClickDelete()">delete</v-btn>
             <v-btn color="teal" :loading="loading" dark @click="onClickSave()">Save</v-btn>
         </v-card-actions>
     </v-card>
@@ -92,6 +92,10 @@ export default {
                     this.$emit("onCloseModal");
                 });
         },
+        onClickDelete(){
+            alert('まだ実装されていません')
+            this.$emit('onCloseModal')
+        }
     },
     mounted() {
         this.$set(this.task, "date", this.date);

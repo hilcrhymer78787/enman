@@ -5,7 +5,7 @@
                 <Nuxt />
             </v-container>
         </v-main>
-        <v-bottom-navigation app fixed color="teal">
+        <v-bottom-navigation app light fixed color="teal">
             <v-btn :style="`width:calc(100% / ${navs.length}); height:100%;`" v-for="(nav, i) in navs" :key="i" :to="nav.to" router dark exact>
                 <span>{{ nav.txt }}</span>
                 <v-icon>{{ nav.icon }}</v-icon>
@@ -43,11 +43,6 @@ export default {
                     icon: "mdi-account",
                     txt: "マイページ",
                     to: "/mypage",
-                },
-                {
-                    icon: "mdi-ab-testing",
-                    txt: "test",
-                    to: "/test",
                 },
             ],
         };

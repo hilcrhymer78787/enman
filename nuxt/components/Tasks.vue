@@ -39,7 +39,7 @@
             <v-divider></v-divider>
             <v-card-actions v-if="$route.name != 'index'">
                 <v-spacer></v-spacer>
-                <v-btn>close</v-btn>
+                <v-btn @click="$emit('onCloseDialog')">close</v-btn>
             </v-card-actions>
         </v-card>
 
@@ -66,7 +66,7 @@ export default {
             taskDialog: false,
             dialog: false,
             focusTask: {},
-            loadings:[]
+            loadings: [],
         };
     },
     methods: {
@@ -74,7 +74,7 @@ export default {
             this.dialog = true;
             this.focusTask = task;
         },
-        async onClickCheckBoxBlank(task,taskIndex) {
+        async onClickCheckBoxBlank(task, taskIndex) {
             this.$set(this.loadings, taskIndex, true);
             await this.$axios.post(
                 `/api/work/create?token=${this.$store.state.loginInfo.token}`,
@@ -92,7 +92,7 @@ export default {
             await this.$store.dispatch("setTodayTasks");
             this.$set(this.loadings, taskIndex, false);
         },
-        async onClickCheckBoxMarked(task,taskIndex) {
+        async onClickCheckBoxMarked(task, taskIndex) {
             this.$set(this.loadings, taskIndex, true);
             const date = this.date;
             const task_id = task.task_id;
@@ -120,5 +120,9 @@ export default {
     border-radius: 0;
     height: 100%;
     width: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(128, 128, 128, 0.1);
 }
 </style>
