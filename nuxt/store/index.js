@@ -20,7 +20,8 @@ export const mutations = {
     setTodayTasks(state, todayTasks) {
         todayTasks.forEach((task) => {
             let minute = task.works.reduce(function (sum, work) {
-                return sum + Number(work.work_minute);
+                return sum + work.work_minute;
+                // return sum + Number(work.work_minute);
             }, 0);
             task.minute = minute
         });

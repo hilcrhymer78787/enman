@@ -16,7 +16,7 @@ class roomsTableSeeder extends Seeder
     {
        DB::table('rooms')->insert([
           [
-            'room_id' => '1',
+            'room_id' => 1,
             'room_name' => '今野家',
             'created_at' => date('Y-m-d H:i:s'),
             'updated_at' => date('Y-m-d H:i:s'),

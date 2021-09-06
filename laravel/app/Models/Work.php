@@ -16,4 +16,12 @@ class Work extends Model
       'work_user_id',
       'work_minute_id',
     ];
+
+    protected $casts = [
+      'work_date',
+      'work_room_id'=>'integer',
+      'work_task_id'=>'integer',
+      'work_user_id'=>'integer',
+      'work_minute_id'=>'integer',
+    ];
 }
