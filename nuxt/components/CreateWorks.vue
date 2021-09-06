@@ -119,6 +119,7 @@ export default {
             this.$set(obj, "work_user_id", 0);
             this.$set(obj, "work_minute", this.focusTask.task_default_minute);
             this.task.works.push(obj);
+            console.log(obj)
         }
     },
 };

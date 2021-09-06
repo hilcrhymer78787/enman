@@ -17,4 +17,12 @@ class Task extends Model
         'task_point_per_minute',
         'task_is_everyday',
     ];
+
+    protected $casts = [
+        'task_room_id'=>'integer',
+        'task_status'=>'integer',
+        'task_default_minute'=>'integer',
+        'task_point_per_minute'=>'integer',
+        'task_is_everyday'=>'integer',
+      ];
 }

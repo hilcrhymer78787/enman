@@ -6,7 +6,7 @@
             </v-container>
         </v-main>
         <v-bottom-navigation app light fixed color="teal">
-            <v-btn :style="`width:calc(100% / ${navs.length}); height:100%;`" v-for="(nav, i) in navs" :key="i" :to="nav.to" router dark exact>
+            <v-btn :style="`width:calc(100% / ${navs.length}); height:100%;background-color:white;`" v-for="(nav, i) in navs" :key="i" :to="nav.to" router light exact>
                 <span>{{ nav.txt }}</span>
                 <v-icon>{{ nav.icon }}</v-icon>
             </v-btn>
@@ -59,10 +59,10 @@ export default {
 };
 </script>
 <style lang="scss">
-.v-dialog{
+.v-dialog {
     max-width: 476px !important;
 }
-ul{
+ul {
     padding: 0;
 }
 li {

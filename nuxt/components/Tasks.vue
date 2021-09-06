@@ -73,6 +73,7 @@ export default {
         onFocusTask(task) {
             this.dialog = true;
             this.focusTask = task;
+            console.log(this.tasks)
         },
         async onClickCheckBoxBlank(task, taskIndex) {
             this.$set(this.loadings, taskIndex, true);
