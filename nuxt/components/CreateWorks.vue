@@ -26,8 +26,8 @@
                 <v-icon>mdi-cog</v-icon>
             </v-btn>
             <v-spacer></v-spacer>
-            <v-btn color="error" @click="onClickDelete()">delete</v-btn>
-            <v-btn color="teal" :loading="loading" dark @click="onClickSave()">Save</v-btn>
+            <v-btn color="error" :loading="deleteLoading" @click="onClickDelete()">delete</v-btn>
+            <v-btn color="teal" :loading="saveLoading" dark @click="onClickSave()">Save</v-btn>
         </v-card-actions>
     </v-card>
 </template>
@@ -38,7 +38,8 @@ export default {
 
     data() {
         return {
-            loading: false,
+            deleteLoading: false,
+            saveLoading: false,
             noError: false,
             task: {},
         };
@@ -74,7 +75,7 @@ export default {
             if (!this.noError) {
                 return;
             }
-            this.loading = true;
+            this.saveLoading = true;
             await this.$axios
                 .post(
                     `/api/work/create?token=${this.$store.state.loginInfo.token}`,
@@ -88,14 +89,32 @@ export default {
                     console.log(err);
                 })
                 .finally(() => {
-                    this.loading = false;
+                    this.saveLoading = false;
                     this.$emit("onCloseModal");
                 });
         },
-        onClickDelete(){
-            alert('まだ実装されていません')
-            this.$emit('onCloseModal')
-        }
+        async onClickDelete() {
+            if (
+                !confirm(
+                    `${this.date}、「${this.task.task_name}」の稼働情報を全て削除しますか？`
+                )
+            ) {
+                return;
+            }
+            this.deleteLoading = true;
+            const date = this.date;
+            const task_id = this.task.task_id;
+            await this.$axios
+                .delete(
+                    `/api/work/delete?token=${this.$store.state.loginInfo.token}&date=${date}&task_id=${task_id}`
+                )
+                .then((res) => {
+                    console.log(res.data);
+                });
+            await this.$store.dispatch("setTodayTasks");
+            this.deleteLoading = false;
+            this.$emit("onCloseModal");
+        },
     },
     mounted() {
         this.$set(this.task, "date", this.date);
@@ -119,12 +138,11 @@ export default {
             this.$set(obj, "work_user_id", 0);
             this.$set(obj, "work_minute", this.focusTask.task_default_minute);
             this.task.works.push(obj);
-            console.log(obj)
+            console.log(obj);
         }
     },
 };
 </script>
-
 <style lang="scss" scoped>
 .close_wrap {
     display: flex;

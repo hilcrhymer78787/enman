@@ -27,7 +27,7 @@
                 <li @click="onClickCalendar(calendar.date)" v-for="(calendar, index) in calendars" :key="calendar.date" v-ripple class="content_item main">
                     <div class="content_item_icn">{{ index + 1 }}</div>
                     <v-responsive class="pa-2" aspect-ratio="1">
-                        <PieGraph />
+                        <!-- <PieGraph /> -->
                     </v-responsive>
                 </li>
 

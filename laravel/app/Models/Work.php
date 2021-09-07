@@ -10,18 +10,20 @@ class Work extends Model
     use HasFactory;
 
     protected $fillable = [
-      'work_date',
-      'work_room_id',
-      'work_task_id',
-      'work_user_id',
-      'work_minute',
+        'work_id',
+        'work_date',
+        'work_room_id',
+        'work_task_id',
+        'work_user_id',
+        'work_minute',
     ];
 
     protected $casts = [
-      'work_date',
-      'work_room_id'=>'integer',
-      'work_task_id'=>'integer',
-      'work_user_id'=>'integer',
-      'work_minute'=>'integer',
+        'work_id'=>'integer',
+        'work_date',
+        'work_room_id'=>'integer',
+        'work_task_id'=>'integer',
+        'work_user_id'=>'integer',
+        'work_minute'=>'integer',
     ];
 }

@@ -73,7 +73,7 @@ export default {
         onFocusTask(task) {
             this.dialog = true;
             this.focusTask = task;
-            console.log(this.tasks)
+            console.log(this.tasks);
         },
         async onClickCheckBoxBlank(task, taskIndex) {
             this.$set(this.loadings, taskIndex, true);
@@ -94,6 +94,13 @@ export default {
             this.$set(this.loadings, taskIndex, false);
         },
         async onClickCheckBoxMarked(task, taskIndex) {
+            if (
+                !confirm(
+                    `${this.date}、「${task.task_name}」の稼働情報を全て削除しますか？`
+                )
+            ) {
+                return;
+            }
             this.$set(this.loadings, taskIndex, true);
             const date = this.date;
             const task_id = task.task_id;

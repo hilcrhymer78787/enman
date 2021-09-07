@@ -10,6 +10,7 @@ class Task extends Model
     use HasFactory;
 
     protected $fillable = [
+        'task_id',
         'task_room_id',
         'task_name',
         'task_status',
@@ -19,6 +20,7 @@ class Task extends Model
     ];
 
     protected $casts = [
+        'task_id'=>'integer',
         'task_room_id'=>'integer',
         'task_status'=>'integer',
         'task_default_minute'=>'integer',
