@@ -5,23 +5,24 @@
                 <v-toolbar-title>毎日タスク</v-toolbar-title>
                 <v-spacer></v-spacer>
                 <span class="pt-1 mr-3">{{date}}</span>
-                <v-btn v-if="$route.name == 'index'" @click="openTaskDialog()" light height="35px" width="35px" fab elevation="0">
+                <v-btn v-if="mode == 'today'" @click="openTaskDialog()" light height="35px" width="35px" fab elevation="0">
                     <v-icon color="teal">mdi-plus</v-icon>
                 </v-btn>
             </v-toolbar>
-            <v-card-text :style="$route.name != 'index' ? 'height: 300px;overflow-y:scroll;':''" class="pa-0">
+            <v-card-text :style="mode != 'today' ? 'height: 60vh;overflow-y:scroll;':''" class="pa-0">
                 <vuedraggable :options="{animation: 200,  delay: 50 }" v-model="tasks">
                     <div v-for="(task,taskIndex) in tasks" :key="taskIndex">
                         <swiper @slideChangeTransitionStart="hoge()" :options="swiperOption">
                             <swiper-slide>
-                                <v-btn @click="openTaskDialog()" color="orange" class="pa-0">Edit</v-btn>
+                                <v-btn @click="deleteTask(task)" :loading="deleteTaskLoading" color="error" dark class="pa-0 mr-3">DELETE</v-btn>
+                                <v-btn @click="openTaskDialog(task)" color="orange" dark class="pa-0">Edit</v-btn>
                             </swiper-slide>
                             <swiper-slide>
                                 <v-list-item v-ripple class="pl-2 pr-0" style="height:60px;overflow:hidden;">
                                     <v-list-item-avatar @click="onFocusTask(task)">
-                                        <v-icon v-if="task.works.length == 0" style="border:2px solid gray;">mdi-account</v-icon>
-                                        <v-img v-if="task.works.length == 1" style="border:2px solid #009688;" :src="task.works[0].work_user_img" class="rounded-circle"></v-img>
-                                        <v-icon v-if="task.works.length >= 2" style="border:2px solid #009688;" color="teal">mdi-account-group</v-icon>
+                                        <v-icon v-if="task.works.length == 0">mdi-account</v-icon>
+                                        <v-img v-if="task.works.length == 1" :src="task.works[0].work_user_img" class="rounded-circle"></v-img>
+                                        <v-icon v-if="task.works.length >= 2" style="background-color:rgba(128, 128, 128, 0.3);" color="teal">mdi-account-group</v-icon>
                                     </v-list-item-avatar>
                                     <v-list-item-content @click="onFocusTask(task)">
                                         <v-list-item-title>{{task.task_name}}</v-list-item-title>
@@ -44,7 +45,7 @@
                 </vuedraggable>
             </v-card-text>
             <v-divider></v-divider>
-            <v-card-actions v-if="$route.name != 'index'">
+            <v-card-actions v-if="mode != 'today'">
                 <v-spacer></v-spacer>
                 <v-btn @click="$emit('onCloseDialog')">close</v-btn>
             </v-card-actions>
@@ -55,7 +56,7 @@
         </v-dialog>
 
         <v-dialog v-model="taskDialog" scrollable>
-            <CreateTasks @onCloseTaskDialog="onCloseTaskDialog" v-if="taskDialog" />
+            <CreateTasks @onCloseTaskDialog="onCloseTaskDialog" :focusTask="focusTask" v-if="taskDialog" />
         </v-dialog>
 
     </div>
@@ -70,7 +71,7 @@ import "swiper/css/swiper.css";
 Vue.use(VueAwesomeSwiper);
 
 export default {
-    props: ["tasks", "date"],
+    props: ["tasks", "date", "mode"],
     components: {
         vuedraggable: vuedraggable,
     },
@@ -80,9 +81,10 @@ export default {
                 initialSlide: 1,
                 slidesPerView: "auto",
             },
+            deleteTaskLoading:false,
             taskDialog: false,
             dialog: false,
-            focusTask: {},
+            focusTask: null,
             loadings: [],
         };
     },
@@ -110,7 +112,12 @@ export default {
                     ],
                 }
             );
-            await this.$store.dispatch("setTodayTasks");
+            if (this.mode == "today") {
+                await this.$store.dispatch("setTodayTasks");
+            } else {
+                await this.$emit("getTasks", this.date);
+            }
+
             this.$set(this.loadings, taskIndex, false);
         },
         async onClickCheckBoxMarked(task, taskIndex) {
@@ -131,17 +138,43 @@ export default {
                 .then((res) => {
                     console.log(res.data);
                 });
-            await this.$store.dispatch("setTodayTasks");
+            if (this.mode == "today") {
+                await this.$store.dispatch("setTodayTasks");
+            } else {
+                await this.$emit("getTasks", this.date);
+            }
             this.$set(this.loadings, taskIndex, false);
         },
         onCloseModal() {
             this.dialog = false;
         },
-        openTaskDialog(task){
-            if(task){
-
+        async deleteTask(task) {
+            if (
+                !confirm(
+                    `「${task.task_name}」に関するデータを全て削除しますか？`
+                )
+            ) {
+                return;
             }
-            this.taskDialog = true
+            this.deleteTaskLoading = true;
+            const task_id = task.task_id;
+            await this.$axios
+                .delete(
+                    `/api/task/delete?token=${this.$store.state.loginInfo.token}&task_id=${task_id}`
+                )
+                .then((res) => {
+                    console.log(res.data);
+                });
+            await this.$store.dispatch("setTodayTasks");
+            this.deleteTaskLoading = false;
+        },
+        openTaskDialog(task) {
+            if (task) {
+                this.focusTask = task;
+            } else {
+                this.focusTask = null;
+            }
+            this.taskDialog = true;
         },
         onCloseTaskDialog() {
             this.taskDialog = false;
@@ -162,7 +195,7 @@ export default {
 ::v-deep {
     .swiper-slide {
         &:nth-child(1) {
-            width: 100px;
+            width: 180px;
             height: 60px;
             display: flex;
             justify-content: center;

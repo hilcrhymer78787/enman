@@ -37,7 +37,7 @@
         </v-card>
 
         <v-dialog v-model="dialog" scrollable>
-            <Tasks @onCloseDialog="dialog = false" v-if="!dialogLoading" :date="date" :tasks="tasks" />
+            <Tasks mode="calendar" @onCloseDialog="dialog = false" @getTasks="getTasks" v-if="!dialogLoading" :date="date" :tasks="tasks" />
         </v-dialog>
     </div>
 </template>

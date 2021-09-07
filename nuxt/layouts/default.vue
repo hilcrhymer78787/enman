@@ -61,6 +61,7 @@ export default {
 <style lang="scss">
 .v-dialog {
     max-width: 476px !important;
+    // height: 90%;
 }
 ul {
     padding: 0;

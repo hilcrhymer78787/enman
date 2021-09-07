@@ -1,7 +1,8 @@
 <template>
     <v-card>
         <v-toolbar color="teal" dark style="box-shadow:none;">
-            <v-toolbar-title>新しい毎日タスクを追加</v-toolbar-title>
+            <v-toolbar-title v-if="this.focusTask">「{{this.focusTask.task_name}}」を編集</v-toolbar-title>
+            <v-toolbar-title v-else>新しい毎日タスクを追加</v-toolbar-title>
         </v-toolbar>
         <v-divider></v-divider>
         <v-card-text class="pa-3" style="min-height:30vh;">
@@ -22,10 +23,12 @@
 </template>
 <script>
 export default {
+    props: ["focusTask"],
     data: () => ({
         loading: false,
         noError: false,
         form: {
+            taskId: 0,
             taskName: "",
             taskDefaultMinute: "",
             taskPointPerMinute: "",
@@ -56,6 +59,28 @@ export default {
                     this.$emit("onCloseTaskDialog");
                 });
         },
+    },
+    mounted() {
+        console.log(this.focusTask)
+        if (this.focusTask) {
+            this.$set(this.form, "taskId", this.focusTask.task_id);
+            this.$set(this.form, "taskName", this.focusTask.task_name);
+            this.$set(
+                this.form,
+                "taskDefaultMinute",
+                this.focusTask.task_default_minute
+            );
+            this.$set(
+                this.form,
+                "taskPointPerMinute",
+                this.focusTask.task_point_per_minute
+            );
+            this.$set(
+                this.form,
+                "taskIsEveryday",
+                this.focusTask.task_is_everyday
+            );
+        }
     },
 };
 </script>

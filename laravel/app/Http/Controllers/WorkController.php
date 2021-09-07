@@ -36,8 +36,12 @@ class WorkController extends Controller
     }
     public function delete(Request $request)
     {
+        $userRoomId = User::where('token', $request->token)
+        ->get()[0]->user_room_id;
+
         Work::where('work_date', $request["date"])
-        ->where('work_task_id', $request["task_id"])->
-        delete();
+        ->where('work_task_id', $request["task_id"])
+        ->where('work_room_id', $userRoomId)
+        ->delete();
     }
 }

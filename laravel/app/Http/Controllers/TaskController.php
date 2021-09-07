@@ -43,18 +43,38 @@ class TaskController extends Controller
 
         return $tasks;
     }
-    public function create(Request $request)
+    public function create(Request $request, Task $task)
     {
         $userRoomId = User::where('token', $request->token)
         ->get()[0]->user_room_id;
 
-        $task = new Task;
-        $task["task_name"] = $request["taskName"];
-        $task["task_default_minute"] = $request["taskDefaultMinute"];
-        $task["task_point_per_minute"] = $request["taskPointPerMinute"];
-        $task["task_is_everyday"] = $request["taskIsEveryday"];
-        $task["task_room_id"] = $userRoomId;
-        $task->save();
+        if(isset($request["taskId"])){
+            $task->where("task_id", $request["taskId"])->update([
+                "task_name" => $request["taskName"],
+                "task_default_minute" => $request["taskDefaultMinute"],
+                "task_point_per_minute" => $request["taskPointPerMinute"],
+                "task_is_everyday" => $request["taskIsEveryday"],
+                "task_room_id" => $userRoomId,
+            ]);
+        }else{
+            $task["task_name"] = $request["taskName"];
+            $task["task_default_minute"] = $request["taskDefaultMinute"];
+            $task["task_point_per_minute"] = $request["taskPointPerMinute"];
+            $task["task_is_everyday"] = $request["taskIsEveryday"];
+            $task["task_room_id"] = $userRoomId;
+            $task->save();
+        }
+
+        return $request;
+    }
+    public function delete(Request $request, Task $task)
+    {
+        $userRoomId = User::where('token', $request->token)
+        ->get()[0]->user_room_id;
+
+        Task::where('task_id', $request['task_id'])
+        ->where('task_room_id', $userRoomId)
+        ->delete();
 
         return $request;
     }
