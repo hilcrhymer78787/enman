@@ -13,7 +13,7 @@
                 <vuedraggable :options="{animation: 200,  delay: 50 }" v-model="tasks">
                     <div v-for="(task,taskIndex) in tasks" :key="taskIndex">
                         <swiper @slideChangeTransitionStart="hoge()" :options="swiperOption">
-                            <swiper-slide>
+                            <swiper-slide class="swiper_btn" v-if="mode == 'today'">
                                 <v-btn @click="deleteTask(task)" :loading="deleteTaskLoading" color="error" dark class="pa-0 mr-3">DELETE</v-btn>
                                 <v-btn @click="openTaskDialog(task)" color="orange" dark class="pa-0">Edit</v-btn>
                             </swiper-slide>
@@ -81,7 +81,7 @@ export default {
                 initialSlide: 1,
                 slidesPerView: "auto",
             },
-            deleteTaskLoading:false,
+            deleteTaskLoading: false,
             taskDialog: false,
             dialog: false,
             focusTask: null,
@@ -193,15 +193,13 @@ export default {
     background-color: rgba(128, 128, 128, 0.1);
 }
 ::v-deep {
-    .swiper-slide {
-        &:nth-child(1) {
-            width: 180px;
-            height: 60px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: rgba(128, 128, 128, 0.1);
-        }
+    .swiper_btn {
+        width: 180px;
+        height: 60px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: rgba(128, 128, 128, 0.1);
     }
 }
 </style>

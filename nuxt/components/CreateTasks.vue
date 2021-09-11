@@ -28,7 +28,6 @@ export default {
         loading: false,
         noError: false,
         form: {
-            taskId: 0,
             taskName: "",
             taskDefaultMinute: "",
             taskPointPerMinute: "",
@@ -49,6 +48,7 @@ export default {
                     this.form
                 )
                 .then((res) => {
+                    console.log(res.data)
                     this.$store.dispatch("setTodayTasks");
                 })
                 .catch((err) => {
@@ -61,7 +61,7 @@ export default {
         },
     },
     mounted() {
-        console.log(this.focusTask)
+        console.log(this.focusTask);
         if (this.focusTask) {
             this.$set(this.form, "taskId", this.focusTask.task_id);
             this.$set(this.form, "taskName", this.focusTask.task_name);

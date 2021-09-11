@@ -21,20 +21,10 @@ export const mutations = {
         todayTasks.forEach((task) => {
             let minute = task.works.reduce(function (sum, work) {
                 return sum + work.work_minute;
-                // return sum + Number(work.work_minute);
             }, 0);
             task.minute = minute
         });
         state.todayTasks = todayTasks
-    },
-    setTasks(state, tasks) {
-        tasks.forEach((task) => {
-            let minute = task.works.reduce(function (sum, work) {
-                return sum + work.work_minute;
-            }, 0);
-            task.minute = minute
-        });
-        state.tasks = tasks
     },
     setWorks(state, works) {
         state.works = works
@@ -93,7 +83,6 @@ export const actions = {
             )
             .then((res) => {
                 commit('setTodayTasks', res.data)
-                console.log('tasks', res.data)
             });
     },
     async setWorks({ state, commit }) {

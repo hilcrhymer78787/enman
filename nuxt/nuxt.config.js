@@ -16,6 +16,16 @@ export default {
         ],
         link: [
             { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
+        ],
+        script: [
+            {
+                src:
+                    "https://cdn.jsdelivr.net/npm/pwacompat@2.0.6/pwacompat.min.js",
+                integrity:
+                    "sha384-GOaSLecPIMCJksN83HLuYf9FToOiQ2Df0+0ntv7ey8zjUHESXhthwvq9hXAZTifA",
+                crossorigin: "anonymous",
+                defer: true
+            }
         ]
     },
     server: {
@@ -61,7 +71,10 @@ export default {
     // PWA module configuration: https://go.nuxtjs.dev/pwa
     pwa: {
         manifest: {
-            lang: 'en'
+            name: 'enman',
+            lang: 'ja',
+            short_name: 'enman',
+            title: 'enman',
         }
     },
 

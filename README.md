@@ -18,57 +18,20 @@ http://localhost:8000/
 http://localhost:8080/
 
 
+【issue】
 
-【api仕様書】
-
-request
-    method
-        get
-    url
-        /task/read/?year=<int>&month=<int>&day=<int>&token=<string>
-response
-    [
-        {
-            date:<string>,
-            users:[
-                {
-                    user_id:<int>,
-                    user_name:<int>,
-                    ★★★user_sum_minute:<int>,
-                    ★★★user_sum_point:<int>,
-                },
-            ],
-            everydayTasks:[
-                task_id:<int>,
-                task_name:<string>,
-                task_point_per_minute:<int>,
-                task_default_minute:<int>,
-                ...
-                works:[
-                    {
-                        work_id:<int>,
-                        user_id:<int>,
-                        user_name:<string>,
-                        user_img:<int>,
-                        minute:<string>,
-                    },
-                ]
-            ],
-            bigTasks:[
-                task_id:<int>,
-                task_name:<string>,
-                task_point_per_minute:<int>,
-                task_default_minute:<int>,
-                ...
-                works:[
-                    {
-                        work_id:<int>,
-                        user_id:<int>,
-                        user_name:<string>,
-                        user_img:<int>,
-                        minute:<string>,
-                    },
-                ]
-            ],
-        }
-    ]
+work
+    create
+    read
+    update
+    delete
+user
+    create
+    read
+    update
+    delete
+room
+    create
+    read
+    update
+    delete

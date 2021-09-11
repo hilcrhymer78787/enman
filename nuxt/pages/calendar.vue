@@ -149,6 +149,12 @@ export default {
                 )
                 .then((res) => {
                     this.tasks = res.data;
+                    this.tasks.forEach((task) => {
+                        let minute = task.works.reduce(function (sum, work) {
+                            return sum + work.work_minute;
+                        }, 0);
+                        this.$set(task, "minute", minute);
+                    });
                 })
                 .finally(() => {});
         },
