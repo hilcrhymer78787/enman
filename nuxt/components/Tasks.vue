@@ -52,7 +52,7 @@
         </v-card>
 
         <v-dialog v-model="dialog" scrollable>
-            <CreateWorks @onCloseModal="onCloseModal" :date="date" :focusTask="focusTask" v-if="dialog" />
+            <CreateWorks @onCloseModal="onCloseModal" :date="date" :mode="mode" @getTasks="$emit('getTasks')" :focusTask="focusTask" v-if="dialog" />
         </v-dialog>
 
         <v-dialog v-model="taskDialog" scrollable>

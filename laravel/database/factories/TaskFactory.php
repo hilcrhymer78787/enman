@@ -26,7 +26,6 @@ class TaskFactory extends Factory
             // 'task_name' => $this->faker->word(),
             // 'task_status' => $this->faker->numberBetween(1,4),
             // 'task_default_minute' => $this->faker->numberBetween(1,60),
-            // 'task_point_per_minute' => $this->faker->numberBetween(1,20),
             // 'task_is_everyday' => $this->faker->boolean(),
         ];
     }

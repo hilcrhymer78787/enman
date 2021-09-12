@@ -15,7 +15,6 @@ class Task extends Model
         'task_name',
         'task_status',
         'task_default_minute',
-        'task_point_per_minute',
         'task_is_everyday',
     ];
 
@@ -24,7 +23,6 @@ class Task extends Model
         'task_room_id'=>'integer',
         'task_status'=>'integer',
         'task_default_minute'=>'integer',
-        'task_point_per_minute'=>'integer',
         'task_is_everyday'=>'integer',
       ];
 }

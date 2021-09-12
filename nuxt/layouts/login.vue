@@ -21,6 +21,23 @@ export default {
     },
 };
 </script>
+<style lang="scss">
+.v-application {
+    ul {
+        padding: 0;
+    }
+    li {
+        list-style: none;
+    }
+    a {
+        color: teal !important;
+        text-decoration: none;
+    }
+    p {
+        margin: 0;
+    }
+}
+</style>
 <style lang="scss" scoped>
 .login_container {
     max-height: 500px;

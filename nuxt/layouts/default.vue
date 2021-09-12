@@ -63,10 +63,19 @@ export default {
     max-width: 476px !important;
     // height: 90%;
 }
-ul {
-    padding: 0;
-}
-li {
-    list-style: none;
+.v-application {
+    ul {
+        padding: 0;
+    }
+    li {
+        list-style: none;
+    }
+    a {
+        color: teal !important;
+        text-decoration: none;
+    }
+    p {
+        margin: 0;
+    }
 }
 </style>

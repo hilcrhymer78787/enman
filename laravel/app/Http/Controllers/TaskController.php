@@ -52,14 +52,12 @@ class TaskController extends Controller
             $task->where("task_id", $request["taskId"])->update([
                 "task_name" => $request["taskName"],
                 "task_default_minute" => $request["taskDefaultMinute"],
-                "task_point_per_minute" => $request["taskPointPerMinute"],
                 "task_is_everyday" => $request["taskIsEveryday"],
                 "task_room_id" => $userRoomId,
             ]);
         }else{
             $task["task_name"] = $request["taskName"];
             $task["task_default_minute"] = $request["taskDefaultMinute"];
-            $task["task_point_per_minute"] = $request["taskPointPerMinute"];
             $task["task_is_everyday"] = $request["taskIsEveryday"];
             $task["task_room_id"] = $userRoomId;
             $task->save();

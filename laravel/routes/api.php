@@ -27,7 +27,11 @@ Route::delete('/task/delete', 'TaskController@delete');
 
 
 Route::get('/user/login_info', 'UserController@login_info');
+Route::post('/user/create', 'UserController@create');
+Route::put('/user/update', 'UserController@update');
+
 Route::get('/user/read', 'UserController@read');
+
 Route::get('/room/read', 'RoomController@read');
 
 Route::get('/work/read', 'WorkController@read');

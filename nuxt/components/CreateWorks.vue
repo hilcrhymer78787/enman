@@ -22,9 +22,6 @@
         </v-card-text>
         <v-divider></v-divider>
         <v-card-actions>
-            <v-btn icon>
-                <v-icon>mdi-cog</v-icon>
-            </v-btn>
             <v-spacer></v-spacer>
             <v-btn color="error" :loading="deleteLoading" @click="onClickDelete()">delete</v-btn>
             <v-btn color="teal" :loading="saveLoading" dark @click="onClickSave()">Save</v-btn>
@@ -34,7 +31,7 @@
 
 <script>
 export default {
-    props: ["focusTask", "date"],
+    props: ["focusTask", "date", "mode"],
 
     data() {
         return {
@@ -83,7 +80,11 @@ export default {
                 )
                 .then((res) => {
                     console.log(res.data);
-                    this.$store.dispatch("setTodayTasks");
+                    if (this.mode == "today") {
+                        this.$store.dispatch("setTodayTasks");
+                    } else {
+                        this.$emit("getTasks");
+                    }
                 })
                 .catch((err) => {
                     console.log(err);
@@ -111,7 +112,11 @@ export default {
                 .then((res) => {
                     console.log(res.data);
                 });
-            await this.$store.dispatch("setTodayTasks");
+            if (this.mode == "today") {
+                await this.$store.dispatch("setTodayTasks");
+            } else {
+                await this.$emit("getTasks");
+            }
             this.deleteLoading = false;
             this.$emit("onCloseModal");
         },

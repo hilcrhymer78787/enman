@@ -7,9 +7,8 @@
         <v-divider></v-divider>
         <v-card-text class="pa-3" style="min-height:30vh;">
             <v-form ref="form" v-model="noError">
-                <v-text-field v-model="form.taskName" :rules="[v => !!v || 'Item is required']" label="タスクの名前" required></v-text-field>
-                <v-select v-model="form.taskDefaultMinute" :items="$MINUTE" :rules="[v => !!v || 'Item is required']" label="想定時間" required item-value="val" item-text="txt"></v-select>
-                <v-select v-model="form.taskPointPerMinute" :items="$POINTS" :rules="[v => !!v || 'Item is required']" label="1分あたりのポイント" required item-value="val" item-text="txt"></v-select>
+                <v-text-field validate-on-blur v-model="form.taskName" :rules="[v => !!v || 'Item is required']" label="タスクの名前" prepend-icon="mdi-format-title" required></v-text-field>
+                <v-select v-model="form.taskDefaultMinute" :items="$MINUTE" :rules="[v => !!v || 'Item is required']" label="想定時間" prepend-icon="mdi-clock-outline" required item-value="val" item-text="txt"></v-select>
             </v-form>
         </v-card-text>
 
@@ -30,7 +29,6 @@ export default {
         form: {
             taskName: "",
             taskDefaultMinute: "",
-            taskPointPerMinute: "",
             taskIsEveryday: 1,
         },
     }),
@@ -69,11 +67,6 @@ export default {
                 this.form,
                 "taskDefaultMinute",
                 this.focusTask.task_default_minute
-            );
-            this.$set(
-                this.form,
-                "taskPointPerMinute",
-                this.focusTask.task_point_per_minute
             );
             this.$set(
                 this.form,

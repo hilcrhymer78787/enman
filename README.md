@@ -20,14 +20,10 @@ http://localhost:8080/
 
 【issue】
 
-work
-    create
-    read
-    update
-    delete
+work 担当重複阻止
+
 user
     create
-    read
     update
     delete
 room

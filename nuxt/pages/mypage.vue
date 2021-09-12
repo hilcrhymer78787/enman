@@ -12,15 +12,15 @@
                     </div>
                     <v-spacer></v-spacer>
                     <div class="pt-2" style="width:65%;">
-                        <v-text-field :rules="[v => !!v || 'Item is required']" :clearable="edit" color="teal" prepend-icon="mdi-account" :readonly="!edit" label="名前" v-model="editloginInfo.name"></v-text-field>
-                        <v-text-field :rules="[v => !!v || 'Item is required']" :clearable="edit" color="teal" prepend-icon="mdi-email" :readonly="!edit" label="メールアドレス" v-model="editloginInfo.email"></v-text-field>
+                        <v-text-field validate-on-blur :rules="[v => !!v || 'Item is required']" :clearable="edit" color="teal" prepend-icon="mdi-account" :readonly="!edit" label="名前" v-model="editloginInfo.name"></v-text-field>
+                        <v-text-field validate-on-blur :rules="[v => !!v || 'Item is required']" :clearable="edit" color="teal" prepend-icon="mdi-email" :readonly="!edit" label="メールアドレス" v-model="editloginInfo.email"></v-text-field>
                     </div>
                 </v-card-text>
                 <v-divider></v-divider>
                 <div class="d-flex pa-3">
                     <v-spacer></v-spacer>
                     <v-btn @click="onCloseEdit()" v-if="edit" class="mr-2">編集取消</v-btn>
-                    <v-btn @click="onSubmit()" v-if="edit" dark color="teal lighten-1">確定</v-btn>
+                    <v-btn @click="onSubmit()" v-if="edit" :loading="loading" dark color="teal lighten-1">確定</v-btn>
                     <v-btn @click="logout()" v-if="!edit" class="mr-2">ログアウト</v-btn>
                     <v-btn @click="edit = true" v-if="!edit" dark color="orange lighten-1">編集</v-btn>
                 </div>
@@ -58,6 +58,7 @@ import { mapState } from "vuex";
 export default {
     data() {
         return {
+            loading: false,
             dialog: false,
             noError: false,
             edit: false,
@@ -78,12 +79,26 @@ export default {
             this.editloginInfo.user_img = `https://picsum.photos/500/300?image=${n}`;
             this.dialog = false;
         },
-        onSubmit() {
+        async onSubmit() {
             this.$refs.form.validate();
             if (!this.noError) {
                 return;
             }
-            alert("まだ実装されていません");
+            this.loading = true;
+            await this.$axios
+                .put(
+                    `/api/user/update?name=${this.editloginInfo.name}&email=${this.editloginInfo.email}&user_img=${this.editloginInfo.user_img}`
+                )
+                .then((res) => {
+                    this.errorMessage = "";
+                    if (res.data.errorMessage) {
+                        this.errorMessage = res.data.errorMessage;
+                    }
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+            this.loading = false;
             this.edit = false;
         },
         logout() {

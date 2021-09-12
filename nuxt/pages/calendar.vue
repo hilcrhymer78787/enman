@@ -137,12 +137,12 @@ export default {
         async onClickCalendar(date) {
             this.dialog = true;
             this.dialogLoading = true;
-            await this.getTasks(date);
+            this.date = date;
+            await this.getTasks();
             this.dialogLoading = false;
         },
-        async getTasks(date) {
-            this.date = date;
-            const day = moment(date).format("D");
+        async getTasks() {
+            const day = moment(this.date).format("D");
             await this.$axios
                 .get(
                     `/api/task/show?year=${this.year}&month=${this.month}&day=${day}&token=${this.$store.state.loginInfo.token}`
