@@ -70,12 +70,11 @@ export default {
     li {
         list-style: none;
     }
-    a {
-        color: teal !important;
-        text-decoration: none;
-    }
     p {
         margin: 0;
+    }
+    .v-btn:before {
+        content: none;
     }
 }
 </style>

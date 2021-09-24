@@ -7,7 +7,7 @@
         <v-card-text class="pa-3" style="min-height:35vh;">
             <v-form ref="form" v-model="noError">
                 <v-card v-for="(work,workIndex) in task.works" :key="workIndex" class="d-flex align-center mb-4" style="height:70px;overflow: hidden;">
-                    <v-select class="pt-3 pl-3" style="width:46%;" label="担当者" :items="users" v-model="work.work_user_id" item-value="val" item-text="txt" :rules="[v => !!v || 'Item is required']" dense></v-select>
+                    <v-select class="pt-3 pl-3" style="width:46%;" label="担当者" :items="users(work.work_user_id)" v-model="work.work_user_id" item-value="val" item-text="txt" :rules="[v => !!v || 'Item is required']" dense></v-select>
                     <v-spacer></v-spacer>
                     <v-select class="pt-3" style="width:30%;" label="稼働時間" :items="$MINUTE" v-model="work.work_minute" item-value="val" item-text="txt" :rules="[v => !!v || 'Item is required']" dense></v-select>
                     <v-spacer></v-spacer>
@@ -41,16 +41,21 @@ export default {
             task: {},
         };
     },
-    computed: {
-        users() {
+    methods: {
+        users(userId) {
             let outputData = [];
             this.$store.state.users.forEach((user) => {
-                outputData.push({ val: user.id, txt: user.name });
+                const userDuplicateJudge =
+                    this.task.works.filter(
+                        (work) => work.work_user_id == user.id
+                    ).length == 0;
+
+                if (userDuplicateJudge || userId == user.id) {
+                    outputData.push({ val: user.id, txt: user.name });
+                }
             });
             return outputData;
         },
-    },
-    methods: {
         addWork() {
             this.$refs.form.validate();
             if (!this.noError) {

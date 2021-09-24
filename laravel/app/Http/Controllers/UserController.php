@@ -22,19 +22,43 @@ class UserController extends Controller
     }
     public function create(Request $request, User $user)
     {
-        $userDataCount = count(User::where('email', $request["email"])->get());
-
-        if($userDataCount == 0){
-            $user["name"] = $request["name"];
-            $user["email"] = $request["email"];
-            $user["password"] = $request["password"];
-            $user["user_img"] = "https://picsum.photos/500/300?image=40";
-            $user["token"] = $request["email"].Str::random(100);
-            $user->save();
-            return;
+        if($request["id"] == 0){
+            // 新規登録
+            $userDataCount = count(User::where('email', $request["email"])->get());
+            if($userDataCount != 0){
+                $error['errorMessage'] = 'このメールアドレスは既に登録されています';
+                return $error;
+            }
+            else{
+                $user["name"] = $request["name"];
+                $user["email"] = $request["email"];
+                $user["password"] = $request["password"];
+                $user["user_img"] = $request["user_img"];
+                $user["token"] = $request["email"].Str::random(100);
+                $user->save();
+                return;
+            }
         }else{
-            $error['errorMessage'] = 'このメールアドレスは既に登録されています';
-            return $error;
+            // 編集
+            $userData = User::where('token', $request["token"])
+            ->get()[0];
+
+            $userId = $userData['id'];
+            $userEmail = $userData['email'];
+            $userDataCount = count(User::where('email', $request["email"])->get());
+
+            if($userDataCount != 0 && $userData['email'] != $request["email"]){
+                $error['errorMessage'] = 'このメールアドレスは既に登録されています';
+                return $error;
+            }else{
+                $user->where("id", $userId)->update([
+                    "name" => $request["name"],
+                    "email" => $request["email"],
+                    "password" => $request["password"],
+                    "user_img" => $request["user_img"],
+                    "token" => $request["email"].Str::random(100),
+                ]);
+            }
         }
     }
     public function read(Request $request)
@@ -45,16 +69,11 @@ class UserController extends Controller
         $users = User::where('user_room_id', $userRoomId)->get();
         return $users;
     }
-    public function update(Request $request, User $user)
+    public function delete(Request $request)
     {
         $userId = User::where('token', $request->token)
         ->get()[0]->id;
 
-        $task->where("id", $userId)->update([
-            "name" => $request["name"],
-            "email" => $request["email"],
-            // "password" => $request["password"],
-            "user_img" => $request["user_img"],
-        ]);
+        User::where('id', $userId)->delete();
     }
 }

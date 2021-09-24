@@ -10,7 +10,7 @@
                 </v-btn>
             </v-toolbar>
             <v-card-text :style="mode != 'today' ? 'height: 60vh;overflow-y:scroll;':''" class="pa-0">
-                <vuedraggable :options="{animation: 200,  delay: 50 }" v-model="tasks">
+                <!-- <vuedraggable :options="{animation: 200,  delay: 50 }" v-model="tasks"> -->
                     <div v-for="(task,taskIndex) in tasks" :key="taskIndex">
                         <swiper @slideChangeTransitionStart="hoge()" :options="swiperOption">
                             <swiper-slide class="swiper_btn" v-if="mode == 'today'">
@@ -42,7 +42,7 @@
                         </swiper>
                         <v-divider v-if="taskIndex + 1 != tasks.length"></v-divider>
                     </div>
-                </vuedraggable>
+                <!-- </vuedraggable> -->
             </v-card-text>
             <v-divider></v-divider>
             <v-card-actions v-if="mode != 'today'">
@@ -52,18 +52,18 @@
         </v-card>
 
         <v-dialog v-model="dialog" scrollable>
-            <CreateWorks @onCloseModal="onCloseModal" :date="date" :mode="mode" @getTasks="$emit('getTasks')" :focusTask="focusTask" v-if="dialog" />
+            <CreateWorks @onCloseModal="dialog = false" :date="date" :mode="mode" @getTasks="$emit('getTasks')" :focusTask="focusTask" v-if="dialog" />
         </v-dialog>
 
         <v-dialog v-model="taskDialog" scrollable>
-            <CreateTasks @onCloseTaskDialog="onCloseTaskDialog" :focusTask="focusTask" v-if="taskDialog" />
+            <CreateTasks @onCloseTaskDialog="taskDialog = false" :focusTask="focusTask" v-if="taskDialog" />
         </v-dialog>
 
     </div>
 </template>
 
 <script>
-import vuedraggable from "vuedraggable";
+// // import vuedraggable from "vuedraggable";
 
 import Vue from "vue";
 import VueAwesomeSwiper from "vue-awesome-swiper";
@@ -73,7 +73,7 @@ Vue.use(VueAwesomeSwiper);
 export default {
     props: ["tasks", "date", "mode"],
     components: {
-        vuedraggable: vuedraggable,
+        // // vuedraggable: vuedraggable,
     },
     data() {
         return {
@@ -145,9 +145,6 @@ export default {
             }
             this.$set(this.loadings, taskIndex, false);
         },
-        onCloseModal() {
-            this.dialog = false;
-        },
         async deleteTask(task) {
             if (
                 !confirm(
@@ -175,9 +172,6 @@ export default {
                 this.focusTask = null;
             }
             this.taskDialog = true;
-        },
-        onCloseTaskDialog() {
-            this.taskDialog = false;
         },
     },
 };

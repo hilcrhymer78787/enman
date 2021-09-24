@@ -12,21 +12,23 @@ export default {
             { charset: 'utf-8' },
             { name: 'viewport', content: 'width=device-width, initial-scale=1' },
             { hid: 'description', name: 'description', content: '' },
-            { name: 'format-detection', content: 'telephone=no' }
+            { name: 'format-detection', content: 'telephone=no' },
+            { name: 'apple-mobile-web-app-capable', content: 'yes' },
         ],
         link: [
-            { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
+            { href: '/launch.png', rel: 'apple-touch-startup-image' },
+            { href: '/favicon.ico', rel: 'icon', type: 'image/x-icon' },
+            { href: "splashscreens/iphone5_splash.png", media: "(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)", rel: "apple-touch-startup-image" },
+            { href: "splashscreens/iphone6_splash.png", media: "(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2)", rel: "apple-touch-startup-image" },
+            { href: "splashscreens/iphoneplus_splash.png", media: "(device-width: 621px) and (device-height: 1104px) and (-webkit-device-pixel-ratio: 3)", rel: "apple-touch-startup-image" },
+            { href: "splashscreens/iphonex_splash.png", media: "(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3)", rel: "apple-touch-startup-image" },
+            { href: "splashscreens/iphonexr_splash.png", media: "(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2)", rel: "apple-touch-startup-image" },
+            { href: "splashscreens/iphonexsmax_splash.png", media: "(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3)", rel: "apple-touch-startup-image" },
+            { href: "splashscreens/ipad_splash.png", media: "(device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2)", rel: "apple-touch-startup-image" },
+            { href: "splashscreens/ipadpro1_splash.png", media: "(device-width: 834px) and (device-height: 1112px) and (-webkit-device-pixel-ratio: 2)", rel: "apple-touch-startup-image" },
+            { href: "splashscreens/ipadpro3_splash.png", media: "(device-width: 834px) and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2)", rel: "apple-touch-startup-image" },
+            { href: "splashscreens/ipadpro2_splash.png", media: "(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2)", rel: "apple-touch-startup-image" },
         ],
-        script: [
-            {
-                src:
-                    "https://cdn.jsdelivr.net/npm/pwacompat@2.0.6/pwacompat.min.js",
-                integrity:
-                    "sha384-GOaSLecPIMCJksN83HLuYf9FToOiQ2Df0+0ntv7ey8zjUHESXhthwvq9hXAZTifA",
-                crossorigin: "anonymous",
-                defer: true
-            }
-        ]
     },
     server: {
         host: '0.0.0.0'
@@ -71,11 +73,16 @@ export default {
 
     // PWA module configuration: https://go.nuxtjs.dev/pwa
     pwa: {
+        meta: {
+            theme_color: 'white',
+            appleStatusBarStyle: 'default',
+        },
         manifest: {
             name: 'enman',
             lang: 'ja',
             short_name: 'enman',
             title: 'enman',
+            background_color: 'white',
         }
     },
 

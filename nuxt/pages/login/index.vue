@@ -1,18 +1,23 @@
 <template>
-    <v-card max-width="350" class="mx-auto">
-        <v-card-title>ログイン</v-card-title>
-        <v-divider></v-divider>
-        <v-card-text>
-            <v-form v-model="noError" ref="form">
-                <v-text-field validate-on-blur @keyup.enter="login" :rules="emailRules" required label="メールアドレス" placeholder="メールアドレス" prepend-inner-icon="mdi-email" outlined v-model="form.email" color="teal"></v-text-field>
-                <v-text-field validate-on-blur @keyup.enter="login" :rules="passwordRules" required label="パスワード" placeholder="パスワード" prepend-inner-icon="mdi-lock" :append-icon="passwordShow ? 'mdi-eye' : 'mdi-eye-off'" :type="passwordShow ? 'text' : 'password'" outlined v-model="form.password" @click:append="passwordShow = !passwordShow" color="teal"></v-text-field>
-                <v-btn :loading="loading" color="teal" dark block x-large @click="login" class="mb-5">ログイン</v-btn>
-                <div class="text-center">
-                    <NuxtLink to="/login/createUser">新規ユーザー登録</NuxtLink>
-                </div>
-            </v-form>
-        </v-card-text>
-    </v-card>
+    <v-dialog :value="true" scrollable hide-overlay persistent no-click-animation>
+        <v-card max-width="350" class="mx-auto">
+            <v-card-title>ログイン</v-card-title>
+            <v-divider></v-divider>
+            <v-card-text>
+                <v-form v-model="noError" ref="form" class="pt-5">
+                    <v-text-field validate-on-blur @keyup.enter="login" :rules="emailRules" required label="メールアドレス" placeholder="メールアドレス" prepend-inner-icon="mdi-email" outlined v-model="form.email" color="teal" class="pt-5"></v-text-field>
+                    <v-text-field validate-on-blur @keyup.enter="login" :rules="passwordRules" required label="パスワード" placeholder="パスワード" prepend-inner-icon="mdi-lock" :append-icon="passwordShow ? 'mdi-eye' : 'mdi-eye-off'" :type="passwordShow ? 'text' : 'password'" outlined v-model="form.password" @click:append="passwordShow = !passwordShow" color="teal"></v-text-field>
+                </v-form>
+            </v-card-text>
+
+            <v-divider></v-divider>
+            <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn to="/login/newUser">新規ユーザー登録</v-btn>
+                <v-btn :loading="loading" color="teal" dark @click="login">ログイン</v-btn>
+            </v-card-actions>
+        </v-card>
+    </v-dialog>
 </template>
 
 <script>

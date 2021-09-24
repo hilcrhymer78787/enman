@@ -1,53 +1,55 @@
 
 <template>
     <div>
-        <v-form ref="form" v-model="noError">
-            <v-card>
+        <v-form ref="form">
+            <v-card class="mb-5">
                 <v-toolbar color="teal" dark style="box-shadow:none;">
                     <v-toolbar-title>マイページ</v-toolbar-title>
                 </v-toolbar>
                 <v-card-text class="d-flex align-center">
-                    <div class="pb-2" style="width:30%;">
-                        <v-img @click="onClickMainImg()" :v-ripple="edit" :src="editloginInfo.user_img" aspect-ratio="1" class="rounded-circle main_img"></v-img>
+                    <div class="mx-auto" style="width:30%;">
+                        <v-img :src="loginInfo.user_img" aspect-ratio="1" class="rounded-circle main_img"></v-img>
                     </div>
                     <v-spacer></v-spacer>
                     <div class="pt-2" style="width:65%;">
-                        <v-text-field validate-on-blur :rules="[v => !!v || 'Item is required']" :clearable="edit" color="teal" prepend-icon="mdi-account" :readonly="!edit" label="名前" v-model="editloginInfo.name"></v-text-field>
-                        <v-text-field validate-on-blur :rules="[v => !!v || 'Item is required']" :clearable="edit" color="teal" prepend-icon="mdi-email" :readonly="!edit" label="メールアドレス" v-model="editloginInfo.email"></v-text-field>
+                        <v-text-field class="mt-5 mb-3" dense color="teal" prepend-icon="mdi-account" readonly label="名前" v-model="loginInfo.name"></v-text-field>
+                        <v-text-field dense color="teal" prepend-icon="mdi-email" readonly label="メールアドレス" v-model="loginInfo.email"></v-text-field>
                     </div>
                 </v-card-text>
                 <v-divider></v-divider>
                 <div class="d-flex pa-3">
                     <v-spacer></v-spacer>
-                    <v-btn @click="onCloseEdit()" v-if="edit" class="mr-2">編集取消</v-btn>
-                    <v-btn @click="onSubmit()" v-if="edit" :loading="loading" dark color="teal lighten-1">確定</v-btn>
-                    <v-btn @click="logout()" v-if="!edit" class="mr-2">ログアウト</v-btn>
-                    <v-btn @click="edit = true" v-if="!edit" dark color="orange lighten-1">編集</v-btn>
+                    <v-btn @click="logout()" class="mr-2">ログアウト</v-btn>
+                    <v-btn @click="createUserDialog = true" dark color="orange lighten-1">編集</v-btn>
                 </div>
             </v-card>
         </v-form>
 
-        <v-dialog v-model="dialog" scrollable>
-            <v-card v-if="dialog">
-                <v-toolbar color="teal" dark>
-                    <v-toolbar-title>アイコン画像を選択してください</v-toolbar-title>
+        <v-form ref="form">
+            <v-card>
+                <v-toolbar color="teal" dark style="box-shadow:none;">
+                    <v-toolbar-title>マイルーム</v-toolbar-title>
                 </v-toolbar>
-                <v-divider></v-divider>
-                <v-card-text class="pa-3" style="min-height:30vh;">
-                    <ul>
-                        <li v-for="n in 99" :key="n">
-                            <v-card v-ripple>
-                                <v-img @click="onSelectedImg(n)" :src="`https://picsum.photos/500/300?image=${n}`"></v-img>
-                            </v-card>
-                        </li>
-                    </ul>
+                <v-card-text class="d-flex align-center">
+                    <div class="pb-2 mx-auto" style="width:20%;">
+                        <v-img :src="loginInfo.user_img" aspect-ratio="1" class="rounded-circle main_img"></v-img>
+                    </div>
+                    <v-spacer></v-spacer>
+                    <div class="pt-2" style="width:75%;">
+                        <v-text-field dense color="teal" prepend-icon="mdi-home" readonly label="名前" v-model="loginInfo.name"></v-text-field>
+                    </div>
                 </v-card-text>
                 <v-divider></v-divider>
-                <v-card-actions>
+                <div class="d-flex pa-3">
                     <v-spacer></v-spacer>
-                    <v-btn @click="dialog = false">Close</v-btn>
-                </v-card-actions>
+                    <v-btn class="mr-2">test</v-btn>
+                    <v-btn dark color="orange lighten-1">test</v-btn>
+                </div>
             </v-card>
+        </v-form>
+
+        <v-dialog v-model="createUserDialog" scrollable>
+            <CreateUser mode="edit" @onCloseDialog="createUserDialog = false" v-if="createUserDialog"/>
         </v-dialog>
     </div>
 </template>
@@ -58,49 +60,13 @@ import { mapState } from "vuex";
 export default {
     data() {
         return {
-            loading: false,
-            dialog: false,
-            noError: false,
-            edit: false,
-            editloginInfo: {},
+            createUserDialog: false,
         };
     },
     computed: {
         ...mapState(["loginInfo"]),
     },
     methods: {
-        onClickMainImg() {
-            if (!this.edit) {
-                return;
-            }
-            this.dialog = true;
-        },
-        onSelectedImg(n) {
-            this.editloginInfo.user_img = `https://picsum.photos/500/300?image=${n}`;
-            this.dialog = false;
-        },
-        async onSubmit() {
-            this.$refs.form.validate();
-            if (!this.noError) {
-                return;
-            }
-            this.loading = true;
-            await this.$axios
-                .put(
-                    `/api/user/update?name=${this.editloginInfo.name}&email=${this.editloginInfo.email}&user_img=${this.editloginInfo.user_img}`
-                )
-                .then((res) => {
-                    this.errorMessage = "";
-                    if (res.data.errorMessage) {
-                        this.errorMessage = res.data.errorMessage;
-                    }
-                })
-                .catch((err) => {
-                    console.log(err);
-                });
-            this.loading = false;
-            this.edit = false;
-        },
         logout() {
             if (confirm("ログアウトしますか？")) {
                 this.$cookies.remove("token");
@@ -108,38 +74,6 @@ export default {
                 this.$router.push("/login");
             }
         },
-        setLoginInfo() {
-            for (const [key, value] of Object.entries(this.loginInfo)) {
-                this.$set(this.editloginInfo, key, value);
-            }
-        },
-        onCloseEdit() {
-            this.setLoginInfo();
-            this.edit = false;
-        },
-    },
-    mounted() {
-        this.setLoginInfo();
     },
 };
 </script>
-
-<style lang="scss" scoped>
-.main_img {
-    border: 3px solid #009688;
-}
-ul {
-    padding: 0 !important;
-    display: flex;
-    flex-wrap: wrap;
-    li {
-        list-style: none;
-        width: 31%;
-        margin-right: 3.5%;
-        margin-bottom: 3.5%;
-        &:nth-child(3n) {
-            margin-right: 0;
-        }
-    }
-}
-</style>

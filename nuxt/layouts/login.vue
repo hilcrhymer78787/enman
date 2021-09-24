@@ -29,21 +29,12 @@ export default {
     li {
         list-style: none;
     }
-    a {
-        color: teal !important;
-        text-decoration: none;
-    }
     p {
         margin: 0;
     }
 }
-</style>
-<style lang="scss" scoped>
-.login_container {
-    max-height: 500px;
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.v-card__title{
+    background-color: #009688;
+    color: white;
 }
 </style>
