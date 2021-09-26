@@ -38,6 +38,17 @@ class usersTableSeeder extends Seeder
             'created_at' => date('Y-m-d H:i:s'),
             'updated_at' => date('Y-m-d H:i:s'),
           ],
+          [
+            'id' => 3,
+            'name' => '田中浩',
+            'email' => 'tanaka@gmail.com',
+            'password' => 'password',
+            'user_img' => 'https://picsum.photos/500/300?image=10',
+            'token' => 'tanaka@gmail.com'.Str::random(100),
+            'user_room_id' => 2,
+            'created_at' => date('Y-m-d H:i:s'),
+            'updated_at' => date('Y-m-d H:i:s'),
+          ],
       ]);
     }
 }

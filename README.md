@@ -22,12 +22,19 @@ http://localhost:8080/
 
 work 担当重複阻止
 
-user
-    create
-    update
-    delete
 room
     create
     read
     update
     delete
+
+invitation
+    create
+    read
+    update
+    delete
+
+invitation_status
+    0:未確認
+    1:確認済
+    2:参加済

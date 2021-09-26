@@ -33,8 +33,8 @@ class TaskController extends Controller
             ->get();
 
             foreach($works as $work){
-                $work['work_user_name'] = USER::find($work['work_user_id'])->name;
-                $work['work_user_img'] = USER::find($work['work_user_id'])->user_img;
+                $work['work_user_name'] = User::find($work['work_user_id'])->name;
+                $work['work_user_img'] = User::find($work['work_user_id'])->user_img;
             }
 
             $task['works'] = $works;

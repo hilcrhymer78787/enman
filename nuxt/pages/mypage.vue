@@ -32,24 +32,29 @@
                 </v-toolbar>
                 <v-card-text class="d-flex align-center">
                     <div class="pb-2 mx-auto" style="width:20%;">
-                        <v-img :src="loginInfo.user_img" aspect-ratio="1" class="rounded-circle main_img"></v-img>
+                        <v-img :src="loginInfo.room_img" aspect-ratio="1" class="rounded-circle main_img"></v-img>
                     </div>
                     <v-spacer></v-spacer>
                     <div class="pt-2" style="width:75%;">
-                        <v-text-field dense color="teal" prepend-icon="mdi-home" readonly label="名前" v-model="loginInfo.name"></v-text-field>
+                        <v-text-field dense color="teal" prepend-icon="mdi-home" readonly label="名前" v-model="loginInfo.room_name"></v-text-field>
+                        <!-- <v-select v-model="form.taskDefaultMinute" :items="$MINUTE" :rules="[v => !!v || 'Item is required']" label="想定時間" prepend-icon="mdi-clock-outline" required item-value="val" item-text="txt"></v-select> -->
                     </div>
                 </v-card-text>
                 <v-divider></v-divider>
                 <div class="d-flex pa-3">
                     <v-spacer></v-spacer>
-                    <v-btn class="mr-2">test</v-btn>
-                    <v-btn dark color="orange lighten-1">test</v-btn>
+                    <v-btn @click="openCreateRoomDialog('create')" class="mr-2">新規</v-btn>
+                    <v-btn @click="openCreateRoomDialog('edit')" dark color="orange lighten-1">編集</v-btn>
                 </div>
             </v-card>
         </v-form>
 
         <v-dialog v-model="createUserDialog" scrollable>
-            <CreateUser mode="edit" @onCloseDialog="createUserDialog = false" v-if="createUserDialog"/>
+            <CreateUser mode="edit" @onCloseDialog="createUserDialog = false" v-if="createUserDialog" />
+        </v-dialog>
+
+        <v-dialog v-model="createRoomDialog" scrollable>
+            <CreateRoom :mode="modeCreateRoomDialog" @onCloseDialog="createRoomDialog = false" v-if="createRoomDialog" />
         </v-dialog>
     </div>
 </template>
@@ -61,6 +66,8 @@ export default {
     data() {
         return {
             createUserDialog: false,
+            modeCreateRoomDialog: false,
+            createRoomDialog: false,
         };
     },
     computed: {
@@ -74,6 +81,18 @@ export default {
                 this.$router.push("/login");
             }
         },
+        openCreateRoomDialog(mode) {
+            this.modeCreateRoomDialog = mode;
+            this.createRoomDialog = true;
+        },
+    },
+    mounted() {
+        this.$axios
+            .get(`/api/room/read?token=${this.$store.state.loginInfo.token}`)
+            .then((res) => {
+                console.log(res.data);
+            })
+            .catch((err) => {});
     },
 };
 </script>

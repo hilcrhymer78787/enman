@@ -1,0 +1,52 @@
+<?php
+
+namespace Database\Seeders;
+
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+
+class InvitationsTableSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        DB::table('invitations')->insert([
+            [
+              'invitation_room_id' => 1,
+              'invitation_from_user_id' => 1,
+              'invitation_to_user_id' => 1,
+              'invitation_status' => 2,
+              'created_at' => date('Y-m-d H:i:s'),
+              'updated_at' => date('Y-m-d H:i:s'),
+            ],
+            [
+              'invitation_room_id' => 2,
+              'invitation_from_user_id' => 1,
+              'invitation_to_user_id' => 1,
+              'invitation_status' => 2,
+              'created_at' => date('Y-m-d H:i:s'),
+              'updated_at' => date('Y-m-d H:i:s'),
+            ],
+            [
+              'invitation_room_id' => 1,
+              'invitation_from_user_id' => 1,
+              'invitation_to_user_id' => 2,
+              'invitation_status' => 2,
+              'created_at' => date('Y-m-d H:i:s'),
+              'updated_at' => date('Y-m-d H:i:s'),
+            ],
+            [
+              'invitation_room_id' => 3,
+              'invitation_from_user_id' => 2,
+              'invitation_to_user_id' => 2,
+              'invitation_status' => 2,
+              'created_at' => date('Y-m-d H:i:s'),
+              'updated_at' => date('Y-m-d H:i:s'),
+            ],
+         ]);
+    }
+}

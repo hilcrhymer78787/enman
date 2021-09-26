@@ -11,5 +11,7 @@ class Room extends Model
 
     protected $fillable = [
       'room_name',
+      'room_token',
+      'room_img',
     ];
 }

@@ -9,16 +9,19 @@ use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
-
     public function login_info(Request $request)
     {
         if($request->token){
-            $data = User::where('token', $request->token)->get();
+            $data = User::where('token', $request->token)
+            ->leftjoin('rooms', 'users.user_room_id', '=', 'rooms.room_id')
+            ->get()[0];
         }elseif($request->email){
             $data = User::where('email', $request->email)
-            ->where('password',$request->password)->get();
+            ->where('password',$request->password)
+            ->leftjoin('rooms', 'users.user_room_id', '=', 'rooms.room_id')
+            ->get()[0];
         }
-        return $data[0];
+        return $data;
     }
     public function create(Request $request, User $user)
     {
