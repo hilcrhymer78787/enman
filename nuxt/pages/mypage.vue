@@ -43,7 +43,7 @@
                 <v-divider></v-divider>
                 <div class="d-flex pa-3">
                     <v-spacer></v-spacer>
-                    <v-btn @click="openCreateRoomDialog('create')" class="mr-2">新規</v-btn>
+                    <v-btn @click="openCreateRoomDialog('create')" class="mr-2">新規作成</v-btn>
                     <v-btn @click="openCreateRoomDialog('edit')" dark color="orange lighten-1">編集</v-btn>
                 </div>
             </v-card>

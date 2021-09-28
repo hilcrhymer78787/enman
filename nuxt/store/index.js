@@ -1,5 +1,3 @@
-import moment from 'moment'
-
 export const state = () => ({
     loginInfo: {},
     users: [],
@@ -66,7 +64,6 @@ export const actions = {
         this.$axios.get(`/api/user/read?token=${state.loginInfo.token}`)
             .then((res) => {
                 commit('setUsers', res.data)
-
             })
             .catch((err) => {
                 console.log(err)

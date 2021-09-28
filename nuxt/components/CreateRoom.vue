@@ -8,7 +8,7 @@
         <v-card-text>
             <v-form v-model="noError" ref="form" class="pt-5">
                 <v-img @click="imagePickerDialog = true" :src="form.room_img" aspect-ratio="1" style="width:30%;" class="rounded-circle main_img mb-5 mx-auto"></v-img>
-                <v-text-field validate-on-blur @keyup.enter="login" :rules="nameRules" required label="部屋名" placeholder="部屋名" prepend-inner-icon="mdi-home" outlined v-model="form.room_name" color="teal"></v-text-field>
+                <v-text-field validate-on-blur :rules="nameRules" required label="部屋名" placeholder="部屋名" prepend-inner-icon="mdi-home" outlined v-model="form.room_name" color="teal"></v-text-field>
                 <p v-if="errorMessage && noError" class="error_message mb-2">{{errorMessage}}</p>
             </v-form>
         </v-card-text>
@@ -17,7 +17,7 @@
             <!-- <v-btn v-if="mode=='edit'" :loading="loading" color="error" dark @click="deleteAccount()">アカウント削除</v-btn> -->
             <v-spacer></v-spacer>
             <v-btn @click="$emit('onCloseDialog')">CLOSE</v-btn>
-            <v-btn :loading="loading" color="teal" dark @click="login()">登録</v-btn>
+            <v-btn :loading="loading" color="teal" dark @click="createRoom()">登録</v-btn>
         </v-card-actions>
 
         <v-dialog v-model="imagePickerDialog" scrollable>
@@ -49,7 +49,7 @@ export default {
         ...mapState(["loginInfo"]),
     },
     methods: {
-        async login() {
+        async createRoom() {
             this.errorMessage = "";
             this.$refs.form.validate();
             // バリデーションエラー
