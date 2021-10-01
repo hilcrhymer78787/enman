@@ -56,24 +56,21 @@ export default {
             if (!this.noError) {
                 return;
             }
-            // ログインAPI
             this.loading = true;
             await this.$axios
                 .post(
                     `/api/room/create?token=${this.loginInfo.token}&room_id=${this.form.room_id}&room_name=${this.form.room_name}&room_img=${this.form.room_img}`
                 )
-                .then((res) => {
-                    console.log(res.data);
-                    this.$emit("onCloseDialog");
-                })
                 .catch((err) => {
-                    alert('通信に失敗しました')
+                    alert("通信に失敗しました");
                 });
-            await this.$store.dispatch("setLoginInfoByToken")
+            await this.$store.dispatch("setLoginInfoByToken");
+            await this.$emit("getRoom");
+            await this.$store.dispatch("setTodayTasks");
+            this.$emit("onCloseDialog");
             this.loading = false;
         },
         onSelectedImg(n) {
-            console.log(n);
             this.$set(
                 this.form,
                 "room_img",

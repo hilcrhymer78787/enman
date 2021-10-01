@@ -97,7 +97,6 @@ export default {
                     `/api/user/create?token=${this.form.token}&id=${this.form.id}&name=${this.form.name}&email=${this.form.email}&password=${this.form.password}&user_img=${this.form.user_img}`
                 )
                 .then((res) => {
-                    console.log(res.data);
                     this.errorMessage = "";
                     if (res.data.errorMessage) {
                         this.errorMessage = res.data.errorMessage;
@@ -119,7 +118,6 @@ export default {
             this.loading = false;
         },
         onSelectedImg(n) {
-            console.log(n);
             this.$set(
                 this.form,
                 "user_img",
@@ -145,11 +143,10 @@ export default {
             await this.$axios
                 .delete(`/api/user/delete?token=${this.form.token}`)
                 .then((res) => {
-                    console.log(res.data);
                     this.$emit("onCloseDialog");
                 })
                 .catch((err) => {
-                    console.log(err);
+                    alert("通信に失敗しました");
                 });
             // ログアウト
             this.$cookies.remove("token");
@@ -160,7 +157,6 @@ export default {
     },
     mounted() {
         if (this.mode == "edit") {
-            console.log(this.loginInfo);
             this.$set(this.form, "token", this.loginInfo.token);
             this.$set(this.form, "id", this.loginInfo.id);
             this.$set(this.form, "name", this.loginInfo.name);

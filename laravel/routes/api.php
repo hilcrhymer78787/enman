@@ -25,9 +25,10 @@ Route::get('/task/show', 'TaskController@show');
 Route::delete('/task/delete', 'TaskController@delete');
 
 // 完成
-Route::get('/user/login_info', 'UserController@login_info');
+Route::get('/read', 'UserController@read');
 Route::post('/user/create', 'UserController@create');
 Route::get('/user/read', 'UserController@read');
+Route::put('/user/update/room_id', 'UserController@updateRoomId');
 Route::delete('/user/delete', 'UserController@delete');
 
 // 完成
@@ -35,7 +36,7 @@ Route::post('/work/create', 'WorkController@create');
 Route::get('/work/read', 'WorkController@read');
 Route::delete('/work/delete', 'WorkController@delete');
 
-
+// ルーム
 Route::get('/room/read', 'RoomController@read');
 Route::post('/room/create', 'RoomController@create');
 

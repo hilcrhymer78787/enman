@@ -57,8 +57,13 @@ class RoomController extends Controller
             $user->where("id", $userId)->update([
                 "user_room_id" => $roomId,
             ]);
+        }else{
+            // 編集
+            $room->where("room_id", $request["room_id"])->update([
+                "room_name" => $request["room_name"],
+                "room_img" => $request["room_img"],
+            ]);
         }
-        return $roomId;
 
         // $rooms = Invitation::where('invitation_to_user_id', $userId)
         // ->where('invitation_status', 2)

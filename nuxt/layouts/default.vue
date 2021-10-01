@@ -47,15 +47,6 @@ export default {
             ],
         };
     },
-    methods: {
-        mountedFunc() {
-            this.$store.dispatch("setUsers");
-            // await this.$store.dispatch("setWorks");
-        },
-    },
-    mounted() {
-        this.mountedFunc();
-    },
 };
 </script>
 <style lang="scss">

@@ -36,8 +36,7 @@
                     </div>
                     <v-spacer></v-spacer>
                     <div class="pt-2" style="width:75%;">
-                        <v-text-field dense color="teal" prepend-icon="mdi-home" readonly label="名前" v-model="loginInfo.room_name"></v-text-field>
-                        <!-- <v-select v-model="form.taskDefaultMinute" :items="$MINUTE" :rules="[v => !!v || 'Item is required']" label="想定時間" prepend-icon="mdi-clock-outline" required item-value="val" item-text="txt"></v-select> -->
+                        <v-select @change="onChangeRoom()" :radonly="getRoomLoading || onChangeRoomloading" :loading="getRoomLoading || onChangeRoomloading" v-model="selectedRoomId" color="teal" prepend-icon="mdi-home" label="部屋名" :items="rooms" item-value="room_id" item-text="room_name" dense></v-select>
                     </div>
                 </v-card-text>
                 <v-divider></v-divider>
@@ -54,7 +53,7 @@
         </v-dialog>
 
         <v-dialog v-model="createRoomDialog" scrollable>
-            <CreateRoom :mode="modeCreateRoomDialog" @onCloseDialog="createRoomDialog = false" v-if="createRoomDialog" />
+            <CreateRoom :mode="modeCreateRoomDialog" @getRoom="getRoom" @onCloseDialog="createRoomDialog = false" v-if="createRoomDialog" />
         </v-dialog>
     </div>
 </template>
@@ -65,6 +64,10 @@ import { mapState } from "vuex";
 export default {
     data() {
         return {
+            selectedRoomId: 0,
+            rooms: [],
+            onChangeRoomloading: false,
+            getRoomLoading: false,
             createUserDialog: false,
             modeCreateRoomDialog: false,
             createRoomDialog: false,
@@ -85,14 +88,35 @@ export default {
             this.modeCreateRoomDialog = mode;
             this.createRoomDialog = true;
         },
+        async onChangeRoom() {
+            this.onChangeRoomloading = true;
+            await this.$axios
+                .put(
+                    `/api/user/update/room_id?token=${this.loginInfo.token}&room_id=${this.selectedRoomId}`
+                )
+                .catch((err) => {
+                    alert("通信に失敗しました");
+                });
+            await this.$store.dispatch("setLoginInfoByToken");
+            await this.$store.dispatch("setTodayTasks");
+            this.onChangeRoomloading = false;
+        },
+        async getRoom() {
+            this.getRoomLoading = true;
+            await this.$axios
+                .get(
+                    `/api/room/read?token=${this.$store.state.loginInfo.token}`
+                )
+                .then((res) => {
+                    this.rooms = res.data;
+                })
+                .catch((err) => {});
+            this.selectedRoomId = this.loginInfo.room_id;
+            this.getRoomLoading = false;
+        },
     },
-    mounted() {
-        this.$axios
-            .get(`/api/room/read?token=${this.$store.state.loginInfo.token}`)
-            .then((res) => {
-                console.log(res.data);
-            })
-            .catch((err) => {});
+    async mounted() {
+        await this.getRoom();
     },
 };
 </script>

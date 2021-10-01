@@ -95,7 +95,6 @@ export default {
         onFocusTask(task) {
             this.dialog = true;
             this.focusTask = task;
-            console.log(this.tasks);
         },
         async onClickCheckBoxBlank(task, taskIndex) {
             this.$set(this.loadings, taskIndex, true);
@@ -135,9 +134,6 @@ export default {
                 .delete(
                     `/api/work/delete?token=${this.$store.state.loginInfo.token}&date=${date}&task_id=${task_id}`
                 )
-                .then((res) => {
-                    console.log(res.data);
-                });
             if (this.mode == "today") {
                 await this.$store.dispatch("setTodayTasks");
             } else {
@@ -159,9 +155,6 @@ export default {
                 .delete(
                     `/api/task/delete?token=${this.$store.state.loginInfo.token}&task_id=${task_id}`
                 )
-                .then((res) => {
-                    console.log(res.data);
-                });
             await this.$store.dispatch("setTodayTasks");
             this.deleteTaskLoading = false;
         },

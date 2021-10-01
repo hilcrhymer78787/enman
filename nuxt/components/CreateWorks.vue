@@ -44,7 +44,7 @@ export default {
     methods: {
         users(userId) {
             let outputData = [];
-            this.$store.state.users.forEach((user) => {
+            this.$store.state.loginInfo.room_users.forEach((user) => {
                 const userDuplicateJudge =
                     this.task.works.filter(
                         (work) => work.work_user_id == user.id
@@ -84,7 +84,6 @@ export default {
                     this.task
                 )
                 .then((res) => {
-                    console.log(res.data);
                     if (this.mode == "today") {
                         this.$store.dispatch("setTodayTasks");
                     } else {
@@ -92,7 +91,7 @@ export default {
                     }
                 })
                 .catch((err) => {
-                    console.log(err);
+                    alert("通信に失敗しました");
                 })
                 .finally(() => {
                     this.saveLoading = false;
@@ -110,13 +109,9 @@ export default {
             this.deleteLoading = true;
             const date = this.date;
             const task_id = this.task.task_id;
-            await this.$axios
-                .delete(
-                    `/api/work/delete?token=${this.$store.state.loginInfo.token}&date=${date}&task_id=${task_id}`
-                )
-                .then((res) => {
-                    console.log(res.data);
-                });
+            await this.$axios.delete(
+                `/api/work/delete?token=${this.$store.state.loginInfo.token}&date=${date}&task_id=${task_id}`
+            );
             if (this.mode == "today") {
                 await this.$store.dispatch("setTodayTasks");
             } else {
@@ -127,6 +122,7 @@ export default {
         },
     },
     mounted() {
+        this.$store.dispatch("setLoginInfoByToken");
         this.$set(this.task, "date", this.date);
         for (const [key, value] of Object.entries(this.focusTask)) {
             if (Array.isArray(value)) {
@@ -148,7 +144,6 @@ export default {
             this.$set(obj, "work_user_id", 0);
             this.$set(obj, "work_minute", this.focusTask.task_default_minute);
             this.task.works.push(obj);
-            console.log(obj);
         }
     },
 };

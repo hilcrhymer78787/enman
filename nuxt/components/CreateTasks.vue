@@ -46,11 +46,10 @@ export default {
                     this.form
                 )
                 .then((res) => {
-                    console.log(res.data)
                     this.$store.dispatch("setTodayTasks");
                 })
                 .catch((err) => {
-                    console.log(err);
+                    alert("通信に失敗しました");
                 })
                 .finally(() => {
                     this.loading = false;
@@ -59,7 +58,6 @@ export default {
         },
     },
     mounted() {
-        console.log(this.focusTask);
         if (this.focusTask) {
             this.$set(this.form, "taskId", this.focusTask.task_id);
             this.$set(this.form, "taskName", this.focusTask.task_name);
