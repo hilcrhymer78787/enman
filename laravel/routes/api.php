@@ -34,7 +34,7 @@ Route::delete('/user/delete', 'UserController@delete');
 // 完成
 Route::post('/work/create', 'WorkController@create');
 Route::get('/work/read', 'WorkController@read');
-// Route::delete('/work/delete', 'WorkController@delete');
+Route::delete('/work/delete', 'WorkController@delete');
 
 // 完成
 Route::get('/room/read', 'RoomController@read');

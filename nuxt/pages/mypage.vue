@@ -36,9 +36,9 @@
                     </div>
                     <v-spacer></v-spacer>
                     <div class="pt-2" style="width:75%;">
-                        <v-select @change="onChangeRoom()" :radonly="onChangeRoomloading" :loading="onChangeRoomloading" v-model="selectedRoomId" color="teal" prepend-icon="mdi-home" label="部屋名" :items="loginInfo.rooms" item-value="room_id" item-text="room_name" class="my-5" dense></v-select>
-                        <v-text-field :value="roomMateNames(loginInfo.room_joined_users)" radonly color="teal" prepend-icon="mdi-account-group" label="ルームメイト" dense style="font-size:12px;"></v-text-field>
-                        <v-text-field :value="roomMateNames(loginInfo.room_inviting_users)" v-if="loginInfo.room_inviting_users.length" radonly color="teal" prepend-icon="mdi-account-plus" label="招待中" dense style="font-size:12px;"></v-text-field>
+                        <v-select @change="onChangeRoom()" :readonly="onChangeRoomloading" :loading="onChangeRoomloading" v-model="selectedRoomId" color="teal" prepend-icon="mdi-home" label="部屋名" :items="loginInfo.rooms" item-value="room_id" item-text="room_name" class="my-5" dense></v-select>
+                        <v-text-field :value="roomMateNames(loginInfo.room_joined_users)" readonly color="teal" prepend-icon="mdi-account-group" label="ルームメイト" dense style="font-size:12px;"></v-text-field>
+                        <v-text-field :value="roomMateNames(loginInfo.room_inviting_users)" v-if="loginInfo.room_inviting_users.length" readonly color="teal" prepend-icon="mdi-account-plus" label="招待中" dense style="font-size:12px;"></v-text-field>
                     </div>
                 </v-card-text>
                 <v-divider></v-divider>
@@ -61,9 +61,9 @@
                     </div>
                     <v-spacer></v-spacer>
                     <div class="pt-2" style="width:75%;">
-                        <v-text-field v-model="room.room_name" radonly color="teal" prepend-icon="mdi-home" label="部屋名" class="my-3" dense></v-text-field>
-                        <v-text-field :value="roomMateNames(room.joined_users)" radonly color="teal" prepend-icon="mdi-account-group" label="ルームメイト" dense style="font-size:12px;"></v-text-field>
-                        <v-text-field :value="roomMateNames(room.inviting_users)" v-if="room.inviting_users.length" radonly color="teal" prepend-icon="mdi-account-plus" label="招待中" dense style="font-size:12px;"></v-text-field>
+                        <v-text-field v-model="room.room_name" readonly color="teal" prepend-icon="mdi-home" label="部屋名" class="my-3" dense></v-text-field>
+                        <v-text-field :value="roomMateNames(room.joined_users)" readonly color="teal" prepend-icon="mdi-account-group" label="ルームメイト" dense style="font-size:12px;"></v-text-field>
+                        <v-text-field :value="roomMateNames(room.inviting_users)" v-if="room.inviting_users.length" readonly color="teal" prepend-icon="mdi-account-plus" label="招待中" dense style="font-size:12px;"></v-text-field>
                     </div>
                 </v-card-text>
                 <div class="d-flex px-3 pb-3">

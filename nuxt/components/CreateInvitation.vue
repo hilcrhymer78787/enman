@@ -67,8 +67,6 @@ export default {
                     alert("通信に失敗しました");
                 });
             await this.$store.dispatch("setLoginInfoByToken");
-            // await this.$store.dispatch("setTodayTasks");
-            // this.$emit("onCloseDialog");
             this.loading = false;
         },
         onSelectedImg(n) {
