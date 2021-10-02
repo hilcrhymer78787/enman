@@ -43,4 +43,31 @@ class InvitationController extends Controller
         $data = Invitation::get();
         return $data;
     }
+    public function update(Request $request, Invitation $invitation)
+    {
+        $loginInfo = User::where('token', $request["token"])->first();
+        if(!isset($loginInfo)){
+            return;
+        }
+
+        $invitation->where("invitation_id", $request["invitation_id"])->update([
+            "invitation_status" => 2,
+        ]);
+
+        $invitationData = Invitation::where('invitation_id', $request["invitation_id"])->first();
+
+        User::where("id", $loginInfo['id'])->update([
+            "user_room_id" => $invitationData['invitation_room_id'],
+        ]);
+    }
+    public function delete(Request $request, Invitation $invitation)
+    {
+        $loginInfo = User::where('token', $request["token"])->first();
+        if(!isset($loginInfo)){
+            return;
+        }
+
+        Invitation::where('invitation_id', $request['invitation_id'])
+        ->delete();
+    }
 }

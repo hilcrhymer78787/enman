@@ -41,5 +41,7 @@ Route::get('/room/read', 'RoomController@read');
 Route::post('/room/create', 'RoomController@create');
 
 
-Route::get('/invitation/read', 'InvitationController@read');
 Route::post('/invitation/create', 'InvitationController@create');
+Route::get('/invitation/read', 'InvitationController@read');
+Route::put('/invitation/update', 'InvitationController@update');
+Route::delete('/invitation/delete', 'InvitationController@delete');

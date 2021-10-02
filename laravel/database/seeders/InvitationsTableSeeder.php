@@ -34,6 +34,12 @@ class InvitationsTableSeeder extends Seeder
               'invitation_status' => 2,
             ],
             [
+              'invitation_room_id' => 4,
+              'invitation_from_user_id' => 4,
+              'invitation_to_user_id' => 4,
+              'invitation_status' => 2,
+            ],
+            [
               'invitation_room_id' => 1,
               'invitation_from_user_id' => 1,
               'invitation_to_user_id' => 2,
@@ -56,6 +62,24 @@ class InvitationsTableSeeder extends Seeder
               'invitation_from_user_id' => 2,
               'invitation_to_user_id' => 1,
               'invitation_status' => 0,
+            ],
+            [
+                'invitation_room_id' => 4,
+                'invitation_from_user_id' => 4,
+                'invitation_to_user_id' => 1,
+                'invitation_status' => 1,
+            ],
+            [
+                'invitation_room_id' => 2,
+                'invitation_from_user_id' => 2,
+                'invitation_to_user_id' => 3,
+                'invitation_status' => 2,
+            ],
+            [
+                'invitation_room_id' => 2,
+                'invitation_from_user_id' => 2,
+                'invitation_to_user_id' => 4,
+                'invitation_status' => 1,
             ],
          ]);
     }

@@ -13,6 +13,7 @@ class UserController extends Controller
 {
     public function read(Request $request)
     {
+        // 個人情報取得
         if($request->token){
             // トークン認証
             $loginInfo = User::where('token', $request->token)
@@ -49,6 +50,28 @@ class UserController extends Controller
         ->select('invitation_id', 'room_id', 'room_name', 'room_img')
         ->get();
 
+        // 招待されている部屋(未確認)
+        $loginInfo["invited_rooms"] = Invitation::where('invitation_to_user_id', $loginInfo['id'])
+        ->where('invitation_status', '<', 2)
+        ->leftjoin('rooms', 'invitations.invitation_room_id', '=', 'rooms.room_id')
+        ->leftjoin('users', 'invitations.invitation_from_user_id', '=', 'users.id')
+        ->select('invitation_id', 'invitation_status', 'room_id', 'room_name', 'room_img', 'name')
+        ->get();
+
+            foreach($loginInfo["invited_rooms"] as $room){
+                // 参加しているユーザー
+                $room["joined_users"] = Invitation::where('invitation_room_id', $room["room_id"])
+                ->where('invitation_status', 2)
+                ->leftjoin('users', 'invitations.invitation_to_user_id', '=', 'users.id')
+                ->select('id', 'name')
+                ->get();
+                // 招待中のユーザー
+                $room["inviting_users"] = Invitation::where('invitation_room_id', $room["room_id"])
+                ->where('invitation_status', '<', 2)
+                ->leftjoin('users', 'invitations.invitation_to_user_id', '=', 'users.id')
+                ->select('id', 'name')
+                ->get();
+            }
         return $loginInfo;
     }
     public function create(Request $request, Room $room, User $user, Invitation $invitation)

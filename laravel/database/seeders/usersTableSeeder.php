@@ -24,8 +24,6 @@ class usersTableSeeder extends Seeder
             'user_img' => 'https://picsum.photos/500/300?image=30',
             'token' => 'yusan@gmail.com'.Str::random(100),
             'user_room_id' => 1,
-            'created_at' => date('Y-m-d H:i:s'),
-            'updated_at' => date('Y-m-d H:i:s'),
           ],
           [
             'id' => 2,
@@ -35,8 +33,6 @@ class usersTableSeeder extends Seeder
             'user_img' => 'https://picsum.photos/500/300?image=40',
             'token' => 'kottan@gmail.com'.Str::random(100),
             'user_room_id' => 1,
-            'created_at' => date('Y-m-d H:i:s'),
-            'updated_at' => date('Y-m-d H:i:s'),
           ],
           [
             'id' => 3,
@@ -46,8 +42,15 @@ class usersTableSeeder extends Seeder
             'user_img' => 'https://picsum.photos/500/300?image=10',
             'token' => 'tanaka@gmail.com'.Str::random(100),
             'user_room_id' => 2,
-            'created_at' => date('Y-m-d H:i:s'),
-            'updated_at' => date('Y-m-d H:i:s'),
+          ],
+          [
+            'id' => 4,
+            'name' => '山田隆',
+            'email' => 'yamada@gmail.com',
+            'password' => 'password',
+            'user_img' => 'https://picsum.photos/500/300?image=11',
+            'token' => 'yamada@gmail.com'.Str::random(100),
+            'user_room_id' => 2,
           ],
       ]);
     }

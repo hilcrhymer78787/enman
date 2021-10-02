@@ -6,15 +6,30 @@
             </v-container>
         </v-main>
         <v-bottom-navigation app light fixed color="teal">
-            <v-btn :style="`width:calc(100% / ${navs.length}); height:100%;background-color:white;`" v-for="(nav, i) in navs" :key="i" :to="nav.to" router light exact>
-                <span>{{ nav.txt }}</span>
-                <v-icon>{{ nav.icon }}</v-icon>
+            <v-btn :style="`width:calc(100% / 3); height:100%;background-color:white;`" to="/" router light exact>
+                <span>毎日タスク</span>
+                <v-badge :value="false" color="teal" offset-x="5" offset-y="15">
+                    <v-icon>mdi-playlist-check</v-icon>
+                </v-badge>
+            </v-btn>
+            <v-btn :style="`width:calc(100% / 3); height:100%;background-color:white;`" to="/calendar" router light exact>
+                <span>カレンダー</span>
+                <v-badge :value="false" color="teal" offset-x="5" offset-y="15">
+                    <v-icon>mdi-calendar-check</v-icon>
+                </v-badge>
+            </v-btn>
+            <v-btn :style="`width:calc(100% / 3); height:100%;background-color:white;`" to="/mypage" router light exact>
+                <span>マイページ</span>
+                <v-badge :value="loginInfo.invited_rooms.length" color="teal" offset-x="5" offset-y="15" :content="loginInfo.invited_rooms.length">
+                    <v-icon>mdi-account</v-icon>
+                </v-badge>
             </v-btn>
         </v-bottom-navigation>
     </v-app>
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
     async middleware({ store, redirect }) {
         if (store.state.loginInfo.id) {
@@ -25,31 +40,9 @@ export default {
             redirect("/login");
         }
     },
-    data() {
-        return {
-            navs: [
-                // https://materialdesignicons.com/
-                {
-                    icon: "mdi-playlist-check ",
-                    txt: "毎日タスク",
-                    to: "/",
-                },
-                {
-                    icon: "mdi-calendar-check",
-                    txt: "カレンダー",
-                    to: "/calendar",
-                },
-                {
-                    icon: "mdi-account",
-                    txt: "マイページ",
-                    to: "/mypage",
-                },
-            ],
-        };
+    computed: {
+        ...mapState(["loginInfo"]),
     },
-    mounted(){
-        console.log(this.$store.state.loginInfo)
-    }
 };
 </script>
 <style lang="scss">

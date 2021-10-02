@@ -40,6 +40,7 @@ export const actions = {
         }
         await this.$axios.get(`/api/user/read?token=${token}`)
             .then((res) => {
+                console.log(res.data)
                 commit('setLoginInfo', res.data)
             })
             .catch(()=>{
