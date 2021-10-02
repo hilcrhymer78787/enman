@@ -1,5 +1,5 @@
 <template>
-    <v-card max-width="350" class="login-card mx-auto">
+    <v-card max-width="350" class="mx-auto">
         <v-card-title>
             <span v-if="mode == 'create'">新規ルーム作成</span>
             <span v-if="mode == 'edit'">ルーム編集</span>
@@ -15,6 +15,7 @@
         <v-divider></v-divider>
         <v-card-actions>
             <!-- <v-btn v-if="mode=='edit'" :loading="loading" color="error" dark @click="deleteAccount()">アカウント削除</v-btn> -->
+            <v-btn @click="createInvitationDialog = true" v-if="mode == 'edit'">招待</v-btn>
             <v-spacer></v-spacer>
             <v-btn @click="$emit('onCloseDialog')">CLOSE</v-btn>
             <v-btn :loading="loading" color="teal" dark @click="createRoom()">登録</v-btn>
@@ -22,6 +23,10 @@
 
         <v-dialog v-model="imagePickerDialog" scrollable>
             <ImagePicker @onSelectedImg="onSelectedImg" @onCloseDialog="imagePickerDialog = false" v-if="imagePickerDialog" />
+        </v-dialog>
+
+        <v-dialog v-model="createInvitationDialog" scrollable>
+            <CreateInvitation @onCloseDialog="createInvitationDialog = false" v-if="createInvitationDialog" />
         </v-dialog>
 
     </v-card>
@@ -37,6 +42,7 @@ export default {
             noError: false,
             errorMessage: "",
             imagePickerDialog: false,
+            createInvitationDialog: false,
             form: {
                 room_id: 0,
                 room_name: "",
@@ -65,7 +71,6 @@ export default {
                     alert("通信に失敗しました");
                 });
             await this.$store.dispatch("setLoginInfoByToken");
-            await this.$emit("getRoom");
             await this.$store.dispatch("setTodayTasks");
             this.$emit("onCloseDialog");
             this.loading = false;

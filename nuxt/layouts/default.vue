@@ -47,6 +47,9 @@ export default {
             ],
         };
     },
+    mounted(){
+        console.log(this.$store.state.loginInfo)
+    }
 };
 </script>
 <style lang="scss">

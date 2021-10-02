@@ -44,7 +44,7 @@ export default {
     methods: {
         users(userId) {
             let outputData = [];
-            this.$store.state.loginInfo.room_users.forEach((user) => {
+            this.$store.state.loginInfo.room_joined_users.forEach((user) => {
                 const userDuplicateJudge =
                     this.task.works.filter(
                         (work) => work.work_user_id == user.id

@@ -14,23 +14,42 @@ class UserController extends Controller
     public function read(Request $request)
     {
         if($request->token){
-            $user = User::where('token', $request->token)
+            // トークン認証
+            $loginInfo = User::where('token', $request->token)
             ->leftjoin('rooms', 'users.user_room_id', '=', 'rooms.room_id')
-            ->select('id', 'name', 'email', 'user_img', 'room_id','room_img','room_name','room_token','token')
-            ->get()[0];
+            ->select('id', 'name', 'email', 'user_img', 'room_id','room_img','room_name','token')
+            ->first();
         }elseif($request->email){
-            $user = User::where('email', $request->email)
+            // ベーシック認証
+            $loginInfo = User::where('email', $request->email)
             ->where('password',$request->password)
             ->leftjoin('rooms', 'users.user_room_id', '=', 'rooms.room_id')
-            ->select('id', 'name', 'email', 'user_img', 'room_id','room_img','room_name','room_token','token')
-            ->get()[0];
+            ->select('id', 'name', 'email', 'user_img', 'room_id','room_img','room_name','token')
+            ->first();
         }
 
-        $user["room_users"] = User::where('user_room_id', $user["room_id"])
-        ->select('id', 'name')
+        // 参加しているユーザー
+        $loginInfo["room_joined_users"] = Invitation::where('invitation_room_id', $loginInfo['room_id'])
+        ->where('invitation_status', 2)
+        ->leftjoin('users', 'invitations.invitation_to_user_id', '=', 'users.id')
+        ->select('id', 'name', 'email', 'user_img')
         ->get();
 
-        return $user;
+        // 招待中のユーザー
+        $loginInfo["room_inviting_users"] = Invitation::where('invitation_room_id', $loginInfo['room_id'])
+        ->where('invitation_status', '<', 2)
+        ->leftjoin('users', 'invitations.invitation_to_user_id', '=', 'users.id')
+        ->select('id', 'name', 'email', 'user_img')
+        ->get();
+
+        // 参加しているルーム
+        $loginInfo["rooms"] = Invitation::where('invitation_to_user_id', $loginInfo['id'])
+        ->where('invitation_status', 2)
+        ->leftjoin('rooms', 'invitations.invitation_room_id', '=', 'rooms.room_id')
+        ->select('invitation_id', 'room_id', 'room_name', 'room_img')
+        ->get();
+
+        return $loginInfo;
     }
     public function create(Request $request, Room $room, User $user, Invitation $invitation)
     {

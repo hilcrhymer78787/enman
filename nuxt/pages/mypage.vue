@@ -26,7 +26,7 @@
         </v-form>
 
         <v-form ref="form">
-            <v-card>
+            <v-card class="mb-5">
                 <v-toolbar color="teal" dark style="box-shadow:none;">
                     <v-toolbar-title>マイルーム</v-toolbar-title>
                 </v-toolbar>
@@ -36,14 +36,16 @@
                     </div>
                     <v-spacer></v-spacer>
                     <div class="pt-2" style="width:75%;">
-                        <v-select @change="onChangeRoom()" :radonly="getRoomLoading || onChangeRoomloading" :loading="getRoomLoading || onChangeRoomloading" v-model="selectedRoomId" color="teal" prepend-icon="mdi-home" label="部屋名" :items="rooms" item-value="room_id" item-text="room_name" dense></v-select>
+                        <v-select @change="onChangeRoom()" :radonly="onChangeRoomloading" :loading="onChangeRoomloading" v-model="selectedRoomId" color="teal" prepend-icon="mdi-home" label="部屋名" :items="loginInfo.rooms" item-value="room_id" item-text="room_name" class="my-5" dense></v-select>
+                        <v-text-field v-model="roomMate" radonly color="teal" prepend-icon="mdi-account-group" label="ルームメイト" dense style="font-size:12px;"></v-text-field>
+                        <v-text-field v-if="invitingMember.length" v-model="invitingMember" radonly color="teal" prepend-icon="mdi-account-plus" label="招待中" dense style="font-size:12px;"></v-text-field>
                     </div>
                 </v-card-text>
                 <v-divider></v-divider>
                 <div class="d-flex pa-3">
                     <v-spacer></v-spacer>
-                    <v-btn @click="openCreateRoomDialog('create')" class="mr-2">新規作成</v-btn>
-                    <v-btn @click="openCreateRoomDialog('edit')" dark color="orange lighten-1">編集</v-btn>
+                    <v-btn :disabled="onChangeRoomloading" @click="openCreateRoomDialog('create')" class="mr-2">新規作成</v-btn>
+                    <v-btn :disabled="onChangeRoomloading" @click="openCreateRoomDialog('edit')" :dark="!onChangeRoomloading" color="orange lighten-1">編集</v-btn>
                 </div>
             </v-card>
         </v-form>
@@ -53,21 +55,19 @@
         </v-dialog>
 
         <v-dialog v-model="createRoomDialog" scrollable>
-            <CreateRoom :mode="modeCreateRoomDialog" @getRoom="getRoom" @onCloseDialog="createRoomDialog = false" v-if="createRoomDialog" />
+            <CreateRoom :mode="modeCreateRoomDialog" @onCloseDialog="createRoomDialog = false" v-if="createRoomDialog" />
         </v-dialog>
+
     </div>
 </template>
 
 <script>
 import { mapState } from "vuex";
-
 export default {
     data() {
         return {
             selectedRoomId: 0,
-            rooms: [],
             onChangeRoomloading: false,
-            getRoomLoading: false,
             createUserDialog: false,
             modeCreateRoomDialog: false,
             createRoomDialog: false,
@@ -75,6 +75,26 @@ export default {
     },
     computed: {
         ...mapState(["loginInfo"]),
+        roomMate(){
+            let outputData = ""
+            this.loginInfo.room_joined_users.forEach((user,index) => {
+                if(index != 0){
+                    outputData = outputData + '、'
+                }
+                outputData = outputData + user.name
+            });
+            return outputData
+        },
+        invitingMember(){
+            let outputData = ""
+            this.loginInfo.room_inviting_users.forEach((user,index) => {
+                if(index != 0){
+                    outputData = outputData + '、'
+                }
+                outputData = outputData + user.name
+            });
+            return outputData
+        },
     },
     methods: {
         logout() {
@@ -101,22 +121,14 @@ export default {
             await this.$store.dispatch("setTodayTasks");
             this.onChangeRoomloading = false;
         },
-        async getRoom() {
-            this.getRoomLoading = true;
-            await this.$axios
-                .get(
-                    `/api/room/read?token=${this.$store.state.loginInfo.token}`
-                )
-                .then((res) => {
-                    this.rooms = res.data;
-                })
-                .catch((err) => {});
-            this.selectedRoomId = this.loginInfo.room_id;
-            this.getRoomLoading = false;
-        },
     },
-    async mounted() {
-        await this.getRoom();
+    watch:{
+        loginInfo(){
+            this.selectedRoomId = this.loginInfo.room_id;
+        }
+    },
+    mounted() {
+        this.selectedRoomId = this.loginInfo.room_id;
     },
 };
 </script>
