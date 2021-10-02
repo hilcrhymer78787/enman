@@ -33,7 +33,7 @@ export const actions = {
                 });
             })
     },
-    async setLoginInfoByToken({ commit }) {
+    async setLoginInfoByToken({ commit, dispatch }) {
         const token = this.$cookies.get("token")
         if (!token) {
             return
@@ -42,6 +42,7 @@ export const actions = {
             .then((res) => {
                 console.log(res.data)
                 commit('setLoginInfo', res.data)
+                dispatch('setTodayTasks')
             })
             .catch(()=>{
                 this.$cookies.remove("token");

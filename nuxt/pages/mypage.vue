@@ -89,6 +89,9 @@
 <script>
 import { mapState } from "vuex";
 export default {
+    async fetch({ store }) {
+        store.dispatch("setLoginInfoByToken");
+    },
     data() {
         return {
             selectedRoomId: 0,
@@ -125,7 +128,6 @@ export default {
                     alert("通信に失敗しました");
                 });
             await this.$store.dispatch("setLoginInfoByToken");
-            await this.$store.dispatch("setTodayTasks");
             this.onChangeRoomloading = false;
         },
         roomMateNames(users) {

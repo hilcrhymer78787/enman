@@ -44,6 +44,9 @@
 <script>
 import moment from "moment";
 export default {
+    async fetch({ store }) {
+        store.dispatch("setLoginInfoByToken");
+    },
     middleware({ redirect, route }) {
         let year = new Date().getFullYear();
         let month = new Date().getMonth() + 1;
