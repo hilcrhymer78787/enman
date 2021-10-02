@@ -27,7 +27,7 @@
                 <li @click="onClickCalendar(calendar.date)" v-for="(calendar, index) in calendars" :key="calendar.date" v-ripple class="content_item main">
                     <div class="content_item_icn">{{ index + 1 }}</div>
                     <v-responsive class="pa-2" aspect-ratio="1">
-                        <!-- <PieGraph /> -->
+                        <PieGraph :workUsers="calendar.work.users" v-if="calendar.work" />
                     </v-responsive>
                 </li>
 
@@ -43,9 +43,11 @@
 </template>
 <script>
 import moment from "moment";
+import { mapState } from "vuex";
 export default {
     async fetch({ store }) {
         store.dispatch("setLoginInfoByToken");
+        store.dispatch("setThisMonthWorks");
     },
     middleware({ redirect, route }) {
         let year = new Date().getFullYear();
@@ -64,6 +66,7 @@ export default {
         };
     },
     computed: {
+        ...mapState(["loginInfo", "works"]),
         calendars() {
             let outputData = [];
 
@@ -72,24 +75,16 @@ export default {
                     date: moment(
                         new Date(this.year, this.month - 1, day)
                     ).format("YYYY-MM-DD"),
-                    works: [],
                 });
             }
-
-            // if (!this.$store.state.calendarLoading) {
-            //     outputData.forEach((calendar) => {
-            //         let calendarWorksFilterDate =
-            //             this.$store.state.calendarWorks.filter(
-            //                 (calendarElm) => calendarElm.date === calendar.date
-            //             );
-            //         if (calendarWorksFilterDate.length) {
-            //             calendar.works.push(
-            //                 ...calendarWorksFilterDate[0].works
-            //             );
-            //         }
-            //     });
-            // }
-
+            outputData.forEach((calendar) => {
+                let calendarWork = this.works.filter(
+                    (work) => work.work_date === calendar.date
+                )[0];
+                if (calendarWork) {
+                    calendar.work = calendarWork;
+                }
+            });
             return outputData;
         },
         year() {
@@ -148,7 +143,7 @@ export default {
             const day = moment(this.date).format("D");
             await this.$axios
                 .get(
-                    `/api/task/show?year=${this.year}&month=${this.month}&day=${day}&token=${this.$store.state.loginInfo.token}`
+                    `/api/task/show?year=${this.year}&month=${this.month}&day=${day}&token=${this.loginInfo.token}`
                 )
                 .then((res) => {
                     this.tasks = res.data;
@@ -160,6 +155,20 @@ export default {
                     });
                 })
                 .finally(() => {});
+        },
+    },
+    watch: {
+        $route() {
+            this.$axios
+                .get(
+                    `/api/work/read?year=${this.year}&month=${this.month}&day=${this.day}&token=${this.loginInfo.token}`
+                )
+                .then((res) => {
+                    this.$store.commit("setWorks", res.data);
+                })
+                .catch((err) => {
+                    alert("通信に失敗しました");
+                });
         },
     },
 };

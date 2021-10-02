@@ -3,15 +3,52 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Models\Work;
 use App\Models\User;
+use App\Models\Invitation;
 
 class WorkController extends Controller
 {
-    public function read()
+    public function read(Request $request)
     {
-        $data = Work::get();
-        return $data;
+        $loginInfo = User::where('token', $request->token)->first();
+
+        $works = Work::where('work_room_id', $loginInfo['user_room_id'])
+        ->whereYear('work_date', $request['year'])
+        ->whereMonth('work_date', $request['month'])
+        ->selectRaw('count(work_id) as `work_count`, work_date')
+        ->groupByRaw('work_date')
+        ->get();
+
+        foreach($works as $work){
+            $work['users'] = Invitation::where('invitation_room_id', $loginInfo['user_room_id'])
+            ->where('invitation_status', 2)
+            ->leftjoin('users', 'invitations.invitation_to_user_id', '=', 'users.id')
+            ->select('name', 'id', 'user_img')
+            ->get();
+            foreach($work['users'] as $user){
+                $minute = Work::where('work_room_id', $loginInfo['user_room_id'])
+                ->where('work_date', $work['work_date'])
+                ->where('work_user_id', $user['id'])
+                ->sum("work_minute");
+                $user['minute'] = intval($minute);
+            }
+
+        }
+
+        
+
+        // dd($works);
+
+        // $works = Work::where('work_room_id', $loginInfo['user_room_id'])
+        // ->whereYear('work_date', $request['year'])
+        // ->whereMonth('work_date', $request['month'])
+        // ->whereDay('work_date', $request['day'])
+        // ->get();
+
+        // $data = Work::get();
+        return $works;
     }
     public function create(Request $request)
     {

@@ -2,7 +2,7 @@ export const state = () => ({
     loginInfo: {},
     users: [],
     todayTasks: [],
-    tasks: [],
+    works:[],
 })
 
 export const mutations = {
@@ -17,6 +17,9 @@ export const mutations = {
             task.minute = minute
         });
         state.todayTasks = todayTasks
+    },
+    setWorks(state, works) {
+        state.works = works
     },
 }
 
@@ -62,6 +65,22 @@ export const actions = {
             )
             .then((res) => {
                 commit('setTodayTasks', res.data)
+            })
+            .catch((err) => {
+                alert("通信に失敗しました");
+            })
+    },
+    setThisMonthWorks({ state, commit }) {
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = today.getMonth() + 1;
+        const day = today.getDate();
+        this.$axios
+            .get(
+                `/api/work/read?year=${year}&month=${month}&day=${day}&token=${state.loginInfo.token}`
+            )
+            .then((res) => {
+                commit('setWorks', res.data)
             })
             .catch((err) => {
                 alert("通信に失敗しました");

@@ -3,14 +3,15 @@
 import { Doughnut } from "vue-chartjs";
 export default {
   extends: Doughnut,
+  props: ["workUsers"],
   data() {
     return {
       datas: {
-        labels: ["A", "B"],
+        labels: ["A", "B", "C"],
         datasets: [
           {
-            data: [20, 60],
-            backgroundColor: ["#ff525290", "#2196f390"],
+            data: [],
+            backgroundColor: ["#2196f390","#ff525290"],
           },
         ],
       },
@@ -23,6 +24,10 @@ export default {
     };
   },
   mounted() {
+    this.workUsers.forEach(user => {
+        this.datas.datasets[0].data.push(user.minute)
+        this.datas.labels.push(user.name)
+    });
     this.renderChart(this.datas, this.options);
   },
 };
