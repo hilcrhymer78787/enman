@@ -44,8 +44,11 @@ export const actions = {
                 commit('setLoginInfo', res.data)
                 dispatch('setTodayTasks')
             })
-            .catch(()=>{
+            .catch(() => {
+                alert('通信エラーのためログイン画面に戻ります')
                 this.$cookies.remove("token");
+                commit("setLoginInfo", {});
+                $nuxt.$router.push("/login");
             })
     },
     setTodayTasks({ state, commit }) {
