@@ -27,7 +27,7 @@
                     <div class="content_item_icn">{{ index + 1 }}</div>
                     <v-responsive class="pa-2 pie_graph" aspect-ratio="1">
                         <div class="pie_graph_cover"></div>
-                        <PieGraph mode="daily" :workUsers="calendar.work.users" v-if="calendar.work && !getWorksLoading" />
+                        <PieGraph mode="daily" :workUsers="calendar.work.users" v-if="calendar.work && !getWorksLoading && isShowPieGraph" />
                         <div v-else-if="getWorksLoading">
                             <v-progress-circular indeterminate color="teal"></v-progress-circular>
                         </div>
@@ -37,8 +37,9 @@
             </ul>
         </v-card>
 
+        <!-- <pre>{{works}}</pre> -->
         <div style="padding:50px;">
-            <PieGraph mode="monthly" v-if="worksMonthly.length && !getWorksLoading" :workUsers="worksMonthly" />
+            <PieGraph mode="monthly" v-if="works.monthly.length && !getWorksLoading && isShowPieGraph" :workUsers="works.monthly" />
             <div v-else-if="getWorksLoading" class="text-center">
                 <v-progress-circular indeterminate color="teal"></v-progress-circular>
             </div>
@@ -55,7 +56,6 @@ import { mapState } from "vuex";
 export default {
     async fetch({ store }) {
         store.dispatch("setLoginInfoByToken");
-        store.dispatch("setThisMonthWorks");
     },
     middleware({ redirect, route }) {
         let year = new Date().getFullYear();
@@ -68,6 +68,7 @@ export default {
         return {
             week: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
             dialog: false,
+            isShowPieGraph: false,
             dialogLoading: false,
             getWorksLoading: false,
             date: "",
@@ -76,11 +77,13 @@ export default {
     },
     computed: {
         ...mapState(["loginInfo", "works"]),
-        worksMonthly() {
-            return this.works.monthly;
-        },
         calendars() {
             let outputData = [];
+
+            this.isShowPieGraph = false;
+            this.$nextTick(() => {
+                this.isShowPieGraph = true;
+            });
 
             for (let day = 1; day <= this.lastday; day++) {
                 outputData.push({
@@ -184,6 +187,9 @@ export default {
                     this.getWorksLoading = false;
                 });
         },
+    },
+    mounted() {
+        this.getWorks();
     },
     watch: {
         $route() {
