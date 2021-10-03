@@ -23,21 +23,29 @@
 
             <ul class="content">
                 <li v-for="n in first_day" :key="n" class="content_item blank"></li>
-
                 <li @click="onClickCalendar(calendar.date)" v-for="(calendar, index) in calendars" :key="calendar.date" v-ripple class="content_item main">
                     <div class="content_item_icn">{{ index + 1 }}</div>
-                    <v-responsive class="pa-2" aspect-ratio="1">
-                        <PieGraph :workUsers="calendar.work.users" v-if="calendar.work" />
+                    <v-responsive class="pa-2 pie_graph" aspect-ratio="1">
+                        <div class="pie_graph_cover"></div>
+                        <PieGraph mode="daily" :workUsers="calendar.work.users" v-if="calendar.work && !getWorksLoading" />
+                        <div v-else-if="getWorksLoading">
+                            <v-progress-circular indeterminate color="teal"></v-progress-circular>
+                        </div>
                     </v-responsive>
                 </li>
-
                 <li v-for="n in lastDayCount" :key="n + 100" class="content_item blank"></li>
             </ul>
-
         </v-card>
 
+        <div style="padding:50px;">
+            <PieGraph mode="monthly" v-if="worksMonthly.length && !getWorksLoading" :workUsers="worksMonthly" />
+            <div v-else-if="getWorksLoading" class="text-center">
+                <v-progress-circular indeterminate color="teal"></v-progress-circular>
+            </div>
+        </div>
+
         <v-dialog v-model="dialog" scrollable>
-            <Tasks mode="calendar" @onCloseDialog="dialog = false" @getTasks="getTasks" v-if="!dialogLoading" :date="date" :tasks="tasks" />
+            <Tasks mode="calendar" @onCloseDialog="dialog = false" @getWorks="getWorks" @getTasks="getTasks" v-if="!dialogLoading" :date="date" :tasks="tasks" />
         </v-dialog>
     </div>
 </template>
@@ -61,12 +69,16 @@ export default {
             week: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
             dialog: false,
             dialogLoading: false,
+            getWorksLoading: false,
             date: "",
             tasks: [],
         };
     },
     computed: {
         ...mapState(["loginInfo", "works"]),
+        worksMonthly() {
+            return this.works.monthly;
+        },
         calendars() {
             let outputData = [];
 
@@ -78,7 +90,7 @@ export default {
                 });
             }
             outputData.forEach((calendar) => {
-                let calendarWork = this.works.filter(
+                let calendarWork = this.works.daily.filter(
                     (work) => work.work_date === calendar.date
                 )[0];
                 if (calendarWork) {
@@ -156,9 +168,8 @@ export default {
                 })
                 .finally(() => {});
         },
-    },
-    watch: {
-        $route() {
+        async getWorks() {
+            this.getWorksLoading = true;
             this.$axios
                 .get(
                     `/api/work/read?year=${this.year}&month=${this.month}&day=${this.day}&token=${this.loginInfo.token}`
@@ -168,7 +179,15 @@ export default {
                 })
                 .catch((err) => {
                     alert("通信に失敗しました");
+                })
+                .finally(() => {
+                    this.getWorksLoading = false;
                 });
+        },
+    },
+    watch: {
+        $route() {
+            this.getWorks();
         },
     },
 };
@@ -224,6 +243,17 @@ h1 {
             font-size: 14px;
             text-align: center;
         }
+    }
+}
+
+.pie_graph {
+    position: relative;
+    &_cover {
+        position: absolute;
+        top: 0;
+        right: 0;
+        left: 0;
+        bottom: 0;
     }
 }
 </style>

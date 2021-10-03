@@ -53,7 +53,7 @@
         </v-card>
 
         <v-dialog v-model="dialog" scrollable>
-            <CreateWorks @onCloseModal="dialog = false" :date="date" :mode="mode" @getTasks="$emit('getTasks')" :focusTask="focusTask" v-if="dialog" />
+            <CreateWorks @onCloseModal="dialog = false" :date="date" :mode="mode" @getTasks="$emit('getTasks')" @getWorks="$emit('getWorks')" :focusTask="focusTask" v-if="dialog" />
         </v-dialog>
 
         <v-dialog v-model="taskDialog" scrollable>
@@ -120,6 +120,7 @@ export default {
                 await this.$store.dispatch("setTodayTasks");
             } else {
                 await this.$emit("getTasks", this.date);
+                this.$emit("getWorks");
             }
 
             this.$set(this.loadings, taskIndex, false);
@@ -142,6 +143,7 @@ export default {
                 await this.$store.dispatch("setTodayTasks");
             } else {
                 await this.$emit("getTasks", this.date);
+                this.$emit("getWorks");
             }
             this.$set(this.loadings, taskIndex, false);
         },

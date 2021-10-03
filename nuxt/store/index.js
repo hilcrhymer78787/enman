@@ -2,7 +2,10 @@ export const state = () => ({
     loginInfo: {},
     users: [],
     todayTasks: [],
-    works:[],
+    works:{
+        daily:[],
+        monthly:[],
+    },
 })
 
 export const mutations = {
@@ -80,6 +83,7 @@ export const actions = {
                 `/api/work/read?year=${year}&month=${month}&day=${day}&token=${state.loginInfo.token}`
             )
             .then((res) => {
+                console.log(res.data)
                 commit('setWorks', res.data)
             })
             .catch((err) => {

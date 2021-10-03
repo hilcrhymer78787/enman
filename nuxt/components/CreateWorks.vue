@@ -88,6 +88,7 @@ export default {
                         this.$store.dispatch("setTodayTasks");
                     } else {
                         this.$emit("getTasks");
+                        this.$emit("getWorks");
                     }
                 })
                 .catch((err) => {
@@ -116,6 +117,7 @@ export default {
                 await this.$store.dispatch("setTodayTasks");
             } else {
                 await this.$emit("getTasks");
+                this.$emit("getWorks");
             }
             this.deleteLoading = false;
             this.$emit("onCloseModal");
