@@ -158,7 +158,7 @@ export default {
             const day = moment(this.date).format("D");
             await this.$axios
                 .get(
-                    `/api/task/show?year=${this.year}&month=${this.month}&day=${day}&token=${this.loginInfo.token}`
+                    `/api/task/read?year=${this.year}&month=${this.month}&day=${day}&token=${this.loginInfo.token}`
                 )
                 .then((res) => {
                     this.tasks = res.data;

@@ -12,11 +12,6 @@ class TaskController extends Controller
 {
     public function read(Request $request)
     {
-        $data = Task::get();
-        return $data;
-    }
-    public function show(Request $request)
-    {
         $userRoomId = User::where('token', $request->token)
         ->get()[0]->user_room_id;
         

@@ -21,7 +21,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 // 完成
 Route::post('/task/create', 'TaskController@create');
 Route::get('/task/read', 'TaskController@read');
-Route::get('/task/show', 'TaskController@show');
 Route::delete('/task/delete', 'TaskController@delete');
 
 // 完成

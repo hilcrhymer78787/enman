@@ -64,7 +64,7 @@ export const actions = {
         const day = today.getDate();
         this.$axios
             .get(
-                `/api/task/show?year=${year}&month=${month}&day=${day}&token=${state.loginInfo.token}`
+                `/api/task/read?year=${year}&month=${month}&day=${day}&token=${state.loginInfo.token}`
             )
             .then((res) => {
                 commit('setTodayTasks', res.data)
