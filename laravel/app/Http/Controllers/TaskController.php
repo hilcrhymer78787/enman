@@ -69,6 +69,10 @@ class TaskController extends Controller
         ->where('task_room_id', $userRoomId)
         ->delete();
 
+        Work::where('work_task_id', $request['task_id'])
+        ->where('work_room_id', $userRoomId)
+        ->delete();
+
         return $request;
     }
 }
