@@ -2,9 +2,9 @@ export const state = () => ({
     loginInfo: {},
     users: [],
     todayTasks: [],
-    works:{
-        daily:[],
-        monthly:[],
+    works: {
+        daily: [],
+        monthly: [],
     },
 })
 
