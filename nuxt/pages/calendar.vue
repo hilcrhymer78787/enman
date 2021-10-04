@@ -25,10 +25,10 @@
                 <li v-for="n in first_day" :key="n" class="content_item blank"></li>
                 <li @click="onClickCalendar(calendar.date)" v-for="(calendar, index) in calendars" :key="calendar.date" v-ripple class="content_item main">
                     <div class="content_item_icn">{{ index + 1 }}</div>
-                    <v-responsive class="pa-2 pie_graph" aspect-ratio="1">
-                        <div class="pie_graph_cover"></div>
+                    <v-responsive class="pa-1 pie_graph" aspect-ratio="1">
+                        <div v-if="calendar.work" class="pie_graph_cover">{{calendar.work.sum_minute}}</div>
                         <PieGraph mode="daily" :workUsers="calendar.work.users" v-if="calendar.work && !getWorksLoading && isShowPieGraph" />
-                        <div v-else-if="getWorksLoading">
+                        <div v-else-if="getWorksLoading" class="pa-1">
                             <v-progress-circular indeterminate color="teal"></v-progress-circular>
                         </div>
                     </v-responsive>
@@ -178,6 +178,7 @@ export default {
                     `/api/work/read?year=${this.year}&month=${this.month}&day=${this.day}&token=${this.loginInfo.token}`
                 )
                 .then((res) => {
+                    console.log(res.data)
                     this.$store.commit("setWorks", res.data);
                 })
                 .catch((err) => {
@@ -260,6 +261,12 @@ h1 {
         right: 0;
         left: 0;
         bottom: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 15px;
+        font-weight: bold;
+        color: teal;
     }
 }
 </style>

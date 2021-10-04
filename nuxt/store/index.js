@@ -32,7 +32,6 @@ export const actions = {
         const password = form.password
         await this.$axios.get(`/api/user/read?email=${email}&password=${password}`)
             .then((res) => {
-                console.log(res.data)
                 commit('setLoginInfo', res.data)
                 this.$cookies.set("token", res.data.token, {
                     maxAge: 60 * 60 * 24 * 30,
@@ -46,7 +45,6 @@ export const actions = {
         }
         await this.$axios.get(`/api/user/read?token=${token}`)
             .then((res) => {
-                console.log(res.data)
                 commit('setLoginInfo', res.data)
                 dispatch('setTodayTasks')
             })

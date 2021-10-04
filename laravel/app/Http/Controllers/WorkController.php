@@ -17,7 +17,7 @@ class WorkController extends Controller
         $works = Work::where('work_room_id', $loginInfo['user_room_id'])
         ->whereYear('work_date', $request['year'])
         ->whereMonth('work_date', $request['month'])
-        ->selectRaw('count(work_id) as `work_count`, work_date')
+        ->selectRaw('sum(work_minute) as `sum_minute`, work_date')
         ->groupByRaw('work_date')
         ->get();
         foreach($works as $work){
