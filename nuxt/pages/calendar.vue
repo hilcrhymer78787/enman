@@ -24,14 +24,20 @@
             <ul class="content">
                 <li v-for="n in first_day" :key="n" class="content_item blank"></li>
                 <li @click="onClickCalendar(calendar.date)" v-for="(calendar, index) in calendars" :key="calendar.date" v-ripple class="content_item main">
-                    <div class="content_item_icn">{{ index + 1 }}</div>
-                    <v-responsive class="pa-1 pie_graph" aspect-ratio="1">
-                        <div v-if="calendar.work" class="pie_graph_cover">{{calendar.work.sum_minute}}</div>
-                        <PieGraph mode="daily" :workUsers="calendar.work.users" v-if="calendar.work && !getWorksLoading && isShowPieGraph" />
-                        <div v-else-if="getWorksLoading" class="pa-1">
-                            <v-progress-circular indeterminate color="teal"></v-progress-circular>
+                    <div class="content_item_inner">
+                        <div class="content_item_icn">
+                            <div class="content_item_icn_num" :class="{nowDay:index + 1 == nowDay && year == nowYear && month == nowMonth}">
+                                {{ index + 1 }}
+                            </div>
                         </div>
-                    </v-responsive>
+                        <v-responsive class="pa-1 pie_graph" aspect-ratio="1">
+                            <div v-if="calendar.work && !getWorksLoading" class="pie_graph_cover">{{calendar.work.sum_minute}}</div>
+                            <PieGraph mode="daily" :workUsers="calendar.work.users" v-if="calendar.work && !getWorksLoading && isShowPieGraph" />
+                            <div v-else-if="getWorksLoading" class="pa-1">
+                                <v-progress-circular indeterminate color="teal"></v-progress-circular>
+                            </div>
+                        </v-responsive>
+                    </div>
                 </li>
                 <li v-for="n in lastDayCount" :key="n + 100" class="content_item blank"></li>
             </ul>
@@ -119,6 +125,15 @@ export default {
                 6 - new Date(this.year, this.month - 1, this.lastday).getDay()
             );
         },
+        nowDay() {
+            return moment(new Date()).format("D");
+        },
+        nowYear(){
+            return moment(new Date()).format("Y");
+        },
+        nowMonth(){
+            return moment(new Date()).format("M");
+        }
     },
     methods: {
         onClickPrevMonth() {
@@ -178,7 +193,6 @@ export default {
                     `/api/work/read?year=${this.year}&month=${this.month}&day=${this.day}&token=${this.loginInfo.token}`
                 )
                 .then((res) => {
-                    console.log(res.data)
                     this.$store.commit("setWorks", res.data);
                 })
                 .catch((err) => {
@@ -226,6 +240,8 @@ h1 {
     padding: 0;
     background-color: white;
     &_item {
+        &_inner {
+        }
         width: calc(100% / 7);
         border-right: 1px solid #e0e0e0;
         border-top: 1px solid #e0e0e0;
@@ -247,8 +263,24 @@ h1 {
             background-color: #00968734;
         }
         &_icn {
-            font-size: 14px;
-            text-align: center;
+            padding-top: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            &_num {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                width: 20px;
+                height: 20px;
+                font-size: 14px;
+                border-radius: 50%;
+                &.nowDay {
+                    background-color: #009688;
+                    color: white;
+                    font-size: 12px;
+                }
+            }
         }
     }
 }

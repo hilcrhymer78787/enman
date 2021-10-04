@@ -71,21 +71,4 @@ export const actions = {
                 alert("通信に失敗しました");
             })
     },
-    setThisMonthWorks({ state, commit }) {
-        const today = new Date();
-        const year = today.getFullYear();
-        const month = today.getMonth() + 1;
-        const day = today.getDate();
-        this.$axios
-            .get(
-                `/api/work/read?year=${year}&month=${month}&day=${day}&token=${state.loginInfo.token}`
-            )
-            .then((res) => {
-                console.log(res.data)
-                commit('setWorks', res.data)
-            })
-            .catch((err) => {
-                alert("通信に失敗しました");
-            })
-    },
 }
