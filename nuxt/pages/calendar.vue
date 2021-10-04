@@ -31,11 +31,8 @@
                             </div>
                         </div>
                         <v-responsive class="pa-1 pie_graph" aspect-ratio="1">
-                            <div v-if="calendar.work && !getWorksLoading" class="pie_graph_cover">{{calendar.work.sum_minute}}</div>
-                            <PieGraph mode="daily" :workUsers="calendar.work.users" v-if="calendar.work && !getWorksLoading && isShowPieGraph" />
-                            <div v-else-if="getWorksLoading" class="pa-1">
-                                <v-progress-circular indeterminate color="teal"></v-progress-circular>
-                            </div>
+                            <div v-if="calendar.work" class="pie_graph_cover">{{calendar.work.sum_minute}}</div>
+                            <PieGraph mode="daily" :workUsers="calendar.work.users" v-if="calendar.work && isShowPieGraph" />
                         </v-responsive>
                     </div>
                 </li>
@@ -45,10 +42,7 @@
 
         <!-- <pre>{{works}}</pre> -->
         <div style="padding:50px;">
-            <PieGraph mode="monthly" v-if="works.monthly.length && !getWorksLoading && isShowPieGraph" :workUsers="works.monthly" />
-            <div v-else-if="getWorksLoading" class="text-center">
-                <v-progress-circular indeterminate color="teal"></v-progress-circular>
-            </div>
+            <PieGraph mode="monthly" v-if="works.monthly.length && isShowPieGraph" :workUsers="works.monthly" />
         </div>
 
         <v-dialog v-model="dialog" scrollable>
@@ -76,7 +70,6 @@ export default {
             dialog: false,
             isShowPieGraph: false,
             dialogLoading: false,
-            getWorksLoading: false,
             date: "",
             tasks: [],
         };
@@ -85,11 +78,6 @@ export default {
         ...mapState(["loginInfo", "works"]),
         calendars() {
             let outputData = [];
-
-            this.isShowPieGraph = false;
-            this.$nextTick(() => {
-                this.isShowPieGraph = true;
-            });
 
             for (let day = 1; day <= this.lastday; day++) {
                 outputData.push({
@@ -105,6 +93,10 @@ export default {
                 if (calendarWork) {
                     calendar.work = calendarWork;
                 }
+            });
+            this.isShowPieGraph = false;
+            this.$nextTick(() => {
+                this.isShowPieGraph = true;
             });
             return outputData;
         },
@@ -187,7 +179,6 @@ export default {
                 .finally(() => {});
         },
         async getWorks() {
-            this.getWorksLoading = true;
             this.$axios
                 .get(
                     `/api/work/read?year=${this.year}&month=${this.month}&day=${this.day}&token=${this.loginInfo.token}`
@@ -198,9 +189,6 @@ export default {
                 .catch((err) => {
                     alert("通信に失敗しました");
                 })
-                .finally(() => {
-                    this.getWorksLoading = false;
-                });
         },
     },
     mounted() {

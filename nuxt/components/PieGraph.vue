@@ -17,6 +17,7 @@ export default {
         ],
       },
       options: {
+        animation: false,
         responsive: true,
         legend: {
           display: false,
