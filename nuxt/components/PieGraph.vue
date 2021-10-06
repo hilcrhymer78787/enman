@@ -4,7 +4,7 @@
 import { Doughnut } from "vue-chartjs";
 export default {
     extends: Doughnut,
-    props: ["workUsers", "mode"],
+    props: ["propsDatas", "mode"],
     data() {
         return {
             datas: {
@@ -12,7 +12,19 @@ export default {
                 datasets: [
                     {
                         data: [],
-                        backgroundColor: ["#2196f390", "#ff525290"],
+                        backgroundColor: [
+                            "#2196f390",
+                            "#ff525290",
+                            "#fff9b1",
+                            "#d7e7af",
+                            "#a5d4ad",
+
+                            "#a3bce2",
+                            "#a59aca",
+                            "#cfa7cd",
+                            "#f4b4d0",
+                            "#f5b2b2",
+                        ],
                     },
                 ],
             },
@@ -26,9 +38,9 @@ export default {
         };
     },
     mounted() {
-        this.workUsers.forEach((user) => {
-            this.datas.datasets[0].data.push(user.minute);
-            this.datas.labels.push(user.name);
+        this.propsDatas.forEach((data) => {
+            this.datas.datasets[0].data.push(data.minute);
+            this.datas.labels.push(data.name);
         });
         if (this.mode == "monthly") {
             this.options.legend.display = false;
@@ -48,9 +60,7 @@ export default {
                                 let fontSize = 20;
                                 ctx.fillStyle = "#000";
                                 // 設定を適用
-                                ctx.font = Chart.helpers.fontString(
-                                    fontSize,
-                                );
+                                ctx.font = Chart.helpers.fontString(fontSize);
 
                                 // ラベルをパーセント表示に変更
                                 let labelString = chart.data.labels[index];
@@ -65,7 +75,7 @@ export default {
 
                                 let padding = -2;
                                 let position = element.tooltipPosition();
-                                if(dataset.data[index]){
+                                if (dataset.data[index]) {
                                     // ツールチップに変更内容を表示
                                     ctx.fillText(
                                         labelString,

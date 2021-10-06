@@ -67,8 +67,8 @@ export default {
     // Axios module configuration: https://go.nuxtjs.dev/config-axios
     axios: {
         // baseURL: 'http://192.168.3.5:8000'
-        // baseURL: 'http://localhost:8000'
-        baseURL: 'https://enman-back.magicgifted.com/enman/laravel/public'
+        baseURL: 'http://localhost:8000'
+        // baseURL: 'https://enman-back.magicgifted.com/enman/laravel/public'
     },
 
     // PWA module configuration: https://go.nuxtjs.dev/pwa

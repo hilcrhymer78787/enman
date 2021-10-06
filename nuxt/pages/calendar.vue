@@ -32,7 +32,7 @@
                         </div>
                         <v-responsive class="pa-1 pie_graph" aspect-ratio="1">
                             <div v-if="calendar.work" class="pie_graph_cover">{{calendar.work.sum_minute}}</div>
-                            <PieGraph mode="daily" :workUsers="calendar.work.users" v-if="calendar.work && isShowPieGraph" />
+                            <PieGraph mode="daily" :propsDatas="calendar.work.users" v-if="calendar.work && isShowPieGraph" />
                         </v-responsive>
                     </div>
                 </li>
@@ -41,8 +41,12 @@
         </v-card>
 
         <!-- <pre>{{works}}</pre> -->
+        <div style="padding:50px 50px 0;">
+            <PieGraph mode="monthly" v-if="works.monthly.length && isShowPieGraph" :propsDatas="works.monthly" />
+        </div>
+
         <div style="padding:50px;">
-            <PieGraph mode="monthly" v-if="works.monthly.length && isShowPieGraph" :workUsers="works.monthly" />
+            <PieGraph mode="monthly" v-if="works.tasks && isShowPieGraph" :propsDatas="works.tasks" />
         </div>
 
         <v-dialog v-model="dialog" scrollable>
@@ -184,6 +188,7 @@ export default {
                     `/api/work/read?year=${this.year}&month=${this.month}&day=${this.day}&token=${this.loginInfo.token}`
                 )
                 .then((res) => {
+                    console.log(res.data)
                     this.$store.commit("setWorks", res.data);
                 })
                 .catch((err) => {
