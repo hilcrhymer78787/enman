@@ -14,6 +14,7 @@ export default {
             { hid: 'description', name: 'description', content: '' },
             { name: 'format-detection', content: 'telephone=no' },
             { name: 'apple-mobile-web-app-capable', content: 'yes' },
+            { name: 'apple-mobile-web-app-status-bar-style', content: 'white' },
         ],
         link: [
             { href: '/launch.png', rel: 'apple-touch-startup-image' },
@@ -29,6 +30,9 @@ export default {
             { href: "splashscreens/ipadpro3_splash.png", media: "(device-width: 834px) and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2)", rel: "apple-touch-startup-image" },
             { href: "splashscreens/ipadpro2_splash.png", media: "(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2)", rel: "apple-touch-startup-image" },
         ],
+        script: [
+            { src: 'https://unpkg.com/pwacompat' }
+        ]
     },
     server: {
         host: '0.0.0.0'
@@ -72,18 +76,14 @@ export default {
     },
 
     // PWA module configuration: https://go.nuxtjs.dev/pwa
-    pwa: {
-        meta: {
-            theme_color: 'white',
-            appleStatusBarStyle: 'default',
-        },
-        manifest: {
-            name: 'enman',
-            lang: 'ja',
-            short_name: 'enman',
-            title: 'enman',
-            background_color: 'white',
-        }
+    manifest: {
+        name: 'enman',
+        lang: 'ja',
+        short_name: 'enman',
+        title: 'enman',
+        background_color: '#00ccaf',
+        color: 'white',
+        theme_color: 'dark',
     },
 
     // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
