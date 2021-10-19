@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Room;
 use App\Models\Invitation;
+use App\Services\UserService;
 use Illuminate\Support\Str;
 
 
@@ -31,6 +32,10 @@ class UserController extends Controller
             ->leftjoin('rooms', 'users.user_room_id', '=', 'rooms.room_id')
             ->select('id', 'name', 'email', 'user_img', 'room_id','room_img','room_name','token')
             ->first();
+            if(!isset($loginInfo)){
+                $error['errorMessage'] = 'メールアドレスかパスワードが違います';
+                return $error;
+            }
         }
 
         // 参加しているユーザー
@@ -101,7 +106,6 @@ class UserController extends Controller
                 $roomId = Room::where('room_token', $roomToken)->get()[0]->room_id;
 
                 // ユーザー作成
-
                 $userToken = $request["email"].Str::random(100);
 
                 $user["name"] = $request["name"];
@@ -112,13 +116,12 @@ class UserController extends Controller
                 $user["user_room_id"] = $roomId;
                 $user->save();
 
-                $userId = User::where('token', $userToken)->get()[0]->id;
+                $loginInfo = (new UserService())->getLoginInfoByToken($userToken);
 
                 // 招待
-
                 $invitation['invitation_room_id'] = $roomId;
-                $invitation['invitation_from_user_id'] = $userId;
-                $invitation['invitation_to_user_id'] = $userId;
+                $invitation['invitation_from_user_id'] = $loginInfo['id'];
+                $invitation['invitation_to_user_id'] = $loginInfo['id'];
                 $invitation['invitation_status'] = 2;
                 $invitation->save();
 
@@ -126,18 +129,19 @@ class UserController extends Controller
             }
         }else{
             // 編集
-            $userData = User::where('token', $request["token"])
-            ->get()[0];
+            $loginInfo = (new UserService())->getLoginInfoByToken($request->token);
+            if(!isset($loginInfo)){
+                $error['errorMessage'] = 'このトークンは有効ではありません';
+                return $error;
+            }
 
-            $userId = $userData['id'];
-            $userEmail = $userData['email'];
-            $userDataCount = count(User::where('email', $request["email"])->get());
+            $loginInfoCount = count(User::where('email', $request["email"])->get());
 
-            if($userDataCount != 0 && $userData['email'] != $request["email"]){
+            if($loginInfoCount != 0 && $loginInfo['email'] != $request["email"]){
                 $error['errorMessage'] = 'このメールアドレスは既に登録されています';
                 return $error;
             }else{
-                $user->where("id", $userId)->update([
+                $user->where("id", $loginInfo['id'])->update([
                     "name" => $request["name"],
                     "email" => $request["email"],
                     "password" => $request["password"],
@@ -149,18 +153,21 @@ class UserController extends Controller
     }
     public function updateRoomId(Request $request)
     {
-        $userId = User::where('token', $request->token)
-        ->get()[0]->id;
-
-        User::where("id", $userId)->update([
+        $loginInfo = (new UserService())->getLoginInfoByToken($request->token);
+        if(!isset($loginInfo)){
+            return $error['errorMessage'] = 'このトークンは有効ではありません';
+        }
+        User::where("id", $loginInfo['id'])->update([
             "user_room_id" => $request["room_id"],
         ]);
     }
     public function delete(Request $request)
     {
-        $userId = User::where('token', $request->token)
-        ->get()[0]->id;
+        $loginInfo = (new UserService())->getLoginInfoByToken($request->token);
+        if(!isset($loginInfo)){
+            return $error['errorMessage'] = 'このトークンは有効ではありません';
+        }
 
-        User::where('id', $userId)->delete();
+        User::where('id', $loginInfo['id'])->delete();
     }
 }

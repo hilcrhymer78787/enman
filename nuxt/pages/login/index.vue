@@ -8,6 +8,7 @@
                     <v-text-field validate-on-blur @keyup.enter="login" :rules="emailRules" required label="メールアドレス" placeholder="メールアドレス" prepend-inner-icon="mdi-email" outlined v-model="form.email" color="teal" class="pt-5"></v-text-field>
                     <v-text-field validate-on-blur @keyup.enter="login" :rules="passwordRules" required label="パスワード" placeholder="パスワード" prepend-inner-icon="mdi-lock" :append-icon="passwordShow ? 'mdi-eye' : 'mdi-eye-off'" :type="passwordShow ? 'text' : 'password'" outlined v-model="form.password" @click:append="passwordShow = !passwordShow" color="teal"></v-text-field>
                 </v-form>
+                <p v-if="errorMessage && noError" class="error_message mb-2">{{errorMessage}}</p>
             </v-card-text>
 
             <v-divider></v-divider>
@@ -27,6 +28,7 @@ export default {
         return {
             loading: false,
             noError: false,
+            errorMessage: "",
             form: {
                 email: "",
                 password: "",
@@ -54,12 +56,35 @@ export default {
                 return;
             }
             this.loading = true;
-            await this.$store.dispatch("setLoginInfo", this.form);
-            if (this.loginInfo.id) {
-                this.$router.push("/");
-            }
+            this.errorMessage = ''
+            const email = this.form.email;
+            const password = this.form.password;
+            await this.$axios
+                .get(`/api/user/read?email=${email}&password=${password}`)
+                .then((res) => {
+                    if (res.data.errorMessage) {
+                        this.errorMessage = res.data.errorMessage;
+                    } else {
+                        this.$cookies.set("token", res.data.token, {
+                            maxAge: 60 * 60 * 24 * 30,
+                        });
+                        this.$store.commit("setLoginInfo", res.data);
+                        this.$router.push("/");
+                    }
+                })
+                .catch(() => {
+                    alert("通信エラーです");
+                });
             this.loading = false;
         },
     },
 };
 </script>
+<style lang="scss" scoped>
+.error_message {
+    color: #ff5252;
+    font-size: 12px;
+    margin-top: -27px;
+    margin-left: 12px;
+}
+</style>

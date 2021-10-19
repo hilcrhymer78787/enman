@@ -55,15 +55,21 @@ export const actions = {
                     commit('setLoginInfo', false)
                 } else {
                     // トークンが有効
-                    if (($nuxt.$route.name == 'login' || $nuxt.$route.name == 'login-newUser')) {
-                        $nuxt.$router.push("/");
+                    if (this.$cookies.get("token")) {
+                        if (($nuxt.$route.name == 'login' || $nuxt.$route.name == 'login-newUser')) {
+                            $nuxt.$router.push("/");
+                        }
+                        commit('setLoginInfo', res.data)
+                        dispatch('setTodayTasks')
                     }
-                    commit('setLoginInfo', res.data)
-                    dispatch('setTodayTasks')
                 }
             })
             .catch(() => {
-                alert('通信エラーです')
+                this.$cookies.remove("token");
+                if (!($nuxt.$route.name == 'login' || $nuxt.$route.name == 'login-newUser')) {
+                    $nuxt.$router.push("/login");
+                }
+                commit('setLoginInfo', false)
             })
             .finally(() => {
                 setTimeout(() => {

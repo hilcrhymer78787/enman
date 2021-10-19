@@ -6,13 +6,14 @@ use Illuminate\Http\Request;
 use App\Models\Task;
 use App\Models\User;
 use App\Models\Work;
+use App\Services\UserService;
 
 
 class TaskController extends Controller
 {
     public function read(Request $request)
     {
-        $loginInfo = User::where('token', $request['token'])->first();
+        $loginInfo = (new UserService())->getLoginInfoByToken($request['token']);
         
         $tasks = Task::where('task_room_id', $loginInfo['user_room_id'])
         ->where('task_is_everyday',1)
@@ -41,7 +42,7 @@ class TaskController extends Controller
     }
     public function create(Request $request, Task $task)
     {
-        $loginInfo = User::where('token', $request['token'])->first();
+        $loginInfo = (new UserService())->getLoginInfoByToken($request['token']);
 
         if(isset($request["taskId"])){
             $task->where("task_id", $request["taskId"])->update([
@@ -62,7 +63,7 @@ class TaskController extends Controller
     }
     public function delete(Request $request, Task $task)
     {
-        $loginInfo = User::where('token', $request['token'])->first();
+        $loginInfo = (new UserService())->getLoginInfoByToken($request['token']);
 
         Task::where('task_id', $request['task_id'])
         ->where('task_room_id', $loginInfo['user_room_id'])
