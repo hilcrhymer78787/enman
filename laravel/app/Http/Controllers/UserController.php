@@ -20,6 +20,10 @@ class UserController extends Controller
             ->leftjoin('rooms', 'users.user_room_id', '=', 'rooms.room_id')
             ->select('id', 'name', 'email', 'user_img', 'room_id','room_img','room_name','token')
             ->first();
+            if(!isset($loginInfo)){
+                $error['errorMessage'] = 'このトークンは有効ではありません';
+                return $error;
+            }
         }elseif($request->email){
             // ベーシック認証
             $loginInfo = User::where('email', $request->email)

@@ -100,12 +100,8 @@ export default {
         //     await this.$axios
         //         .delete(`/api/user/delete?token=${this.form.token}`)
         //         .then((res) => {
-        //             console.log(res.data);
         //             this.$emit("onCloseDialog");
         //         })
-        //         .catch((err) => {
-        //             console.log(err);
-        //         });
         //     // ログアウト
         //     this.$cookies.remove("token");
         //     this.$store.commit("setLoginInfo", {});

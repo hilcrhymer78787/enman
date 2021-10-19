@@ -23,7 +23,6 @@
 <script>
 import { mapState } from "vuex";
 export default {
-    layout: "login",
     data() {
         return {
             loading: false,

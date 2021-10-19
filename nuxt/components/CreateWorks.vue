@@ -124,7 +124,6 @@ export default {
         },
     },
     mounted() {
-        this.$store.dispatch("setLoginInfoByToken");
         this.$set(this.task, "date", this.date);
         for (const [key, value] of Object.entries(this.focusTask)) {
             if (Array.isArray(value)) {

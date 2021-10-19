@@ -149,9 +149,7 @@ export default {
                     alert("通信に失敗しました");
                 });
             // ログアウト
-            this.$cookies.remove("token");
-            this.$store.commit("setLoginInfo", {});
-            this.$router.push("/login");
+            this.$store.dispatch('logout')
             this.loading = false;
         },
     },

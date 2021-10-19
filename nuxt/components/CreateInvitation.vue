@@ -53,7 +53,6 @@ export default {
                     `/api/invitation/create?token=${this.loginInfo.token}&email=${this.email}`
                 )
                 .then((res) => {
-                    console.log(res.data)
                     this.errorMessage = "";
                     this.successMessage = "";
                     if (res.data.errorMessage) {

@@ -4,9 +4,6 @@
 <script>
 import moment from "moment";
 export default {
-    async fetch({ store }) {
-        store.dispatch("setLoginInfoByToken");
-    },
     computed: {
         date() {
             return moment(new Date()).format("YYYY-MM-DD");

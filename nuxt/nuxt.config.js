@@ -37,6 +37,10 @@ export default {
     server: {
         host: '0.0.0.0'
     },
+    router: {
+        mode: 'hash',
+        middleware: 'authenticated'
+    },
     // Global CSS: https://go.nuxtjs.dev/config-css
     css: [
         '@/assets/common.scss',
@@ -83,7 +87,6 @@ export default {
         title: 'enman',
         background_color: '#00ccaf',
         color: 'white',
-        theme_color: 'dark',
     },
 
     // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify

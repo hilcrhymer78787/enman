@@ -58,9 +58,6 @@
 import moment from "moment";
 import { mapState } from "vuex";
 export default {
-    async fetch({ store }) {
-        store.dispatch("setLoginInfoByToken");
-    },
     middleware({ redirect, route }) {
         let year = new Date().getFullYear();
         let month = new Date().getMonth() + 1;
@@ -188,7 +185,6 @@ export default {
                     `/api/work/read?year=${this.year}&month=${this.month}&day=${this.day}&token=${this.loginInfo.token}`
                 )
                 .then((res) => {
-                    console.log(res.data)
                     this.$store.commit("setWorks", res.data);
                 })
                 .catch((err) => {

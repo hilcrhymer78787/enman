@@ -89,9 +89,6 @@
 <script>
 import { mapState } from "vuex";
 export default {
-    async fetch({ store }) {
-        store.dispatch("setLoginInfoByToken");
-    },
     data() {
         return {
             selectedRoomId: 0,
@@ -109,9 +106,7 @@ export default {
     methods: {
         logout() {
             if (confirm("ログアウトしますか？")) {
-                this.$cookies.remove("token");
-                this.$store.commit("setLoginInfo", {});
-                this.$router.push("/login");
+                this.$store.dispatch('logout')
             }
         },
         openCreateRoomDialog(mode) {

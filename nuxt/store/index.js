@@ -1,5 +1,6 @@
 export const state = () => ({
-    loginInfo: {},
+    firstViewFlag: false,
+    loginInfo: null,
     users: [],
     todayTasks: [],
     works: {
@@ -9,6 +10,9 @@ export const state = () => ({
 })
 
 export const mutations = {
+    setFirstViewFlag(state, firstViewFlag) {
+        state.firstViewFlag = firstViewFlag
+    },
     setLoginInfo(state, loginInfo) {
         state.loginInfo = loginInfo
     },
@@ -32,28 +36,43 @@ export const actions = {
         const password = form.password
         await this.$axios.get(`/api/user/read?email=${email}&password=${password}`)
             .then((res) => {
-                commit('setLoginInfo', res.data)
                 this.$cookies.set("token", res.data.token, {
                     maxAge: 60 * 60 * 24 * 30,
                 });
+                commit('setLoginInfo', res.data)
             })
     },
-    async setLoginInfoByToken({ commit, dispatch }) {
+    setLoginInfoByToken({ commit }) {
         const token = this.$cookies.get("token")
-        if (!token) {
-            return
-        }
-        await this.$axios.get(`/api/user/read?token=${token}`)
+        this.$axios.get(`/api/user/read?token=${token}`)
             .then((res) => {
-                commit('setLoginInfo', res.data)
-                dispatch('setTodayTasks')
+                if (res.data.errorMessage) {
+                    // トークンが有効ではない
+                    this.$cookies.remove("token");
+                    if (!($nuxt.$route.name == 'login' || $nuxt.$route.name == 'login-newUser')) {
+                        $nuxt.$router.push("/login");
+                    }
+                    commit('setLoginInfo', false)
+                } else {
+                    // トークンが有効
+                    if (($nuxt.$route.name == 'login' || $nuxt.$route.name == 'login-newUser')) {
+                        $nuxt.$router.push("/");
+                    }
+                    commit('setLoginInfo', res.data)
+                }
             })
             .catch(() => {
-                alert('通信エラーのためログイン画面に戻ります')
-                this.$cookies.remove("token");
-                commit("setLoginInfo", {});
-                $nuxt.$router.push("/login");
+                alert('通信エラーです')
             })
+            .finally(() => {
+                setTimeout(() => {
+                    commit('setFirstViewFlag', true)
+                }, 500);
+            })
+    },
+    logout({ dispatch }) {
+        this.$cookies.remove("token");
+        dispatch('setLoginInfoByToken')
     },
     setTodayTasks({ state, commit }) {
         const today = new Date();
