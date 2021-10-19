@@ -42,7 +42,7 @@ export const actions = {
                 commit('setLoginInfo', res.data)
             })
     },
-    setLoginInfoByToken({ commit }) {
+    setLoginInfoByToken({ commit, dispatch }) {
         const token = this.$cookies.get("token")
         this.$axios.get(`/api/user/read?token=${token}`)
             .then((res) => {
@@ -59,6 +59,7 @@ export const actions = {
                         $nuxt.$router.push("/");
                     }
                     commit('setLoginInfo', res.data)
+                    dispatch('setTodayTasks')
                 }
             })
             .catch(() => {
