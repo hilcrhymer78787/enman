@@ -6,7 +6,7 @@
                     <Nuxt />
                 </v-container>
             </v-main>
-            <v-bottom-navigation v-if="loginInfo" app light fixed color="teal">
+            <v-bottom-navigation app light fixed color="teal">
                 <v-btn :style="`width:calc(100% / 3); height:100%;background-color:white;`" to="/" router light exact>
                     <span>毎日タスク</span>
                     <v-badge :value="false" color="teal" offset-x="5" offset-y="15">
