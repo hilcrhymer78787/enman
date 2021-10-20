@@ -1,5 +1,4 @@
 export const state = () => ({
-    firstViewFlag: false,
     loginInfo: null,
     users: [],
     todayTasks: [],
@@ -10,9 +9,6 @@ export const state = () => ({
 })
 
 export const mutations = {
-    setFirstViewFlag(state, firstViewFlag) {
-        state.firstViewFlag = firstViewFlag
-    },
     setLoginInfo(state, loginInfo) {
         state.loginInfo = loginInfo
     },
@@ -43,16 +39,11 @@ export const actions = {
             })
     },
     setLoginInfoByToken({ commit, dispatch }) {
-        const token = this.$cookies.get("token")
-        this.$axios.get(`/api/user/read?token=${token}`)
+        this.$axios.get(`/api/user/read?token=${this.$cookies.get("token")}`)
             .then((res) => {
                 if (res.data.errorMessage) {
                     // トークンが有効ではない
-                    this.$cookies.remove("token");
-                    if (!($nuxt.$route.name == 'login' || $nuxt.$route.name == 'login-newUser')) {
-                        $nuxt.$router.push("/login");
-                    }
-                    commit('setLoginInfo', false)
+                    dispatch('logout')
                 } else {
                     // トークンが有効
                     if (this.$cookies.get("token")) {
@@ -65,21 +56,15 @@ export const actions = {
                 }
             })
             .catch(() => {
-                this.$cookies.remove("token");
-                if (!($nuxt.$route.name == 'login' || $nuxt.$route.name == 'login-newUser')) {
-                    $nuxt.$router.push("/login");
-                }
-                commit('setLoginInfo', false)
-            })
-            .finally(() => {
-                setTimeout(() => {
-                    commit('setFirstViewFlag', true)
-                }, 500);
+                dispatch('logout')
             })
     },
-    logout({ dispatch }) {
+    logout({ commit }) {
         this.$cookies.remove("token");
-        dispatch('setLoginInfoByToken')
+        if (!($nuxt.$route.name == 'login' || $nuxt.$route.name == 'login-newUser')) {
+            $nuxt.$router.push("/login");
+        }
+        commit('setLoginInfo', false)
     },
     setTodayTasks({ state, commit }) {
         const today = new Date();

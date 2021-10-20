@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-app v-if="firstViewFlag">
+        <v-app v-if="loginInfo">
             <v-main>
                 <v-container style="max-width:500px;">
                     <Nuxt />
@@ -34,7 +34,7 @@
 import { mapState } from "vuex";
 export default {
     computed: {
-        ...mapState(["loginInfo", "firstViewFlag"]),
+        ...mapState(["loginInfo"]),
     },
 };
 </script>
