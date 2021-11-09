@@ -7,7 +7,7 @@ RUN apt-get update \
 git \
 zip \
 unzip \
-nodejs \
+# nodejs \
 vim
 
 RUN apt-get update \

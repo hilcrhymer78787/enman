@@ -1,4 +1,6 @@
 import colors from 'vuetify/es5/util/colors'
+const environment = process.env.NODE_ENV || 'development'
+const envSet = require(`./env.${environment}.js`)
 
 export default {
     // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
@@ -74,9 +76,7 @@ export default {
 
     // Axios module configuration: https://go.nuxtjs.dev/config-axios
     axios: {
-        // baseURL: 'http://192.168.3.5:8000'
-        baseURL: 'http://localhost:8000'
-        // baseURL: 'https://enman-back.magicgifted.com/enman/laravel/public'
+        baseURL: envSet.API_BASE_URL,
     },
 
     // PWA module configuration: https://go.nuxtjs.dev/pwa
@@ -110,5 +110,7 @@ export default {
 
     // Build Configuration: https://go.nuxtjs.dev/config-build
     build: {
-    }
+    },
+
+    env: envSet,
 }

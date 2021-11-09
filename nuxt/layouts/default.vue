@@ -57,9 +57,8 @@ export default {
         content: none;
     }
 }
-.v-card__title{
+.v-card__title {
     background-color: #009688;
     color: white;
 }
-
 </style>
