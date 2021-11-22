@@ -1,5 +1,5 @@
 <template>
-    <v-card max-width="350" class="mx-auto">
+    <v-card class="mx-auto">
         <v-card-title>{{loginInfo.room_name}}へ招待</v-card-title>
         <v-divider></v-divider>
         <v-card-text style="min-height:150px;">

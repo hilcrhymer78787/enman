@@ -1,5 +1,5 @@
 <template>
-    <v-card max-width="350" class="mx-auto">
+    <v-card class="mx-auto">
         <v-card-title>
             <span v-if="mode == 'create'">新規ルーム作成</span>
             <span v-if="mode == 'edit'">ルーム編集</span>
@@ -7,14 +7,25 @@
         <v-divider></v-divider>
         <v-card-text>
             <v-form v-model="noError" ref="form" class="pt-5">
-                <v-img @click="imagePickerDialog = true" :src="form.room_img" aspect-ratio="1" style="width:30%;" class="rounded-circle main_img mb-5 mx-auto"></v-img>
+
+                <div class="mb-5 d-flex align-center justify-center">
+                    <div @click="imagePickerDialog = true" class="mr-5" style="width:30%;">
+                        <v-img v-if="file" :src="uploadedImage" aspect-ratio="1" class="rounded-circle main_img"></v-img>
+                        <v-img v-else-if="form.room_img.slice( 0, 4 ) == 'http'" :src="form.room_img" aspect-ratio="1" class="rounded-circle main_img"></v-img>
+                        <v-img v-else :src="backUrl+'/storage/'+form.room_img" aspect-ratio="1" class="rounded-circle main_img"></v-img>
+                    </div>
+                    <v-btn @click="$refs.input.click()">
+                        <v-icon>mdi-upload</v-icon>
+                    </v-btn>
+                    <input ref="input" class="d-none" type="file" accept="image/*" @change="fileSelected">
+                </div>
+
                 <v-text-field validate-on-blur :rules="nameRules" required label="部屋名" placeholder="部屋名" prepend-inner-icon="mdi-home" outlined v-model="form.room_name" color="teal"></v-text-field>
                 <p v-if="errorMessage && noError" class="error_message mb-2">{{errorMessage}}</p>
             </v-form>
         </v-card-text>
         <v-divider></v-divider>
         <v-card-actions>
-            <!-- <v-btn v-if="mode=='edit'" :loading="loading" color="error" dark @click="deleteAccount()">アカウント削除</v-btn> -->
             <v-btn @click="createInvitationDialog = true" v-if="mode == 'edit'">招待</v-btn>
             <v-spacer></v-spacer>
             <v-btn @click="$emit('onCloseDialog')">CLOSE</v-btn>
@@ -34,10 +45,14 @@
 
 <script>
 import { mapState } from "vuex";
+import moment from "moment";
 export default {
     props: ["mode"],
     data() {
         return {
+            uploadedImage: null,
+            file: null,
+            backUrl: process.env.API_BASE_URL,
             loading: false,
             noError: false,
             errorMessage: "",
@@ -55,6 +70,19 @@ export default {
         ...mapState(["loginInfo"]),
     },
     methods: {
+        fileSelected(e) {
+            this.file = e.target.files[0];
+            this.$set(
+                this.form,
+                "room_img",
+                moment().format("YYYYMMDDHHmmss") + this.file.name
+            );
+            let reader = new FileReader();
+            reader.onload = (e) => {
+                this.uploadedImage = e.target.result;
+            };
+            reader.readAsDataURL(this.file);
+        },
         async createRoom() {
             this.errorMessage = "";
             this.$refs.form.validate();
@@ -63,9 +91,18 @@ export default {
                 return;
             }
             this.loading = true;
+            let imgData = new FormData();
+            imgData.append("file", this.file);
             await this.$axios
                 .post(
-                    `/api/room/create?token=${this.loginInfo.token}&room_id=${this.form.room_id}&room_name=${this.form.room_name}&room_img=${this.form.room_img}`
+                    `/api/room/create?token=${this.loginInfo.token}&room_id=${
+                        this.form.room_id
+                    }&room_name=${this.form.room_name}&room_img=${
+                        this.form.room_img
+                    }&img_oldname=${this.form.img_oldname}&exist_file=${
+                        this.file ? 1 : 0
+                    }`,
+                    imgData
                 )
                 .catch((err) => {
                     alert("通信に失敗しました");
@@ -81,39 +118,13 @@ export default {
                 `https://picsum.photos/500/300?image=${n}`
             );
         },
-        // async deleteAccount() {
-        //     if (
-        //         !confirm(
-        //             `「${this.loginInfo.name}」のアカウント情報を全て削除しますか？`
-        //         )
-        //     ) {
-        //         return;
-        //     }
-        //     if (!confirm(`本当によろしいですか？`)) {
-        //         return;
-        //     }
-        //     if (!confirm(`知らないですよ？`)) {
-        //         return;
-        //     }
-        //     // アカウント削除API
-        //     this.loading = true;
-        //     await this.$axios
-        //         .delete(`/api/user/delete?token=${this.form.token}`)
-        //         .then((res) => {
-        //             this.$emit("onCloseDialog");
-        //         })
-        //     // ログアウト
-        //     this.$cookies.remove("token");
-        //     this.$store.commit("setLoginInfo", {});
-        //     this.$router.push("/login");
-        //     this.loading = false;
-        // },
     },
     mounted() {
         if (this.mode == "edit") {
             this.$set(this.form, "room_id", this.loginInfo.room_id);
             this.$set(this.form, "room_name", this.loginInfo.room_name);
             this.$set(this.form, "room_img", this.loginInfo.room_img);
+            this.$set(this.form, "img_oldname", this.loginInfo.room_img);
         }
     },
 };

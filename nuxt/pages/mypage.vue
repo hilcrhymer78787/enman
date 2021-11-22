@@ -33,7 +33,8 @@
                 </v-toolbar>
                 <v-card-text class="d-flex align-center">
                     <div class="pb-2 mx-auto" style="width:20%;">
-                        <v-img :src="loginInfo.room_img" aspect-ratio="1" class="rounded-circle main_img"></v-img>
+                        <v-img v-if="loginInfo.room_img.slice( 0, 4 ) == 'http'" :src="loginInfo.room_img" aspect-ratio="1" class="rounded-circle main_img"></v-img>
+                        <v-img v-else :src="backUrl+'/storage/'+loginInfo.room_img" aspect-ratio="1" class="rounded-circle main_img"></v-img>
                     </div>
                     <v-spacer></v-spacer>
                     <div class="pt-2" style="width:75%;">
@@ -58,7 +59,8 @@
             <div v-for="(room,roomIndex) in loginInfo.invited_rooms" :key="roomIndex">
                 <v-card-text class="d-flex align-center pb-0">
                     <div class="pb-2 mx-auto" style="width:20%;">
-                        <v-img :src="room.room_img" aspect-ratio="1" class="rounded-circle main_img"></v-img>
+                        <v-img v-if="room.room_img.slice( 0, 4 ) == 'http'" :src="room.room_img" aspect-ratio="1" class="rounded-circle main_img"></v-img>
+                        <v-img v-else :src="backUrl+'/storage/'+room.room_img" aspect-ratio="1" class="rounded-circle main_img"></v-img>
                     </div>
                     <v-spacer></v-spacer>
                     <div class="pt-2" style="width:75%;">

@@ -118,9 +118,6 @@ class UserController extends Controller
                 $user->save();
                 if ($request['exist_file']) {
                     $request["file"]->storeAs('public/', $request["user_img"]);
-                    $user->where("id", $request["id"])->update([
-                        "user_img" => $request["user_img"],
-                    ]);
                 }
 
                 $loginInfo = (new UserService())->getLoginInfoByToken($userToken);
@@ -157,10 +154,9 @@ class UserController extends Controller
                 ]);
                 if ($request['exist_file']) {
                     $request["file"]->storeAs('public/', $request["user_img"]);
+                }
+                if ($request["user_img"] != $request["img_oldname"]) {
                     Storage::delete('public/' . $request["img_oldname"]);
-                    $user->where("id", $loginInfo['id'])->update([
-                        "user_img" => $request["user_img"],
-                    ]);
                 }
             }
         }
