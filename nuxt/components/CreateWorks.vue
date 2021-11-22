@@ -30,6 +30,7 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
     props: ["focusTask", "date", "mode"],
 
@@ -40,6 +41,9 @@ export default {
             noError: false,
             task: {},
         };
+    },
+    computed: {
+        ...mapState(["loginInfo"]),
     },
     methods: {
         users(userId) {
@@ -142,7 +146,7 @@ export default {
         }
         if (!this.focusTask.works.length) {
             let obj = {};
-            this.$set(obj, "work_user_id", 0);
+            this.$set(obj, "work_user_id", this.loginInfo['id']);
             this.$set(obj, "work_minute", this.focusTask.task_default_minute);
             this.task.works.push(obj);
         }
