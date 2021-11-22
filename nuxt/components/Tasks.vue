@@ -22,7 +22,8 @@
                                 <v-list-item v-ripple class="pl-2 pr-0" style="height:60px;overflow:hidden;">
                                     <v-list-item-avatar @click="onFocusTask(task)">
                                         <v-icon v-if="task.works.length == 0">mdi-account</v-icon>
-                                        <v-img v-if="task.works.length == 1" :src="task.works[0].work_user_img" class="rounded-circle"></v-img>
+                                        <v-img v-if="task.works.length == 1 && task.works[0].work_user_img.slice( 0, 4 ) == 'http'" :src="task.works[0].work_user_img" aspect-ratio="1" class="rounded-circle"></v-img>
+                                        <v-img v-else-if="task.works.length == 1" :src="backUrl+'/storage/'+task.works[0].work_user_img" aspect-ratio="1" class="rounded-circle"></v-img>
                                         <v-icon v-if="task.works.length >= 2" style="background-color:rgba(128, 128, 128, 0.3);" color="teal">mdi-account-group</v-icon>
                                     </v-list-item-avatar>
                                     <v-list-item-content @click="onFocusTask(task)">
@@ -81,6 +82,7 @@ export default {
     },
     data() {
         return {
+            backUrl: process.env.API_BASE_URL,
             swiperOption: {
                 initialSlide: 1,
                 slidesPerView: "auto",
