@@ -8,7 +8,8 @@
                 </v-toolbar>
                 <v-card-text class="d-flex align-center">
                     <div class="mx-auto" style="width:30%;">
-                        <v-img :src="loginInfo.user_img" aspect-ratio="1" class="rounded-circle main_img"></v-img>
+                        <v-img v-if="loginInfo.user_img.slice( 0, 4 ) == 'http'" :src="loginInfo.user_img" aspect-ratio="1" class="rounded-circle main_img"></v-img>
+                        <v-img v-else :src="backUrl+'/storage/'+loginInfo.user_img" aspect-ratio="1" class="rounded-circle main_img"></v-img>
                     </div>
                     <v-spacer></v-spacer>
                     <div class="pt-2" style="width:65%;">
@@ -91,6 +92,7 @@ import { mapState } from "vuex";
 export default {
     data() {
         return {
+            backUrl: process.env.API_BASE_URL,
             selectedRoomId: 0,
             onChangeRoomloading: false,
             joinRoomloadings: [],

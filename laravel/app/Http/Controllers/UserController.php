@@ -8,6 +8,7 @@ use App\Models\Room;
 use App\Models\Invitation;
 use App\Services\UserService;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 
 
 class UserController extends Controller
@@ -115,6 +116,12 @@ class UserController extends Controller
                 $user["token"] = $userToken;
                 $user["user_room_id"] = $roomId;
                 $user->save();
+                if ($request['exist_file']) {
+                    $request["file"]->storeAs('public/', $request["user_img"]);
+                    $user->where("id", $request["id"])->update([
+                        "user_img" => $request["user_img"],
+                    ]);
+                }
 
                 $loginInfo = (new UserService())->getLoginInfoByToken($userToken);
 
@@ -148,6 +155,13 @@ class UserController extends Controller
                     "user_img" => $request["user_img"],
                     "token" => $request["email"].Str::random(100),
                 ]);
+                if ($request['exist_file']) {
+                    $request["file"]->storeAs('public/', $request["user_img"]);
+                    Storage::delete('public/' . $request["img_oldname"]);
+                    $user->where("id", $loginInfo['id'])->update([
+                        "user_img" => $request["user_img"],
+                    ]);
+                }
             }
         }
     }
