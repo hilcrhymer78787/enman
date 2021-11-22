@@ -112,5 +112,9 @@ export default {
     build: {
     },
 
+    generate: {
+        dir: '../../../enman.magicgifted.com'
+    },
+
     env: envSet,
 }
