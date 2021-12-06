@@ -1,6 +1,4 @@
 import colors from 'vuetify/es5/util/colors'
-const environment = process.env.NODE_ENV || 'development'
-const envSet = require(`./env.${environment}.js`)
 
 export default {
     // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
@@ -67,6 +65,7 @@ export default {
         '@nuxtjs/vuetify',
         '@nuxtjs/moment',
         'cookie-universal-nuxt',
+        '@nuxtjs/dotenv',
     ],
 
     // Modules: https://go.nuxtjs.dev/config-modules
@@ -79,7 +78,7 @@ export default {
 
     // Axios module configuration: https://go.nuxtjs.dev/config-axios
     axios: {
-        baseURL: envSet.API_BASE_URL,
+        baseURL: process.env.API_BASE_URL,
     },
 
     // PWA module configuration: https://go.nuxtjs.dev/pwa
@@ -115,9 +114,9 @@ export default {
     build: {
     },
 
-    // generate: {
-    //     dir: '../../../enman.magicgifted.com'
-    // },
+    generate: {
+        // dir: '../../../enman.magicgifted.com'
+        dir: process.env.BUILD_DIR,
+    },
 
-    env: envSet,
 }
