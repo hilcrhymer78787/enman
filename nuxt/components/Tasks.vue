@@ -24,7 +24,8 @@
                                         <v-icon v-if="task.works.length == 0">mdi-account</v-icon>
                                         <v-img v-if="task.works.length == 1 && task.works[0].work_user_img.slice( 0, 4 ) == 'http'" :src="task.works[0].work_user_img" aspect-ratio="1" class="rounded-circle"></v-img>
                                         <v-img v-else-if="task.works.length == 1" :src="backUrl+'/storage/'+task.works[0].work_user_img" aspect-ratio="1" class="rounded-circle"></v-img>
-                                        <v-img v-if="task.works.length >= 2" :src="loginInfo.room_img"></v-img>
+                                        <v-img v-if="task.works.length >= 2 && loginInfo.room_img.slice( 0, 4 ) == 'http'" :src="loginInfo.room_img" aspect-ratio="1" class="rounded-circle"></v-img>
+                                        <v-img v-else-if="task.works.length >= 2" :src="backUrl+'/storage/'+loginInfo.room_img" aspect-ratio="1" class="rounded-circle"></v-img>
                                     </v-list-item-avatar>
                                     <v-list-item-content @click="onFocusTask(task)">
                                         <v-list-item-title>{{task.task_name}}</v-list-item-title>
