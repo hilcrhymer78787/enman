@@ -21,7 +21,7 @@
                 </v-btn>
                 <v-btn :style="`width:calc(100% / 3); height:100%;background-color:white;`" to="/mypage" router light exact>
                     <span>マイページ</span>
-                    <v-badge v-if="loginInfo.invited_rooms" :value="loginInfo.invited_rooms.length" color="teal" offset-x="5" offset-y="15" :content="loginInfo.invited_rooms.length">
+                    <v-badge :value="loginInfo.invited_rooms.length" color="teal" offset-x="5" offset-y="15" :content="loginInfo.invited_rooms.length">
                         <v-icon>mdi-account</v-icon>
                     </v-badge>
                 </v-btn>

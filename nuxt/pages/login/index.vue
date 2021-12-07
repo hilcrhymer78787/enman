@@ -69,7 +69,6 @@ export default {
                         this.$cookies.set("token", res.data.token, {
                             maxAge: 60 * 60 * 24 * 30,
                         });
-                        this.$store.commit("setLoginInfo", res.data);
                         this.$router.push("/");
                     }
                 })
