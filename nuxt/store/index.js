@@ -30,7 +30,7 @@ export const actions = {
     async setLoginInfo({ commit }, form) {
         const email = form.email
         const password = form.password
-        await this.$axios.get(`/api/user/read?email=${email}&password=${password}`)
+        await this.$axios.get(`/api/user/basic_authentication?email=${email}&password=${password}`)
             .then((res) => {
                 this.$cookies.set("token", res.data.token, {
                     maxAge: 60 * 60 * 24 * 30,
@@ -39,7 +39,7 @@ export const actions = {
             })
     },
     setLoginInfoByToken({ commit, dispatch }) {
-        this.$axios.get(`/api/user/read?token=${this.$cookies.get("token")}`)
+        this.$axios.get(`/api/user/bearer_authentication?token=${this.$cookies.get("token")}`)
             .then((res) => {
                 if (res.data.errorMessage) {
                     // トークンが有効ではない

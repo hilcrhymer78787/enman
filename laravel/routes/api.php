@@ -18,27 +18,23 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-// 完成
 Route::post('/task/create', 'TaskController@create');
 Route::get('/task/read', 'TaskController@read');
 Route::delete('/task/delete', 'TaskController@delete');
 
-// 完成
-Route::get('/read', 'UserController@read');
+Route::get('/user/basic_authentication', 'UserController@basic_authentication');
+Route::get('/user/bearer_authentication', 'UserController@bearer_authentication');
+
 Route::post('/user/create', 'UserController@create');
-Route::get('/user/read', 'UserController@read');
 Route::put('/user/update/room_id', 'UserController@updateRoomId');
 Route::delete('/user/delete', 'UserController@delete');
 
-// 完成
 Route::post('/work/create', 'WorkController@create');
 Route::get('/work/read', 'WorkController@read');
 Route::delete('/work/delete', 'WorkController@delete');
 
-// 完成
 Route::get('/room/read', 'RoomController@read');
 Route::post('/room/create', 'RoomController@create');
-
 
 Route::post('/invitation/create', 'InvitationController@create');
 Route::get('/invitation/read', 'InvitationController@read');

@@ -13,30 +13,28 @@ use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
-    public function read(Request $request)
+    public function basic_authentication(Request $request)
     {
-        // 個人情報取得
-        if($request->token){
-            // トークン認証
-            $loginInfo = User::where('token', $request->token)
-            ->leftjoin('rooms', 'users.user_room_id', '=', 'rooms.room_id')
-            ->select('id', 'name', 'email', 'user_img', 'room_id','room_img','room_name','token')
+        // ベーシック認証
+        $loginInfo = User::where('email', $request->email)
+            ->where('password', $request->password)
+            ->select('token')
             ->first();
-            if(!isset($loginInfo)){
-                $error['errorMessage'] = 'このトークンは有効ではありません';
-                return $error;
-            }
-        }elseif($request->email){
-            // ベーシック認証
-            $loginInfo = User::where('email', $request->email)
-            ->where('password',$request->password)
-            ->leftjoin('rooms', 'users.user_room_id', '=', 'rooms.room_id')
-            ->select('id', 'name', 'email', 'user_img', 'room_id','room_img','room_name','token')
-            ->first();
-            if(!isset($loginInfo)){
-                $error['errorMessage'] = 'メールアドレスかパスワードが違います';
-                return $error;
-            }
+        if (!isset($loginInfo)) {
+            $error['errorMessage'] = 'メールアドレスかパスワードが違います';
+            return $error;
+        }
+        return $loginInfo;
+    }
+    public function bearer_authentication(Request $request)
+    {
+        $loginInfo = User::where('token', $request->token)
+        ->leftjoin('rooms', 'users.user_room_id', '=', 'rooms.room_id')
+        ->select('id', 'name', 'email', 'user_img', 'room_id','room_img','room_name','token')
+        ->first();
+        if(!isset($loginInfo)){
+            $error['errorMessage'] = 'このトークンは有効ではありません';
+            return $error;
         }
 
         // 参加しているユーザー

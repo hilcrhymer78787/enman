@@ -151,7 +151,7 @@ export default {
                 await this.$store.dispatch("setLoginInfo", this.form);
             }
             // トップページへ移動
-            if (this.loginInfo.id && this.mode == "create") {
+            if (this.loginInfo && this.mode == "create") {
                 this.$router.push("/");
             }
             this.loading = false;
