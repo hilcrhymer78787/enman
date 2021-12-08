@@ -20,8 +20,9 @@
                 </div>
                 <v-text-field validate-on-blur @keyup.enter="login" :rules="nameRules" required label="名前" placeholder="名前" prepend-inner-icon="mdi-account" outlined v-model="form.name" color="teal"></v-text-field>
                 <v-text-field validate-on-blur @keyup.enter="login" :rules="emailRules" required label="メールアドレス" placeholder="メールアドレス" prepend-inner-icon="mdi-email" outlined v-model="form.email" color="teal"></v-text-field>
-                <v-text-field validate-on-blur @keyup.enter="login" :rules="passwordRules" required label="パスワード" placeholder="パスワード" prepend-inner-icon="mdi-lock" :append-icon="passwordShow ? 'mdi-eye' : 'mdi-eye-off'" :type="passwordShow ? 'text' : 'password'" outlined v-model="form.password" @click:append="passwordShow = !passwordShow" color="teal"></v-text-field>
-                <v-text-field validate-on-blur @keyup.enter="login" :rules="passwordAgainRules" required label="パスワードの確認" placeholder="パスワードの確認" prepend-inner-icon="mdi-lock" :append-icon="passwordAgainShow ? 'mdi-eye' : 'mdi-eye-off'" :type="passwordAgainShow ? 'text' : 'passwordAgain'" outlined v-model="form.passwordAgain" @click:append="passwordAgainShow = !passwordAgainShow" color="teal"></v-text-field>
+                <v-text-field v-if="passwordEdit" validate-on-blur @keyup.enter="login" :rules="passwordRules" required label="パスワード" placeholder="パスワード" prepend-inner-icon="mdi-lock" :append-icon="passwordShow ? 'mdi-eye' : 'mdi-eye-off'" :type="passwordShow ? 'text' : 'password'" outlined v-model="form.password" @click:append="passwordShow = !passwordShow" color="teal"></v-text-field>
+                <v-text-field v-if="passwordEdit" validate-on-blur @keyup.enter="login" :rules="passwordAgainRules" required label="パスワードの確認" placeholder="パスワードの確認" prepend-inner-icon="mdi-lock" :append-icon="passwordAgainShow ? 'mdi-eye' : 'mdi-eye-off'" :type="passwordAgainShow ? 'text' : 'passwordAgain'" outlined v-model="form.passwordAgain" @click:append="passwordAgainShow = !passwordAgainShow" color="teal"></v-text-field>
+                <v-btn v-else @click="passwordEdit = true">パスワードを変更する</v-btn>
                 <p v-if="errorMessage && noError" class="error_message mb-2">{{errorMessage}}</p>
             </v-form>
         </v-card-text>
@@ -55,6 +56,7 @@ export default {
             noError: false,
             errorMessage: "",
             imagePickerDialog: false,
+            passwordEdit: true,
             form: {
                 id: 0,
                 name: "",
@@ -133,23 +135,20 @@ export default {
                     imgData
                 )
                 .then((res) => {
-                    console.log(res.data);
                     this.errorMessage = "";
                     if (res.data.errorMessage) {
                         this.errorMessage = res.data.errorMessage;
                     } else {
+                        this.$store.dispatch("setLoginInfoByToken");
                         this.$emit("onCloseDialog");
                     }
                 })
                 .catch((err) => {
                     this.errorMessage = "通信に失敗しました";
                 });
-            // 認証情報のセット
-            if (!this.errorMessage) {
-                await this.$store.dispatch("setLoginInfo", this.form);
-            }
             // トップページへ移動
-            if (this.mode == "create") {
+            if (this.mode == "create" && !this.errorMessage) {
+                await this.$store.dispatch("setLoginInfo", this.form);
                 this.$router.push("/");
             }
             this.loading = false;
@@ -192,6 +191,7 @@ export default {
     },
     mounted() {
         if (this.mode == "edit") {
+            this.passwordEdit = false
             this.$set(this.form, "token", this.loginInfo.token);
             this.$set(this.form, "id", this.loginInfo.id);
             this.$set(this.form, "name", this.loginInfo.name);

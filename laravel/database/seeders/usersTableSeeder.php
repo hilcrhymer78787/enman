@@ -19,10 +19,10 @@ class usersTableSeeder extends Seeder
           [
             'id' => 1,
             'name' => 'user1',
-            'email' => 'user1',
+            'email' => 'user1@gmail.com',
             'password' => 'password',
             'user_img' => 'https://picsum.photos/500/300?image=30',
-            'token' => 'user1'.Str::random(100),
+            'token' => 'user1@gmail.com'.Str::random(100),
             'user_room_id' => 1,
           ],
           [

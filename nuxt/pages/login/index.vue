@@ -10,7 +10,7 @@
                 </v-form>
                 <p v-if="errorMessage && noError" class="error_message mb-2">{{errorMessage}}</p>
                 <div class="d-flex justify-center">
-                    <v-btn @click="login('user1', 'password')">テストユーザーでログイン</v-btn>
+                    <v-btn @click="login('user1@gmail.com', 'password')">テストユーザーでログイン</v-btn>
                 </div>
             </v-card-text>
 

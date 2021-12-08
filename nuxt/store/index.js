@@ -38,7 +38,7 @@ export const actions = {
             })
     },
     setLoginInfoByToken({ commit, dispatch }) {
-        this.$axios.get(`/api/user/bearer_authentication?token=${this.$cookies.get("token")}`)
+        this.$axios.get(`/api/user/bearer_authentication`)
             .then((res) => {
                 if (res.data.errorMessage) {
                     // トークンが有効ではない
@@ -50,7 +50,6 @@ export const actions = {
                             $nuxt.$router.push("/");
                         }
                         commit('setLoginInfo', res.data)
-                        dispatch('setTodayTasks')
                     }
                 }
             })

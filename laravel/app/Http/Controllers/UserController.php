@@ -28,11 +28,11 @@ class UserController extends Controller
     }
     public function bearer_authentication(Request $request)
     {
-        $loginInfo = User::where('token', $request->token)
+        $loginInfo = User::where('token', $request->header('token'))
         ->leftjoin('rooms', 'users.user_room_id', '=', 'rooms.room_id')
         ->select('id', 'name', 'email', 'user_img', 'room_id','room_img','room_name','token')
         ->first();
-        if(!isset($loginInfo)){
+        if(!$loginInfo){
             $error['errorMessage'] = 'このトークンは有効ではありません';
             return $error;
         }
@@ -92,9 +92,7 @@ class UserController extends Controller
                 return $error;
             }
             else{
-
                 // 部屋を作成
-
                 $roomToken = date('Y-m-d H:i:s').Str::random(100);
 
                 $room["room_name"] = "マイルーム";
@@ -132,7 +130,6 @@ class UserController extends Controller
         }else{
             // 編集
             $loginInfo = (new UserService())->getLoginInfoByToken($request->header('token'));
-
             $loginInfoCount = count(User::where('email', $request["email"])->get());
 
             if($loginInfoCount != 0 && $loginInfo['email'] != $request["email"]){
@@ -142,9 +139,7 @@ class UserController extends Controller
                 $user->where("id", $loginInfo['id'])->update([
                     "name" => $request["name"],
                     "email" => $request["email"],
-                    "password" => $request["password"],
                     "user_img" => $request["user_img"],
-                    "token" => $request["email"].Str::random(100),
                 ]);
                 if ($request['exist_file']) {
                     $request["file"]->storeAs('public/', $request["user_img"]);
@@ -152,6 +147,12 @@ class UserController extends Controller
                 if ($request["user_img"] != $request["img_oldname"]) {
                     Storage::delete('public/' . $request["img_oldname"]);
                 }
+                if ($request["password"]) {
+                    $user->where("id", $request['id'])->update([
+                        "password" => $request["password"],
+                    ]);
+                }
+                return User::where('id', $request['id'])->first();
             }
         }
     }
