@@ -17,23 +17,23 @@ class tasksTableSeeder extends Seeder
         DB::table('tasks')->insert([
             [
                 'task_room_id' => 1,
-                'task_name' => 'お風呂洗い',
+                'task_name' => '洗い物',
                 'task_status' => null,
-                'task_default_minute' => 5,
+                'task_default_minute' => 15,
                 'task_is_everyday' => '1',
-                'task_sort_key' => 30
+                'task_sort_key' => 2
             ],
             [
                 'task_room_id' => 1,
-                'task_name' => '洗濯物の片付け',
+                'task_name' => '料理',
                 'task_status' => null,
-                'task_default_minute' => 5,
+                'task_default_minute' => 30,
                 'task_is_everyday' => '1',
-                'task_sort_key' => 31
+                'task_sort_key' => 3
             ],
             [
                 'task_room_id' => 1,
-                'task_name' => '夕飯後の洗い物',
+                'task_name' => '洗濯',
                 'task_status' => null,
                 'task_default_minute' => 15,
                 'task_is_everyday' => '1',
@@ -41,15 +41,15 @@ class tasksTableSeeder extends Seeder
             ],
             [
                 'task_room_id' => 1,
-                'task_name' => '洗濯機の埃取り',
+                'task_name' => '掃除',
                 'task_status' => null,
-                'task_default_minute' => 5,
+                'task_default_minute' => 20,
                 'task_is_everyday' => 1,
                 'task_sort_key' => 5
             ],
             [
                 'task_room_id' => 1,
-                'task_name' => '燃えるゴミ出し',
+                'task_name' => 'ゴミ出し',
                 'task_status' => null,
                 'task_default_minute' => 10,
                 'task_is_everyday' => 1,
@@ -57,51 +57,51 @@ class tasksTableSeeder extends Seeder
             ],
             [
                 'task_room_id' => 1,
-                'task_name' => '資源ごみ出し',
+                'task_name' => '買い出し',
                 'task_status' => null,
-                'task_default_minute' => 5,
+                'task_default_minute' => 30,
                 'task_is_everyday' => 1,
                 'task_sort_key' => 7
             ],
             [
                 'task_room_id' => 1,
-                'task_name' => 'プラスチックゴミ出し',
+                'task_name' => 'その他',
                 'task_status' => null,
                 'task_default_minute' => 5,
                 'task_is_everyday' => 1,
                 'task_sort_key' => 8
             ],
             [
-                'task_room_id' => 1,
-                'task_name' => '結婚式の招待状作成',
-                'task_status' => 1,
-                'task_default_minute' => 120,
-                'task_is_everyday' => null,
-                'task_sort_key' => 9
-            ],
-            [
-                'task_room_id' => 1,
-                'task_name' => '結婚式の進行内容や演出の検討',
-                'task_status' => 1,
-                'task_default_minute' => 180,
-                'task_is_everyday' => null,
-                'task_sort_key' => 10
-            ],
-            [
-                'task_room_id' => 1,
-                'task_name' => '引出物・引菓子の検討',
-                'task_status' => 1,
-                'task_default_minute' => 90,
-                'task_is_everyday' => null,
-                'task_sort_key' => 11
-            ],
-            [
                 'task_room_id' => 2,
-                'task_name' => 'ことみのタスク',
+                'task_name' => '掃除',
                 'task_status' => 1,
-                'task_default_minute' => 90,
+                'task_default_minute' => 20,
                 'task_is_everyday' => 1,
-                'task_sort_key' => 12
+                'task_sort_key' => 1,
+            ],
+            [
+                'task_room_id' => 3,
+                'task_name' => '洗濯',
+                'task_status' => 1,
+                'task_default_minute' => 5,
+                'task_is_everyday' => 1,
+                'task_sort_key' => 1,
+            ],
+            [
+                'task_room_id' => 3,
+                'task_name' => '料理',
+                'task_status' => 1,
+                'task_default_minute' => 30,
+                'task_is_everyday' => 1,
+                'task_sort_key' => 2,
+            ],
+            [
+                'task_room_id' => 3,
+                'task_name' => '買い出し',
+                'task_status' => 1,
+                'task_default_minute' => 30,
+                'task_is_everyday' => 1,
+                'task_sort_key' => 3,
             ],
         ]);
     }

@@ -9,7 +9,7 @@
                     <v-text-field validate-on-blur @keyup.enter="login(form.email, form.password)" :rules="passwordRules" required label="パスワード" placeholder="パスワード" prepend-inner-icon="mdi-lock" :append-icon="passwordShow ? 'mdi-eye' : 'mdi-eye-off'" :type="passwordShow ? 'text' : 'password'" outlined v-model="form.password" @click:append="passwordShow = !passwordShow" color="teal"></v-text-field>
                 </v-form>
                 <p v-if="errorMessage && noError" class="error_message mb-2">{{errorMessage}}</p>
-                <div class="d-flex justify-center">
+                <div class="d-flex justify-end">
                     <v-btn @click="login('user1@gmail.com', 'password', 'test')">テストユーザーでログイン</v-btn>
                 </div>
             </v-card-text>

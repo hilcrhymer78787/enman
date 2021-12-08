@@ -175,9 +175,12 @@ export default {
     async mounted() {
         await this.$store.dispatch("setTodayTasks");
         this.displayTasks = this.tasks;
-        const scrollArea = document.querySelector("#scrollArea");
-        const scrollAreaInner = document.querySelector("#scrollAreaInner");
         this.$nextTick(() => {
+            const scrollArea = document.querySelector("#scrollArea");
+            const scrollAreaInner = document.querySelector("#scrollAreaInner");
+            if(!scrollArea){
+                return
+            }
             scrollArea.addEventListener("scroll", () => {
                 if (scrollArea.scrollTop == 0) {
                     scrollArea.scrollTo({ top: 1 });

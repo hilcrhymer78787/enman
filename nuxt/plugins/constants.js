@@ -1,7 +1,13 @@
 const MINUTE = [
+    { txt: "1分", val: 1 },
+    { txt: "2分", val: 2 },
     { txt: "3分", val: 3 },
+    { txt: "4分", val: 4 },
     { txt: "5分", val: 5 },
+    { txt: "6分", val: 6 },
     { txt: "7分", val: 7 },
+    { txt: "8分", val: 8 },
+    { txt: "9分", val: 9 },
     { txt: "10分", val: 10 },
     { txt: "15分", val: 15 },
     { txt: "20分", val: 20 },

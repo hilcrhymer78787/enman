@@ -31,7 +31,9 @@
             <!-- <v-btn v-if="mode=='edit'" :loading="loading" color="error" dark @click="deleteAccount()">アカウント削除</v-btn> -->
             <v-spacer></v-spacer>
             <v-btn v-if="mode=='create'" to="/login">ログイン画面へ</v-btn>
-            <v-btn v-if="mode=='edit'" @click="$emit('onCloseDialog')"><v-icon>mdi-close</v-icon></v-btn>
+            <v-btn v-if="mode=='edit'" @click="$emit('onCloseDialog')">
+                <v-icon>mdi-close</v-icon>
+            </v-btn>
             <v-btn :loading="loading" color="teal" dark @click="login()">登録</v-btn>
         </v-card-actions>
 
@@ -134,23 +136,26 @@ export default {
                     }&exist_file=${this.file ? 1 : 0}`,
                     imgData
                 )
-                .then((res) => {
+                .then(async(res) => {
                     this.errorMessage = "";
                     if (res.data.errorMessage) {
                         this.errorMessage = res.data.errorMessage;
                     } else {
-                        this.$store.dispatch("setLoginInfoByToken");
-                        this.$emit("onCloseDialog");
+                        if (this.mode == "create") {
+                            await this.$store.dispatch(
+                                "setLoginInfo",
+                                this.form
+                            );
+                            this.$router.push("/");
+                        }else{
+                            this.$store.dispatch("setLoginInfoByToken");
+                            this.$emit("onCloseDialog");
+                        }
                     }
                 })
                 .catch((err) => {
                     this.errorMessage = "通信に失敗しました";
                 });
-            // トップページへ移動
-            if (this.mode == "create" && !this.errorMessage) {
-                await this.$store.dispatch("setLoginInfo", this.form);
-                this.$router.push("/");
-            }
             this.loading = false;
         },
         onSelectedImg(n) {
@@ -191,7 +196,7 @@ export default {
     },
     mounted() {
         if (this.mode == "edit") {
-            this.passwordEdit = false
+            this.passwordEdit = false;
             this.$set(this.form, "token", this.loginInfo.token);
             this.$set(this.form, "id", this.loginInfo.id);
             this.$set(this.form, "name", this.loginInfo.name);
