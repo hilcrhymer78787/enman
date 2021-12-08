@@ -8,6 +8,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::get('/user/test_authentication', 'UserController@test_authentication');
 Route::get('/user/basic_authentication', 'UserController@basic_authentication');
 Route::get('/user/bearer_authentication', 'UserController@bearer_authentication');
 

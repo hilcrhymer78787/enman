@@ -13,6 +13,14 @@ use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
+
+    public function test_authentication()
+    {
+        $loginInfo = User::where('id', 1)
+            ->select('token')
+            ->first();
+        return $loginInfo;
+    }
     public function basic_authentication(Request $request)
     {
         // ベーシック認証
