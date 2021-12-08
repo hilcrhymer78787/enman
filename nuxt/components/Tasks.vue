@@ -173,8 +173,8 @@ export default {
         },
     },
     async mounted() {
-        await this.$store.dispatch("setTodayTasks");
         this.displayTasks = this.tasks;
+        await this.$store.dispatch("setTodayTasks");
         this.$nextTick(() => {
             const scrollArea = document.querySelector("#scrollArea");
             const scrollAreaInner = document.querySelector("#scrollAreaInner");
