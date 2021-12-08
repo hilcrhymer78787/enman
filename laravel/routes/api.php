@@ -2,41 +2,34 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
-|
-*/
+use App\Http\Middleware\CheckToken;
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::post('/task/create', 'TaskController@create');
-Route::get('/task/read', 'TaskController@read');
-Route::delete('/task/delete', 'TaskController@delete');
-
 Route::get('/user/basic_authentication', 'UserController@basic_authentication');
 Route::get('/user/bearer_authentication', 'UserController@bearer_authentication');
 
-Route::post('/user/create', 'UserController@create');
-Route::put('/user/update/room_id', 'UserController@updateRoomId');
-Route::delete('/user/delete', 'UserController@delete');
+// Route::middleware([CheckToken::class])->group(function () {
+    Route::post('/task/create', 'TaskController@create');
+    Route::get('/task/read', 'TaskController@read');
+    Route::delete('/task/delete', 'TaskController@delete');
 
-Route::post('/work/create', 'WorkController@create');
-Route::get('/work/read', 'WorkController@read');
-Route::delete('/work/delete', 'WorkController@delete');
 
-Route::get('/room/read', 'RoomController@read');
-Route::post('/room/create', 'RoomController@create');
+    Route::post('/user/create', 'UserController@create');
+    Route::put('/user/update/room_id', 'UserController@updateRoomId');
+    Route::delete('/user/delete', 'UserController@delete');
 
-Route::post('/invitation/create', 'InvitationController@create');
-Route::get('/invitation/read', 'InvitationController@read');
-Route::put('/invitation/update', 'InvitationController@update');
-Route::delete('/invitation/delete', 'InvitationController@delete');
+    Route::post('/work/create', 'WorkController@create');
+    Route::get('/work/read', 'WorkController@read');
+    Route::delete('/work/delete', 'WorkController@delete');
+
+    Route::get('/room/read', 'RoomController@read');
+    Route::post('/room/create', 'RoomController@create');
+
+    Route::post('/invitation/create', 'InvitationController@create');
+    Route::get('/invitation/read', 'InvitationController@read');
+    Route::put('/invitation/update', 'InvitationController@update');
+    Route::delete('/invitation/delete', 'InvitationController@delete');
+// });

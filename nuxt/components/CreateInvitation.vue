@@ -50,7 +50,7 @@ export default {
             this.loading = true;
             await this.$axios
                 .post(
-                    `/api/invitation/create?token=${this.loginInfo.token}&email=${this.email}`
+                    `/api/invitation/create?email=${this.email}`
                 )
                 .then((res) => {
                     this.errorMessage = "";

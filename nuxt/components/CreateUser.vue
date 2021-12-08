@@ -123,15 +123,13 @@ export default {
             imgData.append("file", this.file);
             await this.$axios
                 .post(
-                    `/api/user/create?token=${this.form.token}&id=${
-                        this.form.id
-                    }&name=${this.form.name}&email=${
-                        this.form.email
-                    }&password=${this.form.password}&user_img=${
-                        this.form.user_img
-                    }&img_oldname=${this.form.img_oldname}&exist_file=${
-                        this.file ? 1 : 0
-                    }`,
+                    `/api/user/create?id=${this.form.id}&name=${
+                        this.form.name
+                    }&email=${this.form.email}&password=${
+                        this.form.password
+                    }&user_img=${this.form.user_img}&img_oldname=${
+                        this.form.img_oldname
+                    }&exist_file=${this.file ? 1 : 0}`,
                     imgData
                 )
                 .then((res) => {
@@ -151,7 +149,7 @@ export default {
                 await this.$store.dispatch("setLoginInfo", this.form);
             }
             // トップページへ移動
-            if (this.loginInfo && this.mode == "create") {
+            if (this.mode == "create") {
                 this.$router.push("/");
             }
             this.loading = false;
@@ -180,7 +178,7 @@ export default {
             // アカウント削除API
             this.loading = true;
             await this.$axios
-                .delete(`/api/user/delete?token=${this.form.token}`)
+                .delete(`/api/user/delete`)
                 .then((res) => {
                     this.$emit("onCloseDialog");
                 })

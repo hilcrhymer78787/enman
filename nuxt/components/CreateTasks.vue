@@ -42,7 +42,7 @@ export default {
             this.loading = true;
             await this.$axios
                 .post(
-                    `/api/task/create?token=${this.$store.state.loginInfo.token}`,
+                    `/api/task/create`,
                     this.form
                 )
                 .then((res) => {

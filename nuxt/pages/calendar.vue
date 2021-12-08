@@ -166,7 +166,7 @@ export default {
             const day = moment(this.date).format("D");
             await this.$axios
                 .get(
-                    `/api/task/read?year=${this.year}&month=${this.month}&day=${day}&token=${this.loginInfo.token}`
+                    `/api/task/read?year=${this.year}&month=${this.month}&day=${day}`
                 )
                 .then((res) => {
                     this.tasks = res.data;
@@ -182,7 +182,7 @@ export default {
         async getWorks() {
             this.$axios
                 .get(
-                    `/api/work/read?year=${this.year}&month=${this.month}&day=${this.day}&token=${this.loginInfo.token}`
+                    `/api/work/read?year=${this.year}&month=${this.month}&day=${this.day}`
                 )
                 .then((res) => {
                     this.$store.commit("setWorks", res.data);

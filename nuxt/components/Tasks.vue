@@ -104,19 +104,16 @@ export default {
         },
         async onClickCheckBoxBlank(task, taskIndex) {
             this.$set(this.loadings, taskIndex, true);
-            await this.$axios.post(
-                `/api/work/create?token=${this.loginInfo.token}`,
-                {
-                    date: this.date,
-                    task_id: task.task_id,
-                    works: [
-                        {
-                            work_user_id: this.loginInfo.id,
-                            work_minute: task.task_default_minute,
-                        },
-                    ],
-                }
-            );
+            await this.$axios.post(`/api/work/create`, {
+                date: this.date,
+                task_id: task.task_id,
+                works: [
+                    {
+                        work_user_id: this.loginInfo.id,
+                        work_minute: task.task_default_minute,
+                    },
+                ],
+            });
             if (this.mode == "today") {
                 await this.$store.dispatch("setTodayTasks");
             } else {
@@ -138,7 +135,7 @@ export default {
             const date = this.date;
             const task_id = task.task_id;
             await this.$axios.delete(
-                `/api/work/delete?token=${this.loginInfo.token}&date=${date}&task_id=${task_id}`
+                `/api/work/delete?date=${date}&task_id=${task_id}`
             );
             if (this.mode == "today") {
                 await this.$store.dispatch("setTodayTasks");
@@ -159,7 +156,7 @@ export default {
             this.deleteTaskLoading = true;
             const task_id = task.task_id;
             await this.$axios.delete(
-                `/api/task/delete?token=${this.loginInfo.token}&task_id=${task_id}`
+                `/api/task/delete?task_id=${task_id}`
             );
             await this.$store.dispatch("setTodayTasks");
             this.deleteTaskLoading = false;

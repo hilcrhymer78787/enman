@@ -3,9 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use App\Services\UserService;
 use App\Models\Work;
-use App\Models\User;
 use App\Models\Task;
 use App\Models\Invitation;
 
@@ -13,7 +12,7 @@ class WorkController extends Controller
 {
     public function read(Request $request)
     {
-        $loginInfo = User::where('token', $request['token'])->first();
+        $loginInfo = (new UserService())->getLoginInfoByToken($request->header('token'));
 
         // 1日ごとのデータ
         $works = Work::where('work_room_id', $loginInfo['user_room_id'])
@@ -72,18 +71,17 @@ class WorkController extends Controller
     }
     public function create(Request $request)
     {
-        $userRoomId = User::where('token', $request['token'])
-        ->get()[0]->user_room_id;
+        $loginInfo = (new UserService())->getLoginInfoByToken($request->header('token'));
 
         Work::where('work_date', $request["date"])
-        ->where('work_task_id', $request["task_id"])->
-        delete();
+        ->where('work_task_id', $request["task_id"])
+        ->delete();
 
         $works = $request['works'];
         foreach($works as $work){
             $newWork = new Work;
             $newWork["work_date"] = $request["date"];
-            $newWork["work_room_id"] = $userRoomId;
+            $newWork["work_room_id"] = $loginInfo['user_room_id'];
             $newWork["work_task_id"] = $request["task_id"];
             $newWork["work_user_id"] = $work["work_user_id"];
             $newWork["work_minute"] = $work["work_minute"];
@@ -93,12 +91,11 @@ class WorkController extends Controller
     }
     public function delete(Request $request)
     {
-        $userRoomId = User::where('token', $request['token'])
-        ->get()[0]->user_room_id;
+        $loginInfo = (new UserService())->getLoginInfoByToken($request->header('token'));
 
         Work::where('work_date', $request["date"])
         ->where('work_task_id', $request["task_id"])
-        ->where('work_room_id', $userRoomId)
+        ->where('work_room_id', $loginInfo['user_room_id'])
         ->delete();
     }
 }

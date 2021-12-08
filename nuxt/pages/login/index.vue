@@ -5,17 +5,20 @@
             <v-divider></v-divider>
             <v-card-text>
                 <v-form v-model="noError" ref="form" class="pt-5">
-                    <v-text-field validate-on-blur @keyup.enter="login" :rules="emailRules" required label="メールアドレス" placeholder="メールアドレス" prepend-inner-icon="mdi-email" outlined v-model="form.email" color="teal" class="pt-5"></v-text-field>
-                    <v-text-field validate-on-blur @keyup.enter="login" :rules="passwordRules" required label="パスワード" placeholder="パスワード" prepend-inner-icon="mdi-lock" :append-icon="passwordShow ? 'mdi-eye' : 'mdi-eye-off'" :type="passwordShow ? 'text' : 'password'" outlined v-model="form.password" @click:append="passwordShow = !passwordShow" color="teal"></v-text-field>
+                    <v-text-field validate-on-blur @keyup.enter="login(form.email, form.password)" :rules="emailRules" required label="メールアドレス" placeholder="メールアドレス" prepend-inner-icon="mdi-email" outlined v-model="form.email" color="teal" class="pt-5"></v-text-field>
+                    <v-text-field validate-on-blur @keyup.enter="login(form.email, form.password)" :rules="passwordRules" required label="パスワード" placeholder="パスワード" prepend-inner-icon="mdi-lock" :append-icon="passwordShow ? 'mdi-eye' : 'mdi-eye-off'" :type="passwordShow ? 'text' : 'password'" outlined v-model="form.password" @click:append="passwordShow = !passwordShow" color="teal"></v-text-field>
                 </v-form>
                 <p v-if="errorMessage && noError" class="error_message mb-2">{{errorMessage}}</p>
+                <div class="d-flex justify-center">
+                    <v-btn @click="login('user1', 'password')">テストユーザーでログイン</v-btn>
+                </div>
             </v-card-text>
 
             <v-divider></v-divider>
             <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn to="/login/newUser">新規ユーザー登録</v-btn>
-                <v-btn :loading="loading" color="teal" dark @click="login">ログイン</v-btn>
+                <v-btn :loading="loading" color="teal" dark @click="login(form.email, form.password)">ログイン</v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
@@ -51,15 +54,13 @@ export default {
         ...mapState(["loginInfo"]),
     },
     methods: {
-        async login() {
+        async login(email, password) {
             this.$refs.form.validate();
             if (!this.noError) {
                 return;
             }
             this.loading = true;
             this.errorMessage = ''
-            const email = this.form.email;
-            const password = this.form.password;
             await this.$axios
                 .get(`/api/user/basic_authentication?email=${email}&password=${password}`)
                 .then((res) => {

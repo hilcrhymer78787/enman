@@ -35,7 +35,6 @@ export const actions = {
                 this.$cookies.set("token", res.data.token, {
                     maxAge: 60 * 60 * 24 * 30,
                 });
-                commit('setLoginInfo', res.data)
             })
     },
     setLoginInfoByToken({ commit, dispatch }) {
@@ -73,7 +72,7 @@ export const actions = {
         const day = today.getDate();
         this.$axios
             .get(
-                `/api/task/read?year=${year}&month=${month}&day=${day}&token=${state.loginInfo.token}`
+                `/api/task/read?year=${year}&month=${month}&day=${day}`
             )
             .then((res) => {
                 commit('setTodayTasks', res.data)

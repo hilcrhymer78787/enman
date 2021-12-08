@@ -84,7 +84,7 @@ export default {
             this.saveLoading = true;
             await this.$axios
                 .post(
-                    `/api/work/create?token=${this.$store.state.loginInfo.token}`,
+                    `/api/work/create`,
                     this.task
                 )
                 .then((res) => {
@@ -115,7 +115,7 @@ export default {
             const date = this.date;
             const task_id = this.task.task_id;
             await this.$axios.delete(
-                `/api/work/delete?token=${this.$store.state.loginInfo.token}&date=${date}&task_id=${task_id}`
+                `/api/work/delete?date=${date}&task_id=${task_id}`
             );
             if (this.mode == "today") {
                 await this.$store.dispatch("setTodayTasks");

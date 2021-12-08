@@ -102,7 +102,7 @@ class UserController extends Controller
                 $room["room_token"] = $roomToken;
                 $room->save();
     
-                $roomId = Room::where('room_token', $roomToken)->get()[0]->room_id;
+                $roomId = Room::where('room_token', $roomToken)->first()->room_id;
 
                 // ユーザー作成
                 $userToken = $request["email"].Str::random(100);
@@ -131,11 +131,7 @@ class UserController extends Controller
             }
         }else{
             // 編集
-            $loginInfo = (new UserService())->getLoginInfoByToken($request->token);
-            if(!isset($loginInfo)){
-                $error['errorMessage'] = 'このトークンは有効ではありません';
-                return $error;
-            }
+            $loginInfo = (new UserService())->getLoginInfoByToken($request->header('token'));
 
             $loginInfoCount = count(User::where('email', $request["email"])->get());
 
@@ -161,21 +157,14 @@ class UserController extends Controller
     }
     public function updateRoomId(Request $request)
     {
-        $loginInfo = (new UserService())->getLoginInfoByToken($request->token);
-        if(!isset($loginInfo)){
-            return $error['errorMessage'] = 'このトークンは有効ではありません';
-        }
+        $loginInfo = (new UserService())->getLoginInfoByToken($request->header('token'));
         User::where("id", $loginInfo['id'])->update([
             "user_room_id" => $request["room_id"],
         ]);
     }
     public function delete(Request $request)
     {
-        $loginInfo = (new UserService())->getLoginInfoByToken($request->token);
-        if(!isset($loginInfo)){
-            return $error['errorMessage'] = 'このトークンは有効ではありません';
-        }
-
+        $loginInfo = (new UserService())->getLoginInfoByToken($request->header('token'));
         User::where('id', $loginInfo['id'])->delete();
     }
 }

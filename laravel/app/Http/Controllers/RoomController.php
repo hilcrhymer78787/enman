@@ -8,15 +8,15 @@ use App\Models\Invitation;
 use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
+use App\Services\UserService;
 
 class RoomController extends Controller
 {
     public function read(Request $request)
     {
-        $userId = User::where('token', $request->token)
-            ->get()[0]->id;
+        $loginInfo = (new UserService())->getLoginInfoByToken($request->header('token'));
 
-        $rooms = Invitation::where('invitation_to_user_id', $userId)
+        $rooms = Invitation::where('invitation_to_user_id', $loginInfo['id'])
             ->where('invitation_status', 2)
             ->leftjoin('rooms', 'invitations.invitation_room_id', '=', 'rooms.room_id')
             ->select('invitation_id', 'room_id', 'room_name', 'room_img')
@@ -35,9 +35,7 @@ class RoomController extends Controller
 
     public function create(Request $request, Room $room, User $user, Invitation $invitation)
     {
-        $userId = User::where('token', $request->token)
-            ->get()[0]->id;
-
+        $loginInfo = (new UserService())->getLoginInfoByToken($request->header('token'));
         $roomToken = date('Y-m-d H:i:s') . Str::random(100);
 
         if ($request["room_id"] == 0) {
@@ -47,11 +45,11 @@ class RoomController extends Controller
             $room["room_token"] = $roomToken;
             $room->save();
 
-            $roomId = Room::where('room_token', $roomToken)->get()[0]->room_id;
+            $roomId = Room::where('room_token', $roomToken)->first()->room_id;
 
             $invitation['invitation_room_id'] = $roomId;
-            $invitation['invitation_from_user_id'] = $userId;
-            $invitation['invitation_to_user_id'] = $userId;
+            $invitation['invitation_from_user_id'] = $loginInfo['id'];
+            $invitation['invitation_to_user_id'] = $loginInfo['id'];
             $invitation['invitation_status'] = 2;
             $invitation->save();
 
@@ -59,7 +57,7 @@ class RoomController extends Controller
                 $request["file"]->storeAs('public/', $request["room_img"]);
             }
 
-            $user->where("id", $userId)->update([
+            $user->where("id", $loginInfo['id'])->update([
                 "user_room_id" => $roomId,
             ]);
         } else {

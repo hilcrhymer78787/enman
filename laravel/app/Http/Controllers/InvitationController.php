@@ -7,29 +7,30 @@ use App\Models\Invitation;
 use App\Models\Room;
 use App\Models\User;
 
+use App\Services\UserService;
+
 class InvitationController extends Controller
 {
     public function create(Request $request, Room $room, User $user, Invitation $invitation)
     {
-        $toUserData = User::where('email', $request["email"])->get();
-        if(count($toUserData) == 0){
+        $toUserData = User::where('email', $request["email"])->first();
+        if(!$toUserData){
             $error['errorMessage'] = '登録されているメールアドレスはありません';
             return $error;
         }else{
-            $fromUserData = User::where('token', $request["token"])->get()[0];
-            $toUserData = $toUserData[0];
-            $roomData = Room::where('room_id', $fromUserData['user_room_id'])->get()[0];
+            $loginInfo = (new UserService())->getLoginInfoByToken($request->header('token'));
+            $roomData = Room::where('room_id', $loginInfo['user_room_id'])->first();
 
             // 重複判定
-            $bool = Invitation::where('invitation_room_id', $fromUserData['user_room_id'])
+            $bool = Invitation::where('invitation_room_id', $loginInfo['user_room_id'])
             ->where('invitation_to_user_id', $toUserData['id'])->first();
             if(isset($bool)){
                 $error['errorMessage'] = $toUserData['name'].'さんはすでに'.$roomData['room_name'].'へ招待されています';
                 return $error;
             }
 
-            $invitation["invitation_room_id"] = $fromUserData['user_room_id'];
-            $invitation["invitation_from_user_id"] = $fromUserData['id'];
+            $invitation["invitation_room_id"] = $loginInfo['user_room_id'];
+            $invitation["invitation_from_user_id"] = $loginInfo['id'];
             $invitation["invitation_to_user_id"] = $toUserData['id'];
             $invitation["invitation_status"] = 0;
             $invitation->save();
@@ -45,11 +46,7 @@ class InvitationController extends Controller
     }
     public function update(Request $request, Invitation $invitation)
     {
-        $loginInfo = User::where('token', $request["token"])->first();
-        if(!isset($loginInfo)){
-            return;
-        }
-
+        $loginInfo = (new UserService())->getLoginInfoByToken($request->header('token'));
         $invitation->where("invitation_id", $request["invitation_id"])->update([
             "invitation_status" => 2,
         ]);
@@ -62,11 +59,7 @@ class InvitationController extends Controller
     }
     public function delete(Request $request, Invitation $invitation)
     {
-        $loginInfo = User::where('token', $request["token"])->first();
-        if(!isset($loginInfo)){
-            return;
-        }
-
+        $loginInfo = (new UserService())->getLoginInfoByToken($request->header('token'));
         Invitation::where('invitation_id', $request['invitation_id'])
         ->delete();
     }

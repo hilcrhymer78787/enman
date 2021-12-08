@@ -121,7 +121,7 @@ export default {
             this.onChangeRoomloading = true;
             await this.$axios
                 .put(
-                    `/api/user/update/room_id?token=${this.loginInfo.token}&room_id=${this.selectedRoomId}`
+                    `/api/user/update/room_id?room_id=${this.selectedRoomId}`
                 )
                 .catch((err) => {
                     alert("通信に失敗しました");
@@ -143,7 +143,7 @@ export default {
             this.$set(this.joinRoomloadings, roomIndex, true);
             await this.$axios
                 .put(
-                    `/api/invitation/update?token=${this.loginInfo.token}&invitation_id=${invitationId}`
+                    `/api/invitation/update?invitation_id=${invitationId}`
                 )
                 .then(async (res) => {
                     await this.$store.dispatch("setLoginInfoByToken");
@@ -160,7 +160,7 @@ export default {
             this.$set(this.rejectRoomloadings, roomIndex, true);
             await this.$axios
                 .delete(
-                    `/api/invitation/delete?token=${this.loginInfo.token}&invitation_id=${invitationId}`
+                    `/api/invitation/delete?invitation_id=${invitationId}`
                 )
                 .then(async (res) => {
                     await this.$store.dispatch("setLoginInfoByToken");

@@ -13,7 +13,7 @@ class TaskController extends Controller
 {
     public function read(Request $request)
     {
-        $loginInfo = (new UserService())->getLoginInfoByToken($request['token']);
+        $loginInfo = (new UserService())->getLoginInfoByToken($request->header('token'));
         
         $tasks = Task::where('task_room_id', $loginInfo['user_room_id'])
         ->where('task_is_everyday',1)
@@ -42,7 +42,7 @@ class TaskController extends Controller
     }
     public function create(Request $request, Task $task)
     {
-        $loginInfo = (new UserService())->getLoginInfoByToken($request['token']);
+        $loginInfo = (new UserService())->getLoginInfoByToken($request->header('token'));
 
         if(isset($request["taskId"])){
             $task->where("task_id", $request["taskId"])->update([
@@ -63,7 +63,7 @@ class TaskController extends Controller
     }
     public function delete(Request $request, Task $task)
     {
-        $loginInfo = (new UserService())->getLoginInfoByToken($request['token']);
+        $loginInfo = (new UserService())->getLoginInfoByToken($request->header('token'));
 
         Task::where('task_id', $request['task_id'])
         ->where('task_room_id', $loginInfo['user_room_id'])

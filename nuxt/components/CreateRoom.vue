@@ -95,13 +95,11 @@ export default {
             imgData.append("file", this.file);
             await this.$axios
                 .post(
-                    `/api/room/create?token=${this.loginInfo.token}&room_id=${
-                        this.form.room_id
-                    }&room_name=${this.form.room_name}&room_img=${
-                        this.form.room_img
-                    }&img_oldname=${this.form.img_oldname}&exist_file=${
-                        this.file ? 1 : 0
-                    }`,
+                    `/api/room/create?room_id=${this.form.room_id}&room_name=${
+                        this.form.room_name
+                    }&room_img=${this.form.room_img}&img_oldname=${
+                        this.form.img_oldname
+                    }&exist_file=${this.file ? 1 : 0}`,
                     imgData
                 )
                 .catch((err) => {
