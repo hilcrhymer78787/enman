@@ -28,13 +28,9 @@ class TaskController extends Controller
                 ->whereYear('work_date', $request['year'])
                 ->whereMonth('work_date', $request['month'])
                 ->whereDay('work_date', $request['day'])
-                ->select('work_id', 'work_date', 'work_minute', 'work_user_id')
+                ->leftjoin('users', 'works.work_user_id', '=', 'users.id')
+                ->select('work_id', 'work_date', 'work_minute', 'work_user_id','name as work_user_name','user_img as work_user_img')
                 ->get();
-
-            foreach ($works as $work) {
-                $work['work_user_name'] = User::find($work['work_user_id'])->name;
-                $work['work_user_img'] = User::find($work['work_user_id'])->user_img;
-            }
 
             $task['works'] = $works;
         }
