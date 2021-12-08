@@ -24,6 +24,9 @@ class RoomController extends Controller
             $room['room_img'] = $request['room_img'];
             $room['room_token'] = $roomToken;
             $room->save();
+            if ($request['exist_file']) {
+                $request['file']->storeAs('public/', $request['room_img']);
+            }
 
             $roomId = Room::where('room_token', $roomToken)->first()->room_id;
 
@@ -33,10 +36,7 @@ class RoomController extends Controller
             $invitation['invitation_status'] = 2;
             $invitation->save();
 
-            if ($request['exist_file']) {
-                $request['file']->storeAs('public/', $request['room_img']);
-            }
-
+            // ルームに入室
             $user->where('id', $loginInfo['id'])->update([
                 'user_room_id' => $roomId,
             ]);
