@@ -10,7 +10,7 @@
                 </v-form>
                 <p v-if="errorMessage && noError" class="error_message mb-2">{{errorMessage}}</p>
                 <div class="d-flex justify-center">
-                    <v-btn @click="login('user1@gmail.com', 'password')">テストユーザーでログイン</v-btn>
+                    <v-btn @click="login('user1@gmail.com', 'password', 'test')">テストユーザーでログイン</v-btn>
                 </div>
             </v-card-text>
 
@@ -54,10 +54,12 @@ export default {
         ...mapState(["loginInfo"]),
     },
     methods: {
-        async login(email, password) {
-            this.$refs.form.validate();
-            if (!this.noError) {
-                return;
+        async login(email, password, mode) {
+            if(mode != 'test'){
+                this.$refs.form.validate();
+                if (!this.noError) {
+                    return;
+                }
             }
             this.loading = true;
             this.errorMessage = ''
