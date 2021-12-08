@@ -28,7 +28,7 @@
         <v-card-actions>
             <v-btn @click="createInvitationDialog = true" v-if="mode == 'edit'">招待</v-btn>
             <v-spacer></v-spacer>
-            <v-btn @click="$emit('onCloseDialog')">CLOSE</v-btn>
+            <v-btn @click="$emit('onCloseDialog')"><v-icon>mdi-close</v-icon></v-btn>
             <v-btn :loading="loading" color="teal" dark @click="createRoom()">登録</v-btn>
         </v-card-actions>
 

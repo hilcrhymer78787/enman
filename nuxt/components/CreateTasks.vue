@@ -15,8 +15,8 @@
         <v-divider></v-divider>
         <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn class="mr-2" @click="$emit('onCloseTaskDialog')">close</v-btn>
-            <v-btn color="teal" :loading="loading" dark @click="submit()">SAVE</v-btn>
+            <v-btn class="mr-2" @click="$emit('onCloseTaskDialog')"><v-icon>mdi-close</v-icon></v-btn>
+            <v-btn color="teal" :loading="loading" dark @click="submit()">登録</v-btn>
         </v-card-actions>
     </v-card>
 </template>

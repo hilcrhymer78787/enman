@@ -50,6 +50,7 @@ export const actions = {
                             $nuxt.$router.push("/");
                         }
                         commit('setLoginInfo', res.data)
+                        dispatch('setTodayTasks')
                     }
                 }
             })

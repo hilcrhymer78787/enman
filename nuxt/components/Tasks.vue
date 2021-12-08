@@ -15,8 +15,8 @@
                     <div v-for="(task,taskIndex) in tasks" :key="taskIndex">
                         <swiper @slideChangeTransitionStart="hoge()" :options="swiperOption">
                             <swiper-slide class="swiper_btn" v-if="mode == 'today'">
-                                <v-btn @click="deleteTask(task)" :loading="deleteTaskLoading" color="error" dark class="pa-0 mr-3">DELETE</v-btn>
-                                <v-btn @click="openTaskDialog(task)" color="orange" dark class="pa-0">Edit</v-btn>
+                                <v-btn @click="deleteTask(task)" :loading="deleteTaskLoading" color="error" dark class="pa-0 mr-3">削除</v-btn>
+                                <v-btn @click="openTaskDialog(task)" color="orange" dark class="pa-0">編集</v-btn>
                             </swiper-slide>
                             <swiper-slide>
                                 <v-list-item v-ripple class="pl-2 pr-0" style="height:60px;overflow:hidden;">
@@ -52,7 +52,7 @@
             <v-divider v-if="mode != 'today'"></v-divider>
             <v-card-actions v-if="mode != 'today'">
                 <v-spacer></v-spacer>
-                <v-btn @click="$emit('onCloseDialog')">close</v-btn>
+                <v-btn @click="$emit('onCloseDialog')"><v-icon>mdi-close</v-icon></v-btn>
             </v-card-actions>
         </v-card>
 

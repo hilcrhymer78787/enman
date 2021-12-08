@@ -12,7 +12,7 @@
         <v-divider></v-divider>
         <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn @click="$emit('onCloseDialog')">CLOSE</v-btn>
+            <v-btn @click="$emit('onCloseDialog')"><v-icon>mdi-close</v-icon></v-btn>
             <v-btn v-if="!successMessage" :loading="loading" color="teal" dark @click="CreateInvitation()">招待する</v-btn>
             <v-btn v-if="successMessage" color="teal" dark @click="resetForm()">続けて招待</v-btn>
         </v-card-actions>

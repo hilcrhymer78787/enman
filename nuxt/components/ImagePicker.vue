@@ -16,7 +16,7 @@
         <v-divider></v-divider>
         <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn @click="$emit('onCloseDialog')">Close</v-btn>
+            <v-btn @click="$emit('onCloseDialog')"><v-icon>mdi-close</v-icon></v-btn>
         </v-card-actions>
     </v-card>
 </template>
