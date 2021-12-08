@@ -31,7 +31,6 @@ Route::get('/user/bearer_authentication', 'UserController@bearer_authentication'
     Route::post('/room/create', 'RoomController@create');
 
     Route::post('/invitation/create', 'InvitationController@create');
-    Route::get('/invitation/read', 'InvitationController@read');
     Route::put('/invitation/update', 'InvitationController@update');
     Route::delete('/invitation/delete', 'InvitationController@delete');
 // });

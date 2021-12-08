@@ -39,11 +39,6 @@ class InvitationController extends Controller
             return $success;
         }
     }
-    public function read()
-    {
-        $data = Invitation::get();
-        return $data;
-    }
     public function update(Request $request, Invitation $invitation)
     {
         $loginInfo = (new UserService())->getLoginInfoByToken($request->header('token'));
@@ -57,9 +52,8 @@ class InvitationController extends Controller
             "user_room_id" => $invitationData['invitation_room_id'],
         ]);
     }
-    public function delete(Request $request, Invitation $invitation)
+    public function delete(Request $request)
     {
-        $loginInfo = (new UserService())->getLoginInfoByToken($request->header('token'));
         Invitation::where('invitation_id', $request['invitation_id'])
         ->delete();
     }
