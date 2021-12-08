@@ -27,7 +27,6 @@ Route::get('/user/bearer_authentication', 'UserController@bearer_authentication'
     Route::get('/work/read', 'WorkController@read');
     Route::delete('/work/delete', 'WorkController@delete');
 
-    Route::get('/room/read', 'RoomController@read');
     Route::post('/room/create', 'RoomController@create');
 
     Route::post('/invitation/create', 'InvitationController@create');
