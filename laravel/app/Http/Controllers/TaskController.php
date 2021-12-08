@@ -29,7 +29,7 @@ class TaskController extends Controller
                 ->whereMonth('work_date', $request['month'])
                 ->whereDay('work_date', $request['day'])
                 ->leftjoin('users', 'works.work_user_id', '=', 'users.id')
-                ->select('work_id', 'work_date', 'work_minute', 'work_user_id','name as work_user_name','user_img as work_user_img')
+                ->select('work_id', 'work_date', 'work_minute', 'work_user_id', 'name as work_user_name', 'user_img as work_user_img')
                 ->get();
 
             $task['works'] = $works;

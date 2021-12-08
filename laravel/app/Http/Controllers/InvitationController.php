@@ -14,18 +14,18 @@ class InvitationController extends Controller
     public function create(Request $request, Invitation $invitation)
     {
         $toUserData = User::where('email', $request["email"])->first();
-        if(!$toUserData){
+        if (!$toUserData) {
             $error['errorMessage'] = '登録されているメールアドレスはありません';
             return $error;
-        }else{
+        } else {
             $loginInfo = (new UserService())->getLoginInfoByToken($request->header('token'));
             $roomData = Room::where('room_id', $loginInfo['user_room_id'])->first();
 
             // 重複判定
             $bool = Invitation::where('invitation_room_id', $loginInfo['user_room_id'])
-            ->where('invitation_to_user_id', $toUserData['id'])->first();
-            if(isset($bool)){
-                $error['errorMessage'] = $toUserData['name'].'さんはすでに'.$roomData['room_name'].'へ招待されています';
+                ->where('invitation_to_user_id', $toUserData['id'])->first();
+            if (isset($bool)) {
+                $error['errorMessage'] = $toUserData['name'] . 'さんはすでに' . $roomData['room_name'] . 'へ招待されています';
                 return $error;
             }
 
@@ -35,7 +35,7 @@ class InvitationController extends Controller
             $invitation["invitation_status"] = 0;
             $invitation->save();
 
-            $success['successMessage'] = $toUserData['name'].'さんを'.$roomData['room_name'].'へ招待しました';
+            $success['successMessage'] = $toUserData['name'] . 'さんを' . $roomData['room_name'] . 'へ招待しました';
             return $success;
         }
     }
@@ -55,6 +55,6 @@ class InvitationController extends Controller
     public function delete(Request $request)
     {
         Invitation::where('invitation_id', $request['invitation_id'])
-        ->delete();
+            ->delete();
     }
 }

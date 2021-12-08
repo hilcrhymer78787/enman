@@ -37,81 +37,80 @@ class UserController extends Controller
     public function bearer_authentication(Request $request)
     {
         $loginInfo = User::where('token', $request->header('token'))
-        ->leftjoin('rooms', 'users.user_room_id', '=', 'rooms.room_id')
-        ->select('id', 'name', 'email', 'user_img', 'room_id','room_img','room_name','token')
-        ->first();
-        if(!$loginInfo){
+            ->leftjoin('rooms', 'users.user_room_id', '=', 'rooms.room_id')
+            ->select('id', 'name', 'email', 'user_img', 'room_id', 'room_img', 'room_name', 'token')
+            ->first();
+        if (!$loginInfo) {
             $error['errorMessage'] = 'このトークンは有効ではありません';
             return $error;
         }
 
         // 参加しているユーザー
         $loginInfo["room_joined_users"] = Invitation::where('invitation_room_id', $loginInfo['room_id'])
-        ->where('invitation_status', 2)
-        ->leftjoin('users', 'invitations.invitation_to_user_id', '=', 'users.id')
-        ->select('id', 'name', 'email', 'user_img')
-        ->get();
+            ->where('invitation_status', 2)
+            ->leftjoin('users', 'invitations.invitation_to_user_id', '=', 'users.id')
+            ->select('id', 'name', 'email', 'user_img')
+            ->get();
 
         // 招待中のユーザー
         $loginInfo["room_inviting_users"] = Invitation::where('invitation_room_id', $loginInfo['room_id'])
-        ->where('invitation_status', '<', 2)
-        ->leftjoin('users', 'invitations.invitation_to_user_id', '=', 'users.id')
-        ->select('id', 'name', 'email', 'user_img')
-        ->get();
+            ->where('invitation_status', '<', 2)
+            ->leftjoin('users', 'invitations.invitation_to_user_id', '=', 'users.id')
+            ->select('id', 'name', 'email', 'user_img')
+            ->get();
 
         // 参加しているルーム
         $loginInfo["rooms"] = Invitation::where('invitation_to_user_id', $loginInfo['id'])
-        ->where('invitation_status', 2)
-        ->leftjoin('rooms', 'invitations.invitation_room_id', '=', 'rooms.room_id')
-        ->select('invitation_id', 'room_id', 'room_name', 'room_img')
-        ->get();
+            ->where('invitation_status', 2)
+            ->leftjoin('rooms', 'invitations.invitation_room_id', '=', 'rooms.room_id')
+            ->select('invitation_id', 'room_id', 'room_name', 'room_img')
+            ->get();
 
         // 招待されている部屋(未確認)
         $loginInfo["invited_rooms"] = Invitation::where('invitation_to_user_id', $loginInfo['id'])
-        ->where('invitation_status', '<', 2)
-        ->leftjoin('rooms', 'invitations.invitation_room_id', '=', 'rooms.room_id')
-        ->leftjoin('users', 'invitations.invitation_from_user_id', '=', 'users.id')
-        ->select('invitation_id', 'invitation_status', 'room_id', 'room_name', 'room_img', 'name')
-        ->get();
+            ->where('invitation_status', '<', 2)
+            ->leftjoin('rooms', 'invitations.invitation_room_id', '=', 'rooms.room_id')
+            ->leftjoin('users', 'invitations.invitation_from_user_id', '=', 'users.id')
+            ->select('invitation_id', 'invitation_status', 'room_id', 'room_name', 'room_img', 'name')
+            ->get();
 
-            foreach($loginInfo["invited_rooms"] as $room){
-                // 参加しているユーザー
-                $room["joined_users"] = Invitation::where('invitation_room_id', $room["room_id"])
+        foreach ($loginInfo["invited_rooms"] as $room) {
+            // 参加しているユーザー
+            $room["joined_users"] = Invitation::where('invitation_room_id', $room["room_id"])
                 ->where('invitation_status', 2)
                 ->leftjoin('users', 'invitations.invitation_to_user_id', '=', 'users.id')
                 ->select('id', 'name')
                 ->get();
-                // 招待中のユーザー
-                $room["inviting_users"] = Invitation::where('invitation_room_id', $room["room_id"])
+            // 招待中のユーザー
+            $room["inviting_users"] = Invitation::where('invitation_room_id', $room["room_id"])
                 ->where('invitation_status', '<', 2)
                 ->leftjoin('users', 'invitations.invitation_to_user_id', '=', 'users.id')
                 ->select('id', 'name')
                 ->get();
-            }
+        }
         return $loginInfo;
     }
     public function create(Request $request, Room $room, User $user, Invitation $invitation)
     {
-        if($request["id"] == 0){
+        if ($request["id"] == 0) {
             // 新規登録
             $userDataCount = count(User::where('email', $request["email"])->get());
-            if($userDataCount != 0){
+            if ($userDataCount != 0) {
                 $error['errorMessage'] = 'このメールアドレスは既に登録されています';
                 return $error;
-            }
-            else{
+            } else {
                 // 部屋を作成
-                $roomToken = date('Y-m-d H:i:s').Str::random(100);
+                $roomToken = date('Y-m-d H:i:s') . Str::random(100);
 
                 $room["room_name"] = "マイルーム";
                 $room["room_img"] = "https://picsum.photos/500/300?image=40";
                 $room["room_token"] = $roomToken;
                 $room->save();
-    
+
                 $roomId = Room::where('room_token', $roomToken)->first()->room_id;
 
                 // ユーザー作成
-                $userToken = $request["email"].Str::random(100);
+                $userToken = $request["email"] . Str::random(100);
 
                 $user["name"] = $request["name"];
                 $user["email"] = $request["email"];
@@ -135,15 +134,15 @@ class UserController extends Controller
 
                 return;
             }
-        }else{
+        } else {
             // 編集
             $loginInfo = (new UserService())->getLoginInfoByToken($request->header('token'));
             $loginInfoCount = count(User::where('email', $request["email"])->get());
 
-            if($loginInfoCount != 0 && $loginInfo['email'] != $request["email"]){
+            if ($loginInfoCount != 0 && $loginInfo['email'] != $request["email"]) {
                 $error['errorMessage'] = 'このメールアドレスは既に登録されています';
                 return $error;
-            }else{
+            } else {
                 $user->where("id", $loginInfo['id'])->update([
                     "name" => $request["name"],
                     "email" => $request["email"],
