@@ -9,7 +9,7 @@
                     <v-text-field validate-on-blur @keyup.enter="login()" :rules="passwordRules" required label="パスワード" placeholder="パスワード" prepend-inner-icon="mdi-lock" :append-icon="passwordShow ? 'mdi-eye' : 'mdi-eye-off'" :type="passwordShow ? 'text' : 'password'" outlined v-model="form.password" @click:append="passwordShow = !passwordShow" color="teal"></v-text-field>
                 </v-form>
                 <p v-if="errorMessage && noError" class="error_message mb-2">{{errorMessage}}</p>
-                <div class="d-flex justify-end">
+                <div v-if="isShowTestUser == 1" class="d-flex justify-end">
                     <v-btn @click="testAuthentication()">テストユーザーでログイン</v-btn>
                 </div>
             </v-card-text>
@@ -30,6 +30,7 @@ export default {
     layout: "login",
     data() {
         return {
+            isShowTestUser: process.env.IS_SHOW_TEST_USER,
             loading: false,
             noError: false,
             errorMessage: "",
