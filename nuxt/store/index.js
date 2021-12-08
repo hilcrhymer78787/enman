@@ -65,12 +65,12 @@ export const actions = {
         }
         commit('setLoginInfo', false)
     },
-    setTodayTasks({ state, commit }) {
+    async setTodayTasks({ state, commit }) {
         const today = new Date();
         const year = today.getFullYear();
         const month = today.getMonth() + 1;
         const day = today.getDate();
-        this.$axios
+        await this.$axios
             .get(
                 `/api/task/read?year=${year}&month=${month}&day=${day}`
             )

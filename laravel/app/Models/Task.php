@@ -16,6 +16,7 @@ class Task extends Model
         'task_status',
         'task_default_minute',
         'task_is_everyday',
+        'task_sort_key',
     ];
 
     protected $casts = [
@@ -24,5 +25,6 @@ class Task extends Model
         'task_status'=>'integer',
         'task_default_minute'=>'integer',
         'task_is_everyday'=>'integer',
+        'task_sort_key'=>'integer',
       ];
 }

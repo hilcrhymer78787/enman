@@ -10,49 +10,51 @@
                 </v-btn>
             </v-toolbar>
             <v-card-text id="scrollArea" :style="mode != 'today' ? 'height: 60vh;overflow-y:scroll;':''" class="pa-0">
-                <!-- <vuedraggable :options="{animation: 200,  delay: 50 }" v-model="tasks"> -->
                 <div id="scrollAreaInner">
-                    <div v-for="(task,taskIndex) in tasks" :key="taskIndex">
-                        <swiper @slideChangeTransitionStart="hoge()" :options="swiperOption">
-                            <swiper-slide class="swiper_btn" v-if="mode == 'today'">
-                                <v-btn @click="deleteTask(task)" :loading="deleteTaskLoading" color="error" dark class="pa-0 mr-3">削除</v-btn>
-                                <v-btn @click="openTaskDialog(task)" color="orange" dark class="pa-0">編集</v-btn>
-                            </swiper-slide>
-                            <swiper-slide>
-                                <v-list-item v-ripple class="pl-2 pr-0" style="height:60px;overflow:hidden;">
-                                    <v-list-item-avatar @click="onFocusTask(task)">
-                                        <v-icon v-if="task.works.length == 0">mdi-account</v-icon>
-                                        <v-img v-if="task.works.length == 1 && task.works[0].work_user_img.slice( 0, 4 ) == 'http'" :src="task.works[0].work_user_img" aspect-ratio="1" class="rounded-circle"></v-img>
-                                        <v-img v-else-if="task.works.length == 1" :src="backUrl+'/storage/'+task.works[0].work_user_img" aspect-ratio="1" class="rounded-circle"></v-img>
-                                        <v-img v-if="task.works.length >= 2 && loginInfo.room_img.slice( 0, 4 ) == 'http'" :src="loginInfo.room_img" aspect-ratio="1" class="rounded-circle"></v-img>
-                                        <v-img v-else-if="task.works.length >= 2" :src="backUrl+'/storage/'+loginInfo.room_img" aspect-ratio="1" class="rounded-circle"></v-img>
-                                    </v-list-item-avatar>
-                                    <v-list-item-content @click="onFocusTask(task)">
-                                        <v-list-item-title>{{task.task_name}}</v-list-item-title>
-                                        <v-list-item-subtitle style="font-size:12px;">
-                                            <span>想定:{{task.task_default_minute}}分</span>
-                                            <span v-if="task.works.length">稼働:{{task.minute}}分</span>
-                                            <span v-if="task.works.length == 1">担当:{{task.works[0].work_user_name}}</span>
-                                            <span v-if="task.works.length >= 2">担当:複数人</span>
-                                        </v-list-item-subtitle>
-                                    </v-list-item-content>
-                                    <v-btn :loading="loadings[taskIndex]" class="check" icon>
-                                        <v-icon @click="onClickCheckBoxMarked(task,taskIndex)" style="font-size: 25px;" v-if="task.works.length">mdi-checkbox-marked-outline</v-icon>
-                                        <v-icon @click="onClickCheckBoxBlank(task,taskIndex)" style="font-size: 25px;" v-else>mdi-checkbox-blank-outline</v-icon>
-                                    </v-btn>
-                                </v-list-item>
-                            </swiper-slide>
-                        </swiper>
-                        <v-divider v-if="taskIndex + 1 != tasks.length || mode != 'today'"></v-divider>
-                    </div>
-                    <div class="pa-5 text-center" v-if="!tasks.length">現在登録されているタスクはありません</div>
+                    <vuedraggable @change="dragged()" :options="{animation: 200,  delay: 50 }" v-model="displayTasks">
+                        <div v-for="(task,taskIndex) in displayTasks" :key="taskIndex">
+                            <swiper @slideChangeTransitionStart="hoge()" :options="swiperOption">
+                                <swiper-slide class="swiper_btn" v-if="mode == 'today'">
+                                    <v-btn @click="deleteTask(task)" :loading="deleteTaskLoading" color="error" dark class="pa-0 mr-3">削除</v-btn>
+                                    <v-btn @click="openTaskDialog(task)" color="orange" dark class="pa-0">編集</v-btn>
+                                </swiper-slide>
+                                <swiper-slide>
+                                    <v-list-item v-ripple class="pl-2 pr-0" style="height:60px;overflow:hidden;">
+                                        <v-list-item-avatar @click="onFocusTask(task)">
+                                            <v-icon v-if="task.works.length == 0">mdi-account</v-icon>
+                                            <v-img v-if="task.works.length == 1 && task.works[0].work_user_img.slice( 0, 4 ) == 'http'" :src="task.works[0].work_user_img" aspect-ratio="1" class="rounded-circle"></v-img>
+                                            <v-img v-else-if="task.works.length == 1" :src="backUrl+'/storage/'+task.works[0].work_user_img" aspect-ratio="1" class="rounded-circle"></v-img>
+                                            <v-img v-if="task.works.length >= 2 && loginInfo.room_img.slice( 0, 4 ) == 'http'" :src="loginInfo.room_img" aspect-ratio="1" class="rounded-circle"></v-img>
+                                            <v-img v-else-if="task.works.length >= 2" :src="backUrl+'/storage/'+loginInfo.room_img" aspect-ratio="1" class="rounded-circle"></v-img>
+                                        </v-list-item-avatar>
+                                        <v-list-item-content @click="onFocusTask(task)">
+                                            <v-list-item-title>{{task.task_name}}</v-list-item-title>
+                                            <v-list-item-subtitle style="font-size:12px;">
+                                                <span>想定:{{task.task_default_minute}}分</span>
+                                                <span v-if="task.works.length">稼働:{{task.minute}}分</span>
+                                                <span v-if="task.works.length == 1">担当:{{task.works[0].work_user_name}}</span>
+                                                <span v-if="task.works.length >= 2">担当:複数人</span>
+                                            </v-list-item-subtitle>
+                                        </v-list-item-content>
+                                        <v-btn :loading="loadings[taskIndex]" class="check" icon>
+                                            <v-icon @click="onClickCheckBoxMarked(task,taskIndex)" style="font-size: 25px;" v-if="task.works.length">mdi-checkbox-marked-outline</v-icon>
+                                            <v-icon @click="onClickCheckBoxBlank(task,taskIndex)" style="font-size: 25px;" v-else>mdi-checkbox-blank-outline</v-icon>
+                                        </v-btn>
+                                    </v-list-item>
+                                </swiper-slide>
+                            </swiper>
+                            <v-divider v-if="taskIndex + 1 != displayTasks.length || mode != 'today'"></v-divider>
+                        </div>
+                        <div class="pa-5 text-center" v-if="!displayTasks.length">現在登録されているタスクはありません</div>
+                    </vuedraggable>
                 </div>
-                <!-- </vuedraggable> -->
             </v-card-text>
             <v-divider v-if="mode != 'today'"></v-divider>
             <v-card-actions v-if="mode != 'today'">
                 <v-spacer></v-spacer>
-                <v-btn @click="$emit('onCloseDialog')"><v-icon>mdi-close</v-icon></v-btn>
+                <v-btn @click="$emit('onCloseDialog')">
+                    <v-icon>mdi-close</v-icon>
+                </v-btn>
             </v-card-actions>
         </v-card>
 
@@ -68,17 +70,16 @@
 </template>
 
 <script>
-// // import vuedraggable from "vuedraggable";
-
+import vuedraggable from "vuedraggable";
 import { mapState } from "vuex";
-
 export default {
     props: ["tasks", "date", "mode"],
     components: {
-        // // vuedraggable: vuedraggable,
+        vuedraggable: vuedraggable,
     },
     data() {
         return {
+            displayTasks: [],
             backUrl: process.env.API_BASE_URL,
             swiperOption: {
                 initialSlide: 1,
@@ -95,6 +96,9 @@ export default {
         ...mapState(["loginInfo"]),
     },
     methods: {
+        dragged() {
+            this.$axios.post(`/api/task/sortset`, { tasks: this.displayTasks });
+        },
         hoge() {
             return;
         },
@@ -155,9 +159,7 @@ export default {
             }
             this.deleteTaskLoading = true;
             const task_id = task.task_id;
-            await this.$axios.delete(
-                `/api/task/delete?task_id=${task_id}`
-            );
+            await this.$axios.delete(`/api/task/delete?task_id=${task_id}`);
             await this.$store.dispatch("setTodayTasks");
             this.deleteTaskLoading = false;
         },
@@ -170,7 +172,9 @@ export default {
             this.taskDialog = true;
         },
     },
-    mounted() {
+    async mounted() {
+        await this.$store.dispatch("setTodayTasks");
+        this.displayTasks = this.tasks;
         const scrollArea = document.querySelector("#scrollArea");
         const scrollAreaInner = document.querySelector("#scrollAreaInner");
         this.$nextTick(() => {
@@ -186,6 +190,11 @@ export default {
                 }
             });
         });
+    },
+    watch: {
+        tasks() {
+            this.displayTasks = this.tasks;
+        },
     },
 };
 </script>

@@ -11,7 +11,7 @@ use App\Services\UserService;
 
 class InvitationController extends Controller
 {
-    public function create(Request $request, Room $room, User $user, Invitation $invitation)
+    public function create(Request $request, Invitation $invitation)
     {
         $toUserData = User::where('email', $request["email"])->first();
         if(!$toUserData){

@@ -14,29 +14,29 @@ class TaskController extends Controller
     public function read(Request $request)
     {
         $loginInfo = (new UserService())->getLoginInfoByToken($request->header('token'));
-        
+
         $tasks = Task::where('task_room_id', $loginInfo['user_room_id'])
-        ->where('task_is_everyday',1)
-        ->select('task_id', 'task_default_minute', 'task_name','task_is_everyday')
-        ->get(); 
-
-        foreach($tasks as $task){
-
-            $works = Work::where('work_room_id', $loginInfo['user_room_id'])
-            ->where('work_task_id', $task['task_id'])
-            ->whereYear('work_date', $request['year'])
-            ->whereMonth('work_date', $request['month'])
-            ->whereDay('work_date', $request['day'])
-            ->select('work_id', 'work_date', 'work_minute','work_user_id')
+            ->where('task_is_everyday', 1)
+            ->select('task_id', 'task_default_minute', 'task_name', 'task_is_everyday', 'task_sort_key')
+            ->orderBy('task_sort_key')
             ->get();
 
-            foreach($works as $work){
+        foreach ($tasks as $task) {
+
+            $works = Work::where('work_room_id', $loginInfo['user_room_id'])
+                ->where('work_task_id', $task['task_id'])
+                ->whereYear('work_date', $request['year'])
+                ->whereMonth('work_date', $request['month'])
+                ->whereDay('work_date', $request['day'])
+                ->select('work_id', 'work_date', 'work_minute', 'work_user_id')
+                ->get();
+
+            foreach ($works as $work) {
                 $work['work_user_name'] = User::find($work['work_user_id'])->name;
                 $work['work_user_img'] = User::find($work['work_user_id'])->user_img;
             }
 
             $task['works'] = $works;
-
         }
         return $tasks;
     }
@@ -44,14 +44,14 @@ class TaskController extends Controller
     {
         $loginInfo = (new UserService())->getLoginInfoByToken($request->header('token'));
 
-        if(isset($request["taskId"])){
+        if (isset($request["taskId"])) {
             $task->where("task_id", $request["taskId"])->update([
                 "task_name" => $request["taskName"],
                 "task_default_minute" => $request["taskDefaultMinute"],
                 "task_is_everyday" => $request["taskIsEveryday"],
                 "task_room_id" => $loginInfo['user_room_id'],
             ]);
-        }else{
+        } else {
             $task["task_name"] = $request["taskName"];
             $task["task_default_minute"] = $request["taskDefaultMinute"];
             $task["task_is_everyday"] = $request["taskIsEveryday"];
@@ -66,13 +66,21 @@ class TaskController extends Controller
         $loginInfo = (new UserService())->getLoginInfoByToken($request->header('token'));
 
         Task::where('task_id', $request['task_id'])
-        ->where('task_room_id', $loginInfo['user_room_id'])
-        ->delete();
+            ->where('task_room_id', $loginInfo['user_room_id'])
+            ->delete();
 
         Work::where('work_task_id', $request['task_id'])
-        ->where('work_room_id', $loginInfo['user_room_id'])
-        ->delete();
+            ->where('work_room_id', $loginInfo['user_room_id'])
+            ->delete();
 
         return $request;
+    }
+    public function sortset(Request $request)
+    {
+        foreach ($request['tasks'] as $index => $task) {
+            Task::where("task_id", $task["task_id"])->update([
+                "task_sort_key" => $index,
+            ]);
+        }
     }
 }

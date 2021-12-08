@@ -22,8 +22,8 @@
         </v-card-text>
         <v-divider></v-divider>
         <v-card-actions>
-            <v-spacer></v-spacer>
             <v-btn color="error" :loading="deleteLoading" @click="onClickDelete()">削除</v-btn>
+            <v-spacer></v-spacer>
             <v-btn color="teal" :loading="saveLoading" dark @click="onClickSave()">登録</v-btn>
         </v-card-actions>
     </v-card>
