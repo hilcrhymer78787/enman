@@ -8,7 +8,7 @@
             </v-main>
             <v-bottom-navigation app light fixed color="teal">
                 <v-btn :style="`width:calc(100% / 3); height:100%;background-color:white;`" to="/" router light exact>
-                    <span>毎日タスク</span>
+                    <span>家事リスト</span>
                     <v-badge :value="false" color="teal" offset-x="5" offset-y="15">
                         <v-icon>mdi-playlist-check</v-icon>
                     </v-badge>

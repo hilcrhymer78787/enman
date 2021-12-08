@@ -2,7 +2,7 @@
     <div>
         <v-card>
             <v-toolbar color="teal" height="70px" dark class="d-block" style="box-shadow:none;">
-                <v-toolbar-title>毎日タスク</v-toolbar-title>
+                <v-toolbar-title>家事リスト</v-toolbar-title>
                 <v-spacer></v-spacer>
                 <span class="pt-1 mr-3">{{date}}</span>
                 <v-btn v-if="mode == 'today'" @click="openTaskDialog()" light height="35px" width="35px" fab elevation="0">
@@ -19,7 +19,7 @@
                                     <v-btn @click="openTaskDialog(task)" color="orange" dark class="pa-0">編集</v-btn>
                                 </swiper-slide>
                                 <swiper-slide>
-                                    <v-list-item class="pl-2 pr-0" style="height:60px;overflow:hidden;">
+                                    <v-list-item class="pl-2 pr-0" style="height:60px;overflow:hidden;cursor:move;">
                                         <v-list-item-avatar @click="onFocusTask(task)">
                                             <v-icon v-if="task.works.length == 0">mdi-account</v-icon>
                                             <v-img v-if="task.works.length == 1 && task.works[0].work_user_img.slice( 0, 4 ) == 'http'" :src="task.works[0].work_user_img" aspect-ratio="1" class="rounded-circle"></v-img>
