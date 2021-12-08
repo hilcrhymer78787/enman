@@ -2,7 +2,7 @@
     <v-card>
         <v-toolbar color="teal" dark style="box-shadow:none;">
             <v-toolbar-title v-if="this.focusTask">「{{this.focusTask.task_name}}」を編集</v-toolbar-title>
-            <v-toolbar-title v-else>新しい家事リストを追加</v-toolbar-title>
+            <v-toolbar-title v-else>新しいタスクを追加</v-toolbar-title>
         </v-toolbar>
         <v-divider></v-divider>
         <v-card-text class="pa-3" style="min-height:30vh;">

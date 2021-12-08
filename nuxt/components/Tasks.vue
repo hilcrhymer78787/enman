@@ -2,7 +2,7 @@
     <div>
         <v-card>
             <v-toolbar color="teal" height="70px" dark class="d-block" style="box-shadow:none;">
-                <v-toolbar-title>家事リスト</v-toolbar-title>
+                <v-toolbar-title>タスク</v-toolbar-title>
                 <v-spacer></v-spacer>
                 <span class="pt-1 mr-3">{{date}}</span>
                 <v-btn v-if="mode == 'today'" @click="openTaskDialog()" light height="35px" width="35px" fab elevation="0">
