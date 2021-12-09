@@ -7,7 +7,7 @@
                     <v-toolbar-title>マイページ</v-toolbar-title>
                 </v-toolbar>
                 <v-card-text class="d-flex align-center">
-                    <div class="mx-auto" style="width:30%;">
+                    <div class="mx-auto img_frame" style="width:30%;">
                         <PartsImg :src="loginInfo.user_img"/>
                     </div>
                     <v-spacer></v-spacer>
@@ -31,7 +31,7 @@
                     <v-toolbar-title>マイルーム</v-toolbar-title>
                 </v-toolbar>
                 <v-card-text class="d-flex align-center">
-                    <div class="pb-2 mx-auto" style="width:20%;">
+                    <div class="pb-2 mx-auto img_frame" style="width:20%;">
                         <PartsImg :src="loginInfo.room_img"/>
                     </div>
                     <v-spacer></v-spacer>
@@ -56,7 +56,7 @@
             </v-toolbar>
             <div v-for="(room,roomIndex) in loginInfo.invited_rooms" :key="roomIndex">
                 <v-card-text class="d-flex align-center pb-0">
-                    <div class="pb-2 mx-auto" style="width:20%;">
+                    <div class="pb-2 mx-auto img_frame" style="width:20%;">
                         <PartsImg :src="room.room_img"/>
                     </div>
                     <v-spacer></v-spacer>

@@ -9,8 +9,8 @@
             <v-form v-model="noError" ref="form" class="pt-5">
 
                 <div class="mb-5 d-flex align-center justify-center">
-                    <div @click="imagePickerDialog = true" class="mr-5" style="width:30%;">
-                        <v-img v-if="file" :src="uploadedImage" aspect-ratio="1" class="rounded-circle main_img"></v-img>
+                    <div @click="imagePickerDialog = true" class="mr-5 img_frame" style="width:30%;">
+                        <v-img v-if="file" :src="uploadedImage" aspect-ratio="1" class="rounded-circle"></v-img>
                         <PartsImg v-else :src="form.room_img"/>
                     </div>
                     <v-btn @click="$refs.input.click()">

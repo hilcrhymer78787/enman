@@ -1,6 +1,6 @@
 <template>
-    <v-img v-if="src.slice( 0, 4 ) == 'http'" :src="src" aspect-ratio="1" class="rounded-circle main_img"></v-img>
-    <v-img v-else :src="backUrl+'/storage/'+src" aspect-ratio="1" class="rounded-circle main_img"></v-img>
+    <v-img v-if="src.slice( 0, 4 ) == 'http'" :src="src" aspect-ratio="1" class="rounded-circle"></v-img>
+    <v-img v-else :src="backUrl+'/storage/'+src" aspect-ratio="1" class="rounded-circle"></v-img>
 </template>
 
 <script>
