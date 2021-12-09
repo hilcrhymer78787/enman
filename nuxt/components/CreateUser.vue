@@ -10,8 +10,7 @@
                 <div class="mb-5 d-flex align-center justify-center">
                     <div @click="imagePickerDialog = true" class="mr-5" style="width:30%;">
                         <v-img v-if="file" :src="uploadedImage" aspect-ratio="1" class="rounded-circle main_img"></v-img>
-                        <v-img v-else-if="form.user_img.slice( 0, 4 ) == 'http'" :src="form.user_img" aspect-ratio="1" class="rounded-circle main_img"></v-img>
-                        <v-img v-else :src="backUrl+'/storage/'+form.user_img" aspect-ratio="1" class="rounded-circle main_img"></v-img>
+                        <PartsImg v-else :src="form.user_img"/>
                     </div>
                     <v-btn @click="$refs.input.click()">
                         <v-icon>mdi-upload</v-icon>
@@ -55,7 +54,6 @@ export default {
         return {
             uploadedImage: null,
             file: null,
-            backUrl: process.env.API_BASE_URL,
             loading: false,
             noError: false,
             errorMessage: "",
