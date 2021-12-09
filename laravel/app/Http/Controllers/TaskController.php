@@ -38,36 +38,20 @@ class TaskController extends Controller
     }
     public function create(Request $request)
     {
-        $loginInfo = (new UserService())->getLoginInfoByToken($request->header('token'));
-
-        if (isset($request["taskId"])) {
-            Task::where("task_id", $request["taskId"])->update([
-                "task_name" => $request["taskName"],
-                "task_default_minute" => $request["taskDefaultMinute"],
-                "task_is_everyday" => $request["taskIsEveryday"],
-                "task_room_id" => $loginInfo['user_room_id'],
-            ]);
+        if ($request['task']['task_id']) {
+            Task::where('task_id', $request['task']['task_id'])
+                ->update($request['task']);
         } else {
-            Task::create([
-                "task_name" => $request["taskName"],
-                "task_default_minute" => $request["taskDefaultMinute"],
-                "task_is_everyday" => $request["taskIsEveryday"],
-                "task_room_id" => $loginInfo['user_room_id'],
-            ]);
+            Task::create($request['task']);
         }
-
-        return $request;
     }
     public function delete(Request $request)
     {
-        $loginInfo = (new UserService())->getLoginInfoByToken($request->header('token'));
 
         Task::where('task_id', $request['task_id'])
-            ->where('task_room_id', $loginInfo['user_room_id'])
             ->delete();
 
         Work::where('work_task_id', $request['task_id'])
-            ->where('work_room_id', $loginInfo['user_room_id'])
             ->delete();
 
         return $request;
@@ -75,8 +59,8 @@ class TaskController extends Controller
     public function sortset(Request $request)
     {
         foreach ($request['tasks'] as $index => $task) {
-            Task::where("task_id", $task["task_id"])->update([
-                "task_sort_key" => $index,
+            Task::where('task_id', $task['task_id'])->update([
+                'task_sort_key' => $index,
             ]);
         }
     }
