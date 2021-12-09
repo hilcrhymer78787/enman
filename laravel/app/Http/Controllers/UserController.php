@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Room;
 use App\Models\Invitation;
 use App\Services\UserService;
+use App\Services\TaskService;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 
@@ -91,7 +92,10 @@ class UserController extends Controller
 
             $roomId = Room::where('room_token', $roomToken)->first()->room_id;
 
-            // 新規登録
+            // ダミータスクを作成
+            (new TaskService())->createcDummyTask($roomId);
+
+            // 新規ユーザー登録
             $userToken = $request['email'] . Str::random(100);
 
             $user['name'] = $request['name'];
