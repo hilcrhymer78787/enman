@@ -15,42 +15,49 @@ class worksTableSeeder extends Seeder
     public function run()
     {
         //  \App\Models\Work::factory(100)->create();
-        DB::table('works')->insert([
-            [
-              'work_room_id' => 1,
-              'work_date'=>date('Y-m-d', strtotime('+1 day')),
-              'work_task_id' => 1,
-              'work_user_id' => 1,
-              'work_minute' => 5,
-            ],
-            [
-              'work_room_id' => 1,
-              'work_date'=>date("Y-m-d H:i:s"),
-              'work_task_id' => 1,
-              'work_user_id' => 1,
-              'work_minute' => 10,
-            ],
-            [
-              'work_room_id' => 1,
-              'work_date'=>date("Y-m-d H:i:s"),
-              'work_task_id' => 2,
-              'work_user_id' => 2,
-              'work_minute' => 10,
-            ],
-            [
-              'work_room_id' => 1,
-              'work_date'=>date("Y-m-d H:i:s"),
-              'work_task_id' => 3,
-              'work_user_id' => 1,
-              'work_minute' => 5,
-            ],
-            [
-              'work_room_id' => 1,
-              'work_date'=>date("Y-m-d H:i:s"),
-              'work_task_id' => 3,
-              'work_user_id' => 2,
-              'work_minute' => 10,
-            ],
-        ]);
+        for ($i = 1; $i  < 20; $i++) {
+            DB::table('works')->insert([
+                [
+                    'work_room_id' => 1,
+                    'work_date' => date('Y-m-d', strtotime("-${i} day")),
+                    'work_task_id' => 1,
+                    'work_user_id' => 1,
+                    'work_minute' => 15,
+                ],
+            ]);
+        }
+        for ($i = 1; $i  < 20; $i = $i + 2) {
+            DB::table('works')->insert([
+                [
+                    'work_room_id' => 1,
+                    'work_date' => date('Y-m-d', strtotime("-${i} day")),
+                    'work_task_id' => 2,
+                    'work_user_id' => 2,
+                    'work_minute' => 30,
+                ],
+            ]);
+        }
+        for ($i = 1; $i  < 20; $i++) {
+            DB::table('works')->insert([
+                [
+                    'work_room_id' => 1,
+                    'work_date' => date('Y-m-d', strtotime("-${i} day")),
+                    'work_task_id' => $i % 2 + 3,
+                    'work_user_id' => 3,
+                    'work_minute' => 15,
+                ],
+            ]);
+        }
+        for ($i = 1; $i  < 20; $i++) {
+            DB::table('works')->insert([
+                [
+                    'work_room_id' => 1,
+                    'work_date' => date('Y-m-d', strtotime("-${i} day")),
+                    'work_task_id' => 5,
+                    'work_user_id' => $i % 3 + 1,
+                    'work_minute' => 10,
+                ],
+            ]);
+        }
     }
 }
