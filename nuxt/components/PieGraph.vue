@@ -56,7 +56,7 @@ export default {
                         if (!meta.hidden) {
                             meta.data.forEach(function (element, index) {
                                 // フォントの設定
-                                let fontSize = 20;
+                                let fontSize = 15;
                                 ctx.fillStyle = "#000";
                                 // 設定を適用
                                 ctx.font = Chart.helpers.fontString(fontSize);
@@ -72,19 +72,18 @@ export default {
                                 ctx.textAlign = "center";
                                 ctx.textBaseline = "middle";
 
-                                let padding = -2;
                                 let position = element.tooltipPosition();
                                 if (dataset.data[index]) {
                                     // ツールチップに変更内容を表示
                                     ctx.fillText(
                                         labelString,
                                         position.x,
-                                        position.y - fontSize / 2 - padding
+                                        position.y - fontSize / 2 + 2
                                     ); // title
                                     ctx.fillText(
                                         dataString,
                                         position.x,
-                                        position.y + fontSize / 2 - padding
+                                        position.y + fontSize / 2 -1
                                     ); // データの百分率
                                 }
 
