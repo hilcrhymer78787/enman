@@ -36,28 +36,29 @@ class TaskController extends Controller
         }
         return $tasks;
     }
-    public function create(Request $request, Task $task)
+    public function create(Request $request)
     {
         $loginInfo = (new UserService())->getLoginInfoByToken($request->header('token'));
 
         if (isset($request["taskId"])) {
-            $task->where("task_id", $request["taskId"])->update([
+            Task::where("task_id", $request["taskId"])->update([
                 "task_name" => $request["taskName"],
                 "task_default_minute" => $request["taskDefaultMinute"],
                 "task_is_everyday" => $request["taskIsEveryday"],
                 "task_room_id" => $loginInfo['user_room_id'],
             ]);
         } else {
-            $task["task_name"] = $request["taskName"];
-            $task["task_default_minute"] = $request["taskDefaultMinute"];
-            $task["task_is_everyday"] = $request["taskIsEveryday"];
-            $task["task_room_id"] = $loginInfo['user_room_id'];
-            $task->save();
+            Task::create([
+                "task_name" => $request["taskName"],
+                "task_default_minute" => $request["taskDefaultMinute"],
+                "task_is_everyday" => $request["taskIsEveryday"],
+                "task_room_id" => $loginInfo['user_room_id'],
+            ]);
         }
 
         return $request;
     }
-    public function delete(Request $request, Task $task)
+    public function delete(Request $request)
     {
         $loginInfo = (new UserService())->getLoginInfoByToken($request->header('token'));
 
