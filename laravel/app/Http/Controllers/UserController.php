@@ -26,15 +26,20 @@ class UserController extends Controller
     public function basic_authentication(Request $request)
     {
         // ベーシック認証
-        $loginInfo = User::where('email', $request->email)
-            ->where('password', $request->password)
+        $token = User::where('email', $request['email'])
             ->select('token')
             ->first();
-        if (!$loginInfo) {
-            $error['errorMessage'] = 'メールアドレスかパスワードが違います';
-            return $error;
+        if (!$token) {
+            return response()->json(['errorMessage' => 'このメールアドレスは登録されていません'], 500);
         }
-        return $loginInfo;
+        $token = User::where('email', $request['email'])
+            ->where('password', $request['password'])
+            ->select('token')
+            ->first();
+        if (!$token) {
+            return response()->json(['errorMessage' => 'パスワードが間違っています'], 500);
+        }
+        return $token;
     }
     public function bearer_authentication(Request $request)
     {

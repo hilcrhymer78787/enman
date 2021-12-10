@@ -84,17 +84,17 @@ export default {
                     `/api/user/basic_authentication?email=${email}&password=${password}`
                 )
                 .then((res) => {
-                    if (res.data.errorMessage) {
-                        this.errorMessage = res.data.errorMessage;
-                    } else {
-                        this.$cookies.set("token", res.data.token, {
-                            maxAge: 60 * 60 * 24 * 30,
-                        });
-                        this.$router.push("/");
-                    }
+                    this.$cookies.set("token", res.data.token, {
+                        maxAge: 60 * 60 * 24 * 30,
+                    });
+                    this.$router.push("/");
                 })
                 .catch((err) => {
-                    alert("通信エラーです");
+                    if (err.response.data.errorMessage) {
+                        this.errorMessage = err.response.data.errorMessage;
+                    } else {
+                        alert("通信エラーです");
+                    }
                 });
             this.loading = false;
         },
