@@ -70,13 +70,13 @@ class WorkController extends Controller
 
         $works = $request['works'];
         foreach ($works as $work) {
-            $newWork = new Work;
-            $newWork['work_date'] = $request['date'];
-            $newWork['work_room_id'] = $loginInfo['user_room_id'];
-            $newWork['work_task_id'] = $request['task_id'];
-            $newWork['work_user_id'] = $work['work_user_id'];
-            $newWork['work_minute'] = $work['work_minute'];
-            $newWork->save();
+            Work::create([
+                'work_date' => $request['date'],
+                'work_room_id' => $loginInfo['user_room_id'],
+                'work_task_id' => $request['task_id'],
+                'work_user_id' => $work['work_user_id'],
+                'work_minute' => $work['work_minute'],
+            ]);
         }
         return $request;
     }
