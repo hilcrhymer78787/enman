@@ -10,7 +10,7 @@ class TaskService
     {
         $tasks = Task::where('task_room_id', $roomId)
             ->where('task_is_everyday', 1)
-            ->select('task_id', 'task_default_minute', 'task_name', 'task_is_everyday', 'task_sort_key')
+            ->select('task_id','task_name as name', 'task_default_minute', 'task_is_everyday', 'task_sort_key')
             ->orderBy('task_sort_key')
             ->get();
         return $tasks;

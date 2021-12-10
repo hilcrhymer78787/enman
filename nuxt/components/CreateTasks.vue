@@ -1,7 +1,7 @@
 <template>
     <v-card>
         <v-toolbar color="teal" dark style="box-shadow:none;">
-            <v-toolbar-title v-if="this.focusTask">「{{this.focusTask.task_name}}」を編集</v-toolbar-title>
+            <v-toolbar-title v-if="this.focusTask">「{{this.focusTask.name}}」を編集</v-toolbar-title>
             <v-toolbar-title v-else>新しいタスクを追加</v-toolbar-title>
         </v-toolbar>
         <v-divider></v-divider>
@@ -63,7 +63,7 @@ export default {
         this.$set(this.form, "task_room_id", this.loginInfo.room_id);
         if (this.focusTask) {
             this.$set(this.form, "task_id", this.focusTask.task_id);
-            this.$set(this.form, "task_name", this.focusTask.task_name);
+            this.$set(this.form, "task_name", this.focusTask.name);
             this.$set(
                 this.form,
                 "task_default_minute",

@@ -1,7 +1,7 @@
 <template>
     <v-card>
         <v-toolbar color="teal" dark style="box-shadow:none;">
-            <v-toolbar-title>{{task.task_name}}</v-toolbar-title>
+            <v-toolbar-title>{{task.name}}</v-toolbar-title>
         </v-toolbar>
         <v-divider></v-divider>
         <v-card-text class="pa-3" style="min-height:35vh;">
@@ -106,7 +106,7 @@ export default {
         async onClickDelete() {
             if (
                 !confirm(
-                    `${this.date}、「${this.task.task_name}」の稼働情報を全て削除しますか？`
+                    `${this.date}、「${this.task.name}」の稼働情報を全て削除しますか？`
                 )
             ) {
                 return;

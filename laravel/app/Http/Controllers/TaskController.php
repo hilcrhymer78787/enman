@@ -19,7 +19,6 @@ class TaskController extends Controller
         $tasks = (new TaskService())->getTasksByRoomId($loginInfo['user_room_id']);
 
         foreach ($tasks as $task) {
-
             $works = Work::where('work_room_id', $loginInfo['user_room_id'])
                 ->where('work_task_id', $task['task_id'])
                 ->whereYear('work_date', $request['year'])

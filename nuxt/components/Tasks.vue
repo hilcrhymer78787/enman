@@ -26,7 +26,7 @@
                                             <PartsImg v-if="task.works.length >= 2" :src="loginInfo.room_img"/>
                                         </v-list-item-avatar>
                                         <v-list-item-content @click="onFocusTask(task)">
-                                            <v-list-item-title>{{task.task_name}}</v-list-item-title>
+                                            <v-list-item-title>{{task.name}}</v-list-item-title>
                                             <v-list-item-subtitle style="font-size:12px;">
                                                 <span>想定:{{task.task_default_minute}}分</span>
                                                 <span v-if="task.works.length">稼働:{{task.minute}}分</span>
@@ -127,7 +127,7 @@ export default {
         async onClickCheckBoxMarked(task, taskIndex) {
             if (
                 !confirm(
-                    `${this.date}、「${task.task_name}」の稼働情報を全て削除しますか？`
+                    `${this.date}、「${task.name}」の稼働情報を全て削除しますか？`
                 )
             ) {
                 return;
@@ -149,7 +149,7 @@ export default {
         async deleteTask(task) {
             if (
                 !confirm(
-                    `「${task.task_name}」に関するデータを全て削除しますか？`
+                    `「${task.name}」に関するデータを全て削除しますか？`
                 )
             ) {
                 return;
