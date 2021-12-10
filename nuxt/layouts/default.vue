@@ -14,7 +14,7 @@
                 </v-list-item>
                 <v-divider></v-divider>
                 <v-list dense>
-                    <v-list-item v-for="nav in navs" :key="nav.ttl" :to="nav.to" router light exact>
+                    <v-list-item v-for="nav in navs" :key="nav.ttl" :to="nav.to" router light>
                         <v-list-item-icon>
                             <v-badge :value="nav.badgeValue" :content="nav.badgeContent" color="teal" offset-x="5" offset-y="15">
                                 <v-icon>{{nav.icon}}</v-icon>
@@ -34,7 +34,7 @@
             </v-main>
 
             <v-bottom-navigation  v-if="$vuetify.breakpoint.xs" app light fixed color="teal">
-                <v-btn v-for="(nav,i) in navs" :key="i" :style="`width:calc(100% / 3); height:100%;background-color:white;`" :to="nav.to" router light exact>
+                <v-btn v-for="(nav,i) in navs" :key="i" :style="`width:calc(100% / 3); height:100%;background-color:white;`" :to="nav.to" router light>
                     <span>{{nav.ttl}}</span>
                     <v-badge :value="nav.badgeValue" :content="nav.badgeContent" color="teal" offset-x="5" offset-y="15">
                         <v-icon>{{nav.icon}}</v-icon>

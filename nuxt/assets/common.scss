@@ -3,8 +3,18 @@
         border: 3px solid #009688;
     }
 }
-.v-list-item:active{
-    background-color: #00968733 ;
+.v-list-item{
+    &:active{
+        background-color: #00968733 ;
+    }
+    &--active{
+        .v-list-item__icon{
+            color: #009688 !important;
+        }
+        .v-list-item__content{
+            color: #009688 !important;
+        }
+    }
 }
 
 .v-dialog {
