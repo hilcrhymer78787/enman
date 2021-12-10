@@ -35,8 +35,8 @@ class WorkController extends Controller
         $data['daily'] = $works;
 
         // 月ごとのデータ
-        $data['monthly'] = (new UserService())->getJoinedUsersByRoomId($loginInfo['user_room_id']);
-        foreach ($data['monthly'] as $user) {
+        $users = (new UserService())->getJoinedUsersByRoomId($loginInfo['user_room_id']);
+        foreach ($users as $user) {
             $minute = Work::where('work_room_id', $loginInfo['user_room_id'])
                 ->whereYear('work_date', $request['year'])
                 ->whereMonth('work_date', $request['month'])
@@ -44,10 +44,11 @@ class WorkController extends Controller
                 ->sum('work_minute');
             $user['minute'] = intval($minute);
         }
+        $data['monthly'] = $users;
 
         // 月ごとのタスクの合計
-        $data['tasks'] = (new TaskService())->getTasksByRoomId($loginInfo['user_room_id']);
-        foreach ($data['tasks'] as $task) {
+        $tasks = (new TaskService())->getTasksByRoomId($loginInfo['user_room_id']);
+        foreach ($tasks as $task) {
             $minute = Work::where('work_room_id', $loginInfo['user_room_id'])
                 ->whereYear('work_date', $request['year'])
                 ->whereMonth('work_date', $request['month'])
@@ -56,6 +57,7 @@ class WorkController extends Controller
                 ->sum('work_minute');
             $task['minute'] = intval($minute);
         }
+        $data['tasks'] = $tasks;
 
         return $data;
     }
