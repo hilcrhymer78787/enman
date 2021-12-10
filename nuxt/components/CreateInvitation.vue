@@ -12,7 +12,9 @@
         <v-divider></v-divider>
         <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn @click="$emit('onCloseDialog')"><v-icon>mdi-close</v-icon></v-btn>
+            <v-btn @click="$emit('onCloseDialog')">
+                <v-icon>mdi-close</v-icon>
+            </v-btn>
             <v-btn v-if="!successMessage" :loading="loading" color="teal" dark @click="CreateInvitation()">招待する</v-btn>
             <v-btn v-if="successMessage" color="teal" dark @click="resetForm()">続けて招待</v-btn>
         </v-card-actions>
@@ -42,6 +44,7 @@ export default {
     methods: {
         async CreateInvitation() {
             this.errorMessage = "";
+            this.successMessage = "";
             this.$refs.form.validate();
             // バリデーションエラー
             if (!this.noError) {
@@ -49,21 +52,16 @@ export default {
             }
             this.loading = true;
             await this.$axios
-                .post(
-                    `/api/invitation/create?email=${this.email}`
-                )
+                .post(`/api/invitation/create?email=${this.email}`)
                 .then((res) => {
-                    this.errorMessage = "";
-                    this.successMessage = "";
-                    if (res.data.errorMessage) {
-                        this.errorMessage = res.data.errorMessage;
-                    }
-                    if (res.data.successMessage) {
-                        this.successMessage = res.data.successMessage;
-                    }
+                        this.successMessage = res.data;
                 })
                 .catch((err) => {
-                    alert("通信に失敗しました");
+                    if (err.response.data.errorMessage) {
+                        this.errorMessage = err.response.data.errorMessage;
+                    } else {
+                        this.errorMessage = "通信に失敗しました";
+                    }
                 });
             await this.$store.dispatch("setLoginInfoByToken");
             this.loading = false;
@@ -75,10 +73,10 @@ export default {
                 `https://picsum.photos/500/300?image=${n}`
             );
         },
-        resetForm(){
-            this.successMessage = ''
-            this.email = ''
-        }
+        resetForm() {
+            this.successMessage = "";
+            this.email = "";
+        },
     },
     mounted() {
         // this.$set(this.form, "invitation_id", this.loginInfo.invitation_id);

@@ -16,19 +16,19 @@ class InvitationController extends Controller
         // メールアドレスが存在するか確認
         $toUserData = User::where('email', $request['email'])->first();
         if (!$toUserData) {
-            $error['errorMessage'] = '登録されているメールアドレスはありません';
-            return $error;
+            return response()->json(['errorMessage' => 'このメールアドレスは登録されていません'], 500);
         }
 
         $loginInfo = (new UserService())->getLoginInfoByToken($request->header('token'));
         $roomData = Room::where('room_id', $loginInfo['user_room_id'])->first();
-
+        
         // 重複判定
-        $bool = Invitation::where('invitation_room_id', $loginInfo['user_room_id'])
-            ->where('invitation_to_user_id', $toUserData['id'])->first();
-        if ($bool) {
-            $error['errorMessage'] = $toUserData['name'] . 'さんはすでに' . $roomData['room_name'] . 'へ招待されています';
-            return $error;
+        $duplicateJudgment = Invitation::where('invitation_room_id', $loginInfo['user_room_id'])
+            ->where('invitation_to_user_id', $toUserData['id'])
+            ->first();
+        if ($duplicateJudgment) {
+            $errorMessage = $toUserData['name'] . 'さんはすでに' . $roomData['room_name'] . 'へ招待されています';
+            return response()->json(['errorMessage' => $errorMessage], 500);
         }
 
         Invitation::create([
@@ -38,8 +38,7 @@ class InvitationController extends Controller
             'invitation_status' => 0,
         ]);
 
-        $success['successMessage'] = $toUserData['name'] . 'さんを' . $roomData['room_name'] . 'へ招待しました';
-        return $success;
+        return $toUserData['name'] . 'さんを' . $roomData['room_name'] . 'へ招待しました';
     }
     public function update(Request $request)
     {
