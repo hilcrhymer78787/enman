@@ -64,7 +64,6 @@ class WorkController extends Controller
     public function create(Request $request)
     {
         $loginInfo = (new UserService())->getLoginInfoByToken($request->header('token'));
-
         Work::where('work_date', $request['date'])
             ->where('work_task_id', $request['task_id'])
             ->delete();
@@ -84,7 +83,6 @@ class WorkController extends Controller
     public function delete(Request $request)
     {
         $loginInfo = (new UserService())->getLoginInfoByToken($request->header('token'));
-
         Work::where('work_date', $request['date'])
             ->where('work_task_id', $request['task_id'])
             ->where('work_room_id', $loginInfo['user_room_id'])

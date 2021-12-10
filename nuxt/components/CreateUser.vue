@@ -132,7 +132,6 @@ export default {
             await this.$axios
                 .post(`/api/user/create`, postData)
                 .then(async (res) => {
-                    console.log(res.data)
                     this.errorMessage = "";
                     if (res.data.errorMessage) {
                         this.errorMessage = res.data.errorMessage;
