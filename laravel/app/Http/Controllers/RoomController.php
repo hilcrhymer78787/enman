@@ -14,22 +14,19 @@ class RoomController extends Controller
 
     public function create(Request $request)
     {
-
         if ($request['room_id'] == 0) {
             // 新規作成
-            $roomToken = date('Y-m-d H:i:s') . Str::random(100);
-            Room::create([
+            $room = Room::create([
                 'room_name' => $request['room_name'],
                 'room_img' => $request['room_img'],
-                'room_token' => $roomToken,
+                'room_token' => date('Y-m-d H:i:s') . Str::random(100),
             ]);
             if ($request['exist_file']) {
                 $request['file']->storeAs('public/', $request['room_img']);
             }
             // 自分自身をルームに招待し入室
-            $roomId = Room::where('room_token', $roomToken)->first()->room_id;
             $loginInfo = (new UserService())->getLoginInfoByToken($request->header('token'));
-            (new InvitationService())->invitateMySelf($roomId, $loginInfo['id']);
+            (new InvitationService())->invitateMySelf($room['id'], $loginInfo['id']);
             return;
         }
         // 編集

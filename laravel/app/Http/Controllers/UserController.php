@@ -70,64 +70,55 @@ class UserController extends Controller
         }
         return $loginInfo;
     }
-    public function create(Request $request, Room $room, User $user)
+    public function create(Request $request)
     {
         if (!$request['id']) {
             // 重複確認
-            $userDataCount = count(User::where('email', $request['email'])->get());
-            if ($userDataCount != 0) {
+            $existEmail = User::where('email', $request['email'])->first();
+            if ($existEmail) {
                 $error['errorMessage'] = 'このメールアドレスは既に登録されています';
                 return $error;
             }
-
             // 部屋を作成
-            $roomToken = date('Y-m-d H:i:s') . Str::random(100);
-
-            $room['room_name'] = 'マイルーム';
-            $room['room_img'] = 'https://picsum.photos/500/300?image=40';
-            $room['room_token'] = $roomToken;
-            $room->save();
-
-            $roomId = Room::where('room_token', $roomToken)->first()->room_id;
-
+            $room = Room::create([
+                'room_name' => 'マイルーム',
+                'room_img' => 'https://picsum.photos/500/300?image=40',
+                'room_token' => date('Y-m-d H:i:s') . Str::random(100),
+            ]);
             // ダミータスクを作成
-            (new TaskService())->createcDummyTask($roomId);
-
+            (new TaskService())->createcDummyTask($room['id']);
             // 新規ユーザー登録
-            $userToken = $request['email'] . Str::random(100);
-
-            User::create([
+            $user = User::create([
                 'name' => $request['name'],
                 'email' => $request['email'],
                 'password' => $request['password'],
                 'user_img' => $request['user_img'],
-                'token' => $userToken,
+                'token' => $request['email'] . Str::random(100),
             ]);
             if ($request['exist_file']) {
                 $request['file']->storeAs('public/', $request['user_img']);
             }
-
             // 自分自身をルームに招待し入室
-            $loginInfo = (new UserService())->getLoginInfoByToken($userToken);
-            (new InvitationService())->invitateMySelf($roomId, $loginInfo['id']);
+            (new InvitationService())->invitateMySelf($room['id'], $user['id']);
             return;
         }
-        // 編集
-        $loginInfo = (new UserService())->getLoginInfoByToken($request->header('token'));
 
-        $loginInfoCount = count(User::where('email', $request['email'])->get());
-        if ($loginInfoCount != 0 && $loginInfo['email'] != $request['email']) {
+        // 編集の場合
+        $loginInfo = (new UserService())->getLoginInfoByToken($request->header('token'));
+        // 重複確認
+        $existEmail = User::where('email', $request['email'])->first();
+        if ($existEmail && $loginInfo['email'] != $request['email']) {
             $error['errorMessage'] = 'このメールアドレスは既に登録されています';
             return $error;
         }
-
-        $user->where('id', $loginInfo['id'])->update([
+        // ユーザー情報編集
+        User::where('id', $loginInfo['id'])->update([
             'name' => $request['name'],
             'email' => $request['email'],
             'user_img' => $request['user_img'],
         ]);
         if ($request['password']) {
-            $user->where('id', $request['id'])->update([
+            User::where('id', $request['id'])->update([
                 'password' => $request['password'],
             ]);
         }
