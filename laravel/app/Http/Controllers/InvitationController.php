@@ -11,7 +11,7 @@ use App\Services\UserService;
 
 class InvitationController extends Controller
 {
-    public function create(Request $request, Invitation $invitation)
+    public function create(Request $request)
     {
         // メールアドレスが存在するか確認
         $toUserData = User::where('email', $request['email'])->first();
@@ -31,11 +31,12 @@ class InvitationController extends Controller
             return $error;
         }
 
-        $invitation['invitation_room_id'] = $loginInfo['user_room_id'];
-        $invitation['invitation_from_user_id'] = $loginInfo['id'];
-        $invitation['invitation_to_user_id'] = $toUserData['id'];
-        $invitation['invitation_status'] = 0;
-        $invitation->save();
+        Invitation::create([
+            'invitation_room_id' => $loginInfo['user_room_id'],
+            'invitation_from_user_id' => $loginInfo['id'],
+            'invitation_to_user_id' => $toUserData['id'],
+            'invitation_status' => 0,
+        ]);
 
         $success['successMessage'] = $toUserData['name'] . 'さんを' . $roomData['room_name'] . 'へ招待しました';
         return $success;
