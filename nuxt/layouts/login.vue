@@ -18,27 +18,3 @@ export default {
     },
 };
 </script>
-<style lang="scss">
-.v-dialog {
-    max-width: 476px !important;
-}
-.v-application {
-    ul {
-        padding: 0;
-    }
-    li {
-        list-style: none;
-    }
-    p {
-        margin: 0;
-    }
-    .v-btn:before {
-        content: none;
-    }
-}
-.v-card__title{
-    background-color: #009688;
-    color: white;
-}
-
-</style>

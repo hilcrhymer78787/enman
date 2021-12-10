@@ -42,13 +42,10 @@ class UserController extends Controller
             $error['errorMessage'] = 'このトークンは有効ではありません';
             return $error;
         }
-
         // 参加しているユーザー
         $loginInfo['room_joined_users'] = (new UserService())->getJoinedUsersByRoomId($loginInfo['room_id']);
-
         // 招待中のユーザー
         $loginInfo['room_inviting_users'] = (new UserService())->getInvitingUsersByRoomId($loginInfo['room_id']);
-
         // 参加しているルーム
         $loginInfo['rooms'] = Invitation::where('invitation_to_user_id', $loginInfo['id'])
             ->where('invitation_status', 2)

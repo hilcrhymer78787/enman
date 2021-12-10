@@ -47,7 +47,6 @@ class TaskController extends Controller
     }
     public function delete(Request $request)
     {
-
         Task::where('task_id', $request['task_id'])
             ->delete();
 

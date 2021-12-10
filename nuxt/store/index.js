@@ -1,6 +1,5 @@
 export const state = () => ({
     loginInfo: null,
-    users: [],
     todayTasks: [],
     works: {
         daily: [],

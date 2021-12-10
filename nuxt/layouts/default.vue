@@ -1,31 +1,47 @@
 <template>
     <div>
         <v-app v-if="loginInfo">
+
+            <v-navigation-drawer v-if="!$vuetify.breakpoint.xs" width="200px" app permanent>
+                <v-list-item two-line>
+                    <v-list-item-avatar>
+                        <PartsImg :src="loginInfo.user_img" />
+                    </v-list-item-avatar>
+                    <v-list-item-content>
+                        <v-list-item-title>{{loginInfo.name}}</v-list-item-title>
+                        <v-list-item-subtitle>{{loginInfo.room_name}}</v-list-item-subtitle>
+                    </v-list-item-content>
+                </v-list-item>
+                <v-divider></v-divider>
+                <v-list dense>
+                    <v-list-item v-for="nav in navs" :key="nav.ttl" :to="nav.to" router light exact>
+                        <v-list-item-icon>
+                            <v-badge :value="nav.badgeValue" :content="nav.badgeContent" color="teal" offset-x="5" offset-y="15">
+                                <v-icon>{{nav.icon}}</v-icon>
+                            </v-badge>
+                        </v-list-item-icon>
+                        <v-list-item-content>
+                            <v-list-item-title>{{ nav.ttl }}</v-list-item-title>
+                        </v-list-item-content>
+                    </v-list-item>
+                </v-list>
+            </v-navigation-drawer>
+
             <v-main>
                 <v-container style="max-width:500px;">
                     <Nuxt />
                 </v-container>
             </v-main>
-            <v-bottom-navigation app light fixed color="teal">
-                <v-btn :style="`width:calc(100% / 3); height:100%;background-color:white;`" to="/" router light exact>
-                    <span>タスク</span>
-                    <v-badge :value="false" color="teal" offset-x="5" offset-y="15">
-                        <v-icon>mdi-playlist-check</v-icon>
-                    </v-badge>
-                </v-btn>
-                <v-btn :style="`width:calc(100% / 3); height:100%;background-color:white;`" to="/calendar" router light exact>
-                    <span>カレンダー</span>
-                    <v-badge :value="false" color="teal" offset-x="5" offset-y="15">
-                        <v-icon>mdi-calendar-check</v-icon>
-                    </v-badge>
-                </v-btn>
-                <v-btn :style="`width:calc(100% / 3); height:100%;background-color:white;`" to="/mypage" router light exact>
-                    <span>マイページ</span>
-                    <v-badge :value="loginInfo.invited_rooms.length" color="teal" offset-x="5" offset-y="15" :content="loginInfo.invited_rooms.length">
-                        <v-icon>mdi-account</v-icon>
+
+            <v-bottom-navigation  v-if="$vuetify.breakpoint.xs" app light fixed color="teal">
+                <v-btn v-for="(nav,i) in navs" :key="i" :style="`width:calc(100% / 3); height:100%;background-color:white;`" :to="nav.to" router light exact>
+                    <span>{{nav.ttl}}</span>
+                    <v-badge :value="nav.badgeValue" :content="nav.badgeContent" color="teal" offset-x="5" offset-y="15">
+                        <v-icon>{{nav.icon}}</v-icon>
                     </v-badge>
                 </v-btn>
             </v-bottom-navigation>
+
         </v-app>
     </div>
 </template>
@@ -35,30 +51,31 @@ import { mapState } from "vuex";
 export default {
     computed: {
         ...mapState(["loginInfo"]),
+        navs() {
+            return [
+                {
+                    ttl: "タスク",
+                    icon: "mdi-playlist-check",
+                    to: "/",
+                    badgeValue: false,
+                    badgeContent: false,
+                },
+                {
+                    ttl: "カレンダー",
+                    icon: "mdi-calendar-check",
+                    to: "/calendar",
+                    badgeValue: false,
+                    badgeContent: false,
+                },
+                {
+                    ttl: "マイページ",
+                    icon: "mdi-account",
+                    to: "/mypage",
+                    badgeValue: this.loginInfo.invited_rooms.length,
+                    badgeContent: this.loginInfo.invited_rooms.length,
+                },
+            ];
+        },
     },
 };
 </script>
-<style lang="scss">
-.v-dialog {
-    max-width: 476px !important;
-    // height: 90%;
-}
-.v-application {
-    ul {
-        padding: 0;
-    }
-    li {
-        list-style: none;
-    }
-    p {
-        margin: 0;
-    }
-    .v-btn:before {
-        content: none;
-    }
-}
-.v-card__title {
-    background-color: #009688;
-    color: white;
-}
-</style>

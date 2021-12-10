@@ -6,3 +6,26 @@
 .v-list-item:active{
     background-color: #00968733 ;
 }
+
+.v-dialog {
+    max-width: 476px !important;
+    // height: 90%;
+}
+.v-application {
+    ul {
+        padding: 0;
+    }
+    li {
+        list-style: none;
+    }
+    p {
+        margin: 0;
+    }
+    .v-btn:before {
+        content: none;
+    }
+}
+.v-card__title {
+    background-color: #009688;
+    color: white;
+}
