@@ -10,7 +10,7 @@
                 <div class="mb-5 d-flex align-center justify-center">
                     <div @click="imagePickerDialog = true" class="mr-5 img_frame" style="width:30%;">
                         <v-img v-if="file" :src="uploadedImage" aspect-ratio="1" class="rounded-circle"></v-img>
-                        <PartsImg v-else :src="form.user_img"/>
+                        <PartsImg v-else :src="form.user_img" />
                     </div>
                     <v-btn @click="$refs.input.click()">
                         <v-icon>mdi-upload</v-icon>
@@ -123,34 +123,26 @@ export default {
             }
             // ログインAPI
             this.loading = true;
-            let imgData = new FormData();
-            imgData.append("file", this.file);
+            let postData = new FormData();
+            postData.append("file", this.file);
+            postData.append("exist_file", this.file ? 1 : 0);
+            Object.keys(this.form).forEach((key) => {
+                postData.append(key, this.form[key]);
+            });
             await this.$axios
-                .post(
-                    `/api/user/create?id=${this.form.id}&name=${
-                        this.form.name
-                    }&email=${this.form.email}&password=${
-                        this.form.password
-                    }&user_img=${this.form.user_img}&img_oldname=${
-                        this.form.img_oldname
-                    }&exist_file=${this.file ? 1 : 0}`,
-                    imgData
-                )
-                .then(async(res) => {
+                .post(`/api/user/create`, postData)
+                .then(async (res) => {
                     this.errorMessage = "";
                     if (res.data.errorMessage) {
                         this.errorMessage = res.data.errorMessage;
+                        return;
+                    }
+                    if (this.mode == "create") {
+                        await this.$store.dispatch("setLoginInfo", this.form);
+                        this.$router.push("/");
                     } else {
-                        if (this.mode == "create") {
-                            await this.$store.dispatch(
-                                "setLoginInfo",
-                                this.form
-                            );
-                            this.$router.push("/");
-                        }else{
-                            this.$store.dispatch("setLoginInfoByToken");
-                            this.$emit("onCloseDialog");
-                        }
+                        this.$store.dispatch("setLoginInfoByToken");
+                        this.$emit("onCloseDialog");
                     }
                 })
                 .catch((err) => {

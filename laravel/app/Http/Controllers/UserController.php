@@ -72,7 +72,7 @@ class UserController extends Controller
     }
     public function create(Request $request, Room $room, User $user)
     {
-        if ($request['id'] == 0) {
+        if (!$request['id']) {
             // 重複確認
             $userDataCount = count(User::where('email', $request['email'])->get());
             if ($userDataCount != 0) {
@@ -96,12 +96,13 @@ class UserController extends Controller
             // 新規ユーザー登録
             $userToken = $request['email'] . Str::random(100);
 
-            $user['name'] = $request['name'];
-            $user['email'] = $request['email'];
-            $user['password'] = $request['password'];
-            $user['user_img'] = $request['user_img'];
-            $user['token'] = $userToken;
-            $user->save();
+            User::create([
+                'name' => $request['name'],
+                'email' => $request['email'],
+                'password' => $request['password'],
+                'user_img' => $request['user_img'],
+                'token' => $userToken,
+            ]);
             if ($request['exist_file']) {
                 $request['file']->storeAs('public/', $request['user_img']);
             }
@@ -110,34 +111,33 @@ class UserController extends Controller
             $loginInfo = (new UserService())->getLoginInfoByToken($userToken);
             (new InvitationService())->invitateMySelf($roomId, $loginInfo['id']);
             return;
-        } else {
-            // 編集
-            $loginInfo = (new UserService())->getLoginInfoByToken($request->header('token'));
-
-            $loginInfoCount = count(User::where('email', $request['email'])->get());
-            if ($loginInfoCount != 0 && $loginInfo['email'] != $request['email']) {
-                $error['errorMessage'] = 'このメールアドレスは既に登録されています';
-                return $error;
-            }
-
-            $user->where('id', $loginInfo['id'])->update([
-                'name' => $request['name'],
-                'email' => $request['email'],
-                'user_img' => $request['user_img'],
-            ]);
-            if ($request['exist_file']) {
-                $request['file']->storeAs('public/', $request['user_img']);
-            }
-            if ($request['user_img'] != $request['img_oldname']) {
-                Storage::delete('public/' . $request['img_oldname']);
-            }
-            if ($request['password']) {
-                $user->where('id', $request['id'])->update([
-                    'password' => $request['password'],
-                ]);
-            }
-            return User::where('id', $request['id'])->first();
         }
+        // 編集
+        $loginInfo = (new UserService())->getLoginInfoByToken($request->header('token'));
+
+        $loginInfoCount = count(User::where('email', $request['email'])->get());
+        if ($loginInfoCount != 0 && $loginInfo['email'] != $request['email']) {
+            $error['errorMessage'] = 'このメールアドレスは既に登録されています';
+            return $error;
+        }
+
+        $user->where('id', $loginInfo['id'])->update([
+            'name' => $request['name'],
+            'email' => $request['email'],
+            'user_img' => $request['user_img'],
+        ]);
+        if ($request['password']) {
+            $user->where('id', $request['id'])->update([
+                'password' => $request['password'],
+            ]);
+        }
+        if ($request['exist_file']) {
+            $request['file']->storeAs('public/', $request['user_img']);
+        }
+        if ($request['user_img'] != $request['img_oldname']) {
+            Storage::delete('public/' . $request['img_oldname']);
+        }
+        return;
     }
     public function updateRoomId(Request $request)
     {

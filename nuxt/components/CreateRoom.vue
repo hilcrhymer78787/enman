@@ -11,7 +11,7 @@
                 <div class="mb-5 d-flex align-center justify-center">
                     <div @click="imagePickerDialog = true" class="mr-5 img_frame" style="width:30%;">
                         <v-img v-if="file" :src="uploadedImage" aspect-ratio="1" class="rounded-circle"></v-img>
-                        <PartsImg v-else :src="form.room_img"/>
+                        <PartsImg v-else :src="form.room_img" />
                     </div>
                     <v-btn @click="$refs.input.click()">
                         <v-icon>mdi-upload</v-icon>
@@ -27,7 +27,9 @@
         <v-card-actions>
             <v-btn @click="createInvitationDialog = true" v-if="mode == 'edit'">招待</v-btn>
             <v-spacer></v-spacer>
-            <v-btn @click="$emit('onCloseDialog')"><v-icon>mdi-close</v-icon></v-btn>
+            <v-btn @click="$emit('onCloseDialog')">
+                <v-icon>mdi-close</v-icon>
+            </v-btn>
             <v-btn :loading="loading" color="teal" dark @click="createRoom()">登録</v-btn>
         </v-card-actions>
 
@@ -88,18 +90,15 @@ export default {
             if (!this.noError) {
                 return;
             }
+            let postData = new FormData();
+            postData.append("file", this.file);
+            postData.append("exist_file", this.file ? 1 : 0);
+            Object.keys(this.form).forEach((key) => {
+                postData.append(key, this.form[key]);
+            });
             this.loading = true;
-            let imgData = new FormData();
-            imgData.append("file", this.file);
             await this.$axios
-                .post(
-                    `/api/room/create?room_id=${this.form.room_id}&room_name=${
-                        this.form.room_name
-                    }&room_img=${this.form.room_img}&img_oldname=${
-                        this.form.img_oldname
-                    }&exist_file=${this.file ? 1 : 0}`,
-                    imgData
-                )
+                .post(`/api/room/create`, postData)
                 .catch((err) => {
                     alert("通信に失敗しました");
                 });
