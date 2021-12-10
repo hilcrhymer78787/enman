@@ -93,7 +93,7 @@ export default {
                         this.$router.push("/");
                     }
                 })
-                .catch(() => {
+                .catch((err) => {
                     alert("通信エラーです");
                 });
             this.loading = false;

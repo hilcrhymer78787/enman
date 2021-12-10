@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Room;
-use App\Models\Invitation;
 use App\Services\UserService;
 use App\Services\TaskService;
 use App\Services\RoomService;
@@ -68,8 +67,7 @@ class UserController extends Controller
             // 重複確認
             $existEmail = User::where('email', $request['email'])->first();
             if ($existEmail) {
-                $error['errorMessage'] = 'このメールアドレスは既に登録されています';
-                return $error;
+                return response()->json(['errorMessage' => 'このメールアドレスは既に登録されています',], 500);
             }
             // 部屋を作成
             $room = Room::create([
@@ -100,8 +98,7 @@ class UserController extends Controller
         // 重複確認
         $existEmail = User::where('email', $request['email'])->first();
         if ($existEmail && $loginInfo['email'] != $request['email']) {
-            $error['errorMessage'] = 'このメールアドレスは既に登録されています';
-            return $error;
+            return response()->json(['errorMessage' => 'このメールアドレスは既に登録されています',], 404);
         }
         // ユーザー情報編集
         User::where('id', $loginInfo['id'])->update([

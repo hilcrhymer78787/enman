@@ -122,21 +122,17 @@ export default {
                 return;
             }
             // ログインAPI
-            this.loading = true;
             let postData = new FormData();
             postData.append("file", this.file);
             postData.append("exist_file", this.file ? 1 : 0);
             Object.keys(this.form).forEach((key) => {
                 postData.append(key, this.form[key]);
             });
+            this.errorMessage = "";
+            this.loading = true;
             await this.$axios
                 .post(`/api/user/create`, postData)
                 .then(async (res) => {
-                    this.errorMessage = "";
-                    if (res.data.errorMessage) {
-                        this.errorMessage = res.data.errorMessage;
-                        return;
-                    }
                     if (this.mode == "create") {
                         await this.$store.dispatch("setLoginInfo", this.form);
                         this.$router.push("/");
@@ -146,9 +142,15 @@ export default {
                     }
                 })
                 .catch((err) => {
-                    this.errorMessage = "通信に失敗しました";
+                    if (err.response.data.errorMessage) {
+                        this.errorMessage = err.response.data.errorMessage;
+                    } else {
+                        this.errorMessage = "通信に失敗しました";
+                    }
+                })
+                .finally(() => {
+                    this.loading = false;
                 });
-            this.loading = false;
         },
         onSelectedImg(n) {
             this.$set(
