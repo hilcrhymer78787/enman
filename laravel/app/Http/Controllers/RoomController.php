@@ -9,6 +9,7 @@ use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 use App\Services\UserService;
+use App\Services\InvitationService;
 
 class RoomController extends Controller
 {
@@ -30,11 +31,8 @@ class RoomController extends Controller
 
             $roomId = Room::where('room_token', $roomToken)->first()->room_id;
 
-            $invitation['invitation_room_id'] = $roomId;
-            $invitation['invitation_from_user_id'] = $loginInfo['id'];
-            $invitation['invitation_to_user_id'] = $loginInfo['id'];
-            $invitation['invitation_status'] = 2;
-            $invitation->save();
+            // 自分自身をルームに招待し参加
+            (new InvitationService())->invitateMySelf($roomId, $loginInfo['id']);
 
             // ルームに入室
             $user->where('id', $loginInfo['id'])->update([

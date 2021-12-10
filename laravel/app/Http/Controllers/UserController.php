@@ -8,6 +8,7 @@ use App\Models\Room;
 use App\Models\Invitation;
 use App\Services\UserService;
 use App\Services\TaskService;
+use App\Services\InvitationService;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 
@@ -106,14 +107,9 @@ class UserController extends Controller
                 $request['file']->storeAs('public/', $request['user_img']);
             }
 
-            $loginInfo = (new UserService())->getLoginInfoByToken($userToken);
-
             // 自分自身をルームに招待し参加
-            $invitation['invitation_room_id'] = $roomId;
-            $invitation['invitation_from_user_id'] = $loginInfo['id'];
-            $invitation['invitation_to_user_id'] = $loginInfo['id'];
-            $invitation['invitation_status'] = 2;
-            $invitation->save();
+            $loginInfo = (new UserService())->getLoginInfoByToken($userToken);
+            (new InvitationService())->invitateMySelf($roomId, $loginInfo['id']);
 
             return;
         } else {
