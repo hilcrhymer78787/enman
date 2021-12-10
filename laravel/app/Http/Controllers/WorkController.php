@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Services\UserService;
+use App\Services\TaskService;
 use App\Models\Work;
 use App\Models\Task;
 use App\Models\Invitation;
@@ -45,11 +46,7 @@ class WorkController extends Controller
         }
 
         // 月ごとのタスクの合計
-        $data['tasks'] = Task::where('task_room_id', $loginInfo['user_room_id'])
-            ->where('task_is_everyday', 1)
-            ->select('task_id', 'task_default_minute', 'task_name as name', 'task_is_everyday')
-            ->orderBy('task_sort_key')
-            ->get();
+        $data['tasks'] = (new TaskService())->getTasksByRoomId($loginInfo['user_room_id']);
         foreach ($data['tasks'] as $task) {
             $minute = Work::where('work_room_id', $loginInfo['user_room_id'])
                 ->whereYear('work_date', $request['year'])

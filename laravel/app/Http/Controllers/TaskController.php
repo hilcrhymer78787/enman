@@ -7,6 +7,7 @@ use App\Models\Task;
 use App\Models\User;
 use App\Models\Work;
 use App\Services\UserService;
+use App\Services\TaskService;
 
 
 class TaskController extends Controller
@@ -15,11 +16,7 @@ class TaskController extends Controller
     {
         $loginInfo = (new UserService())->getLoginInfoByToken($request->header('token'));
 
-        $tasks = Task::where('task_room_id', $loginInfo['user_room_id'])
-            ->where('task_is_everyday', 1)
-            ->select('task_id', 'task_default_minute', 'task_name', 'task_is_everyday', 'task_sort_key')
-            ->orderBy('task_sort_key')
-            ->get();
+        $tasks = (new TaskService())->getTasksByRoomId($loginInfo['user_room_id']);
 
         foreach ($tasks as $task) {
 
