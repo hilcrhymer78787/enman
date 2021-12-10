@@ -8,6 +8,7 @@ use App\Models\Room;
 use App\Models\Invitation;
 use App\Services\UserService;
 use App\Services\TaskService;
+use App\Services\RoomService;
 use App\Services\InvitationService;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
@@ -30,7 +31,7 @@ class UserController extends Controller
             ->where('password', $request->password)
             ->select('token')
             ->first();
-        if (!isset($loginInfo)) {
+        if (!$loginInfo) {
             $error['errorMessage'] = 'メールアドレスかパスワードが違います';
             return $error;
         }
@@ -48,19 +49,10 @@ class UserController extends Controller
         // 招待中のユーザー
         $loginInfo['room_inviting_users'] = (new UserService())->getInvitingUsersByRoomId($loginInfo['room_id']);
         // 参加しているルーム
-        $loginInfo['rooms'] = Invitation::where('invitation_to_user_id', $loginInfo['id'])
-            ->where('invitation_status', 2)
-            ->leftjoin('rooms', 'invitations.invitation_room_id', '=', 'rooms.room_id')
-            ->select('invitation_id', 'room_id', 'room_name', 'room_img')
-            ->get();
+        $loginInfo['rooms'] = (new RoomService())->getJoinedRooms($loginInfo['id']);
 
-        // 招待されている部屋(未確認)
-        $loginInfo['invited_rooms'] = Invitation::where('invitation_to_user_id', $loginInfo['id'])
-            ->where('invitation_status', '<', 2)
-            ->leftjoin('rooms', 'invitations.invitation_room_id', '=', 'rooms.room_id')
-            ->leftjoin('users', 'invitations.invitation_from_user_id', '=', 'users.id')
-            ->select('invitation_id', 'invitation_status', 'room_id', 'room_name', 'room_img', 'name')
-            ->get();
+        // 招待されている部屋
+        $loginInfo['invited_rooms'] = (new RoomService())->getInvitedRooms($loginInfo['id']);
 
         foreach ($loginInfo['invited_rooms'] as $room) {
             // 参加しているユーザー

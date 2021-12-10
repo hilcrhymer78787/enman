@@ -68,8 +68,7 @@ class WorkController extends Controller
             ->where('work_task_id', $request['task_id'])
             ->delete();
 
-        $works = $request['works'];
-        foreach ($works as $work) {
+        foreach ($request['works'] as $work) {
             Work::create([
                 'work_date' => $request['date'],
                 'work_room_id' => $loginInfo['user_room_id'],
