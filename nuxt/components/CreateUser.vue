@@ -134,7 +134,9 @@ export default {
                 .post(`/api/user/create`, postData)
                 .then(async (res) => {
                     if (this.mode == "create") {
-                        await this.$store.dispatch("setLoginInfo", this.form);
+                        this.$cookies.set("token", res.data.token, {
+                            maxAge: 60 * 60 * 24 * 30,
+                        });
                         this.$router.push("/");
                     } else {
                         this.$store.dispatch("setLoginInfoByToken");

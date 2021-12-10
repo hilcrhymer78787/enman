@@ -26,31 +26,16 @@ export const mutations = {
 }
 
 export const actions = {
-    async setLoginInfo({ commit }, form) {
-        const email = form.email
-        const password = form.password
-        await this.$axios.get(`/api/user/basic_authentication?email=${email}&password=${password}`)
-            .then((res) => {
-                this.$cookies.set("token", res.data.token, {
-                    maxAge: 60 * 60 * 24 * 30,
-                });
-            })
-    },
     setLoginInfoByToken({ commit, dispatch }) {
         this.$axios.get(`/api/user/bearer_authentication`)
             .then((res) => {
-                if (res.data.errorMessage) {
-                    // トークンが有効ではない
-                    dispatch('logout')
-                } else {
-                    // トークンが有効
-                    if (this.$cookies.get("token")) {
-                        if (($nuxt.$route.name == 'login' || $nuxt.$route.name == 'login-newUser')) {
-                            $nuxt.$router.push("/");
-                        }
-                        commit('setLoginInfo', res.data)
-                        dispatch('setTodayTasks')
+                // トークンが有効
+                if (this.$cookies.get("token")) {
+                    if (($nuxt.$route.name == 'login' || $nuxt.$route.name == 'login-newUser')) {
+                        $nuxt.$router.push("/");
                     }
+                    commit('setLoginInfo', res.data)
+                    dispatch('setTodayTasks')
                 }
             })
             .catch(() => {

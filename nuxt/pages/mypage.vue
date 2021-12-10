@@ -8,7 +8,7 @@
                 </v-toolbar>
                 <v-card-text class="d-flex align-center">
                     <div class="mx-auto img_frame" style="width:30%;">
-                        <PartsImg :src="loginInfo.user_img"/>
+                        <PartsImg :src="loginInfo.user_img" />
                     </div>
                     <v-spacer></v-spacer>
                     <div class="pt-2" style="width:65%;">
@@ -32,7 +32,7 @@
                 </v-toolbar>
                 <v-card-text class="d-flex align-center">
                     <div class="pb-2 mx-auto img_frame" style="width:20%;">
-                        <PartsImg :src="loginInfo.room_img"/>
+                        <PartsImg :src="loginInfo.room_img" />
                     </div>
                     <v-spacer></v-spacer>
                     <div class="pt-2" style="width:75%;">
@@ -57,7 +57,7 @@
             <div v-for="(room,roomIndex) in loginInfo.invited_rooms" :key="roomIndex">
                 <v-card-text class="d-flex align-center pb-0">
                     <div class="pb-2 mx-auto img_frame" style="width:20%;">
-                        <PartsImg :src="room.room_img"/>
+                        <PartsImg :src="room.room_img" />
                     </div>
                     <v-spacer></v-spacer>
                     <div class="pt-2" style="width:75%;">
@@ -106,7 +106,7 @@ export default {
     methods: {
         logout() {
             if (confirm("ログアウトしますか？")) {
-                this.$store.dispatch('logout')
+                this.$store.dispatch("logout");
             }
         },
         openCreateRoomDialog(mode) {
@@ -116,9 +116,7 @@ export default {
         async onChangeRoom() {
             this.onChangeRoomloading = true;
             await this.$axios
-                .put(
-                    `/api/user/update/room_id?room_id=${this.selectedRoomId}`
-                )
+                .put(`/api/user/update/room_id?room_id=${this.selectedRoomId}`)
                 .catch((err) => {
                     alert("通信に失敗しました");
                 });
@@ -138,9 +136,7 @@ export default {
         async joinRoom(invitationId, roomIndex) {
             this.$set(this.joinRoomloadings, roomIndex, true);
             await this.$axios
-                .put(
-                    `/api/invitation/update?invitation_id=${invitationId}`
-                )
+                .put(`/api/invitation/update?invitation_id=${invitationId}`)
                 .then(async (res) => {
                     await this.$store.dispatch("setLoginInfoByToken");
                 })
@@ -155,9 +151,7 @@ export default {
             }
             this.$set(this.rejectRoomloadings, roomIndex, true);
             await this.$axios
-                .delete(
-                    `/api/invitation/delete?invitation_id=${invitationId}`
-                )
+                .delete(`/api/invitation/delete?invitation_id=${invitationId}`)
                 .then(async (res) => {
                     await this.$store.dispatch("setLoginInfoByToken");
                 })
