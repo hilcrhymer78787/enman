@@ -70,7 +70,7 @@ class UserController extends Controller
         }
         return $loginInfo;
     }
-    public function create(Request $request, Room $room, User $user, Invitation $invitation)
+    public function create(Request $request, Room $room, User $user)
     {
         if ($request['id'] == 0) {
             // 重複確認
@@ -101,16 +101,14 @@ class UserController extends Controller
             $user['password'] = $request['password'];
             $user['user_img'] = $request['user_img'];
             $user['token'] = $userToken;
-            $user['user_room_id'] = $roomId;
             $user->save();
             if ($request['exist_file']) {
                 $request['file']->storeAs('public/', $request['user_img']);
             }
 
-            // 自分自身をルームに招待し参加
+            // 自分自身をルームに招待し入室
             $loginInfo = (new UserService())->getLoginInfoByToken($userToken);
             (new InvitationService())->invitateMySelf($roomId, $loginInfo['id']);
-
             return;
         } else {
             // 編集

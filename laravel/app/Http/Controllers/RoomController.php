@@ -31,13 +31,8 @@ class RoomController extends Controller
 
             $roomId = Room::where('room_token', $roomToken)->first()->room_id;
 
-            // 自分自身をルームに招待し参加
+            // 自分自身をルームに招待し入室
             (new InvitationService())->invitateMySelf($roomId, $loginInfo['id']);
-
-            // ルームに入室
-            $user->where('id', $loginInfo['id'])->update([
-                'user_room_id' => $roomId,
-            ]);
         } else {
             // 編集
             $room->where('room_id', $request['room_id'])->update([
