@@ -26,6 +26,12 @@ export const mutations = {
 }
 
 export const actions = {
+    setTokenRedirect({},token) {
+        this.$cookies.set("token", token, {
+            maxAge: 60 * 60 * 24 * 30,
+        });
+        $nuxt.$router.push("/");
+    },
     setLoginInfoByToken({ commit, dispatch }) {
         this.$axios.get(`/api/user/bearer_authentication`)
             .then((res) => {

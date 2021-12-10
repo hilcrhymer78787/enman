@@ -9,7 +9,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::get('/user/test_authentication', 'UserController@test_authentication');
-Route::get('/user/basic_authentication', 'UserController@basic_authentication');
+Route::post('/user/basic_authentication', 'UserController@basic_authentication');
 Route::get('/user/bearer_authentication', 'UserController@bearer_authentication');
 
 // Route::middleware([CheckToken::class])->group(function () {

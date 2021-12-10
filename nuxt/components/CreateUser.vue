@@ -134,10 +134,7 @@ export default {
                 .post(`/api/user/create`, postData)
                 .then(async (res) => {
                     if (this.mode == "create") {
-                        this.$cookies.set("token", res.data.token, {
-                            maxAge: 60 * 60 * 24 * 30,
-                        });
-                        this.$router.push("/");
+                        this.$store.dispatch('setTokenRedirect',res.data.token)
                     } else {
                         this.$store.dispatch("setLoginInfoByToken");
                         this.$emit("onCloseDialog");

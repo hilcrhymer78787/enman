@@ -60,10 +60,7 @@ export default {
             await this.$axios
                 .get(`/api/user/test_authentication`)
                 .then((res) => {
-                    this.$cookies.set("token", res.data.token, {
-                        maxAge: 60 * 60 * 24 * 30,
-                    });
-                    this.$router.push("/");
+                    this.$store.dispatch("setTokenRedirect", res.data.token);
                 })
                 .catch(() => {
                     alert("通信エラーです");
@@ -77,17 +74,10 @@ export default {
             }
             this.loading = true;
             this.errorMessage = "";
-            const email = this.form.email;
-            const password = this.form.password;
             await this.$axios
-                .get(
-                    `/api/user/basic_authentication?email=${email}&password=${password}`
-                )
+                .post(`/api/user/basic_authentication`, this.form)
                 .then((res) => {
-                    this.$cookies.set("token", res.data.token, {
-                        maxAge: 60 * 60 * 24 * 30,
-                    });
-                    this.$router.push("/");
+                    this.$store.dispatch("setTokenRedirect", res.data.token);
                 })
                 .catch((err) => {
                     if (err.response.data.errorMessage) {
