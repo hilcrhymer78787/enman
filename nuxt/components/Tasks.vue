@@ -22,8 +22,8 @@
                                     <v-list-item class="pl-2 pr-0" style="height:60px;overflow:hidden;cursor:move;">
                                         <v-list-item-avatar @click="onFocusTask(task)">
                                             <v-icon v-if="task.works.length == 0">mdi-account</v-icon>
-                                            <PartsImg v-if="task.works.length == 1" :src="task.works[0].work_user_img"/>
-                                            <PartsImg v-if="task.works.length >= 2" :src="loginInfo.room_img"/>
+                                            <PartsImg v-if="task.works.length == 1" :src="task.works[0].work_user_img" />
+                                            <PartsImg v-if="task.works.length >= 2" :src="loginInfo.room_img" />
                                         </v-list-item-avatar>
                                         <v-list-item-content @click="onFocusTask(task)">
                                             <v-list-item-title>{{task.name}}</v-list-item-title>
@@ -148,9 +148,7 @@ export default {
         },
         async deleteTask(task) {
             if (
-                !confirm(
-                    `「${task.name}」に関するデータを全て削除しますか？`
-                )
+                !confirm(`「${task.name}」に関するデータを全て削除しますか？`)
             ) {
                 return;
             }
@@ -175,8 +173,8 @@ export default {
         this.$nextTick(() => {
             const scrollArea = document.querySelector("#scrollArea");
             const scrollAreaInner = document.querySelector("#scrollAreaInner");
-            if(!scrollArea){
-                return
+            if (!scrollArea) {
+                return;
             }
             scrollArea.addEventListener("scroll", () => {
                 if (scrollArea.scrollTop == 0) {

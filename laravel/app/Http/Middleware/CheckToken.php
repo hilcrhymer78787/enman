@@ -18,8 +18,8 @@ class CheckToken
     public function handle(Request $request, Closure $next)
     {
       $loginInfo = (new UserService())->getLoginInfoByToken($request->header('token'));
-      if($loginInfo){
-        return redirect('/user/bearer_authentication');
+      if(!$loginInfo){
+          return response()->json(['errorMessage' => 'どうやらこのトークンは切れているみたいですね笑'], 500);
       }
       return $next($request);
     }

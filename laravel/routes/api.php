@@ -12,7 +12,7 @@ Route::get('/user/test_authentication', 'UserController@test_authentication');
 Route::post('/user/basic_authentication', 'UserController@basic_authentication');
 Route::get('/user/bearer_authentication', 'UserController@bearer_authentication');
 
-// Route::middleware([CheckToken::class])->group(function () {
+Route::middleware([CheckToken::class])->group(function () {
     Route::post('/task/sortset', 'TaskController@sortset');
     Route::post('/task/create', 'TaskController@create');
     Route::get('/task/read', 'TaskController@read');
@@ -32,4 +32,4 @@ Route::get('/user/bearer_authentication', 'UserController@bearer_authentication'
     Route::post('/invitation/create', 'InvitationController@create');
     Route::put('/invitation/update', 'InvitationController@update');
     Route::delete('/invitation/delete', 'InvitationController@delete');
-// });
+});
