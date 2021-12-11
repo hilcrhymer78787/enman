@@ -82,7 +82,7 @@ class UserController extends Controller
                 'user_img' => $request['user_img'],
                 'token' => $request['email'] . Str::random(100),
             ]);
-            if ($request['exist_file']) {
+            if ($request['file']) {
                 $request['file']->storeAs('public/', $request['user_img']);
             }
             // 自分自身をルームに招待し入室
@@ -108,7 +108,7 @@ class UserController extends Controller
                 'password' => $request['password'],
             ]);
         }
-        if ($request['exist_file']) {
+        if ($request['file']) {
             $request['file']->storeAs('public/', $request['user_img']);
         }
         if ($request['user_img'] != $request['img_oldname']) {

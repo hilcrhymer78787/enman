@@ -123,8 +123,9 @@ export default {
             }
             // ログインAPI
             let postData = new FormData();
-            postData.append("file", this.file);
-            postData.append("exist_file", this.file ? 1 : 0);
+            if(this.file){
+                postData.append("file", this.file);
+            }
             Object.keys(this.form).forEach((key) => {
                 postData.append(key, this.form[key]);
             });

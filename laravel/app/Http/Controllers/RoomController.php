@@ -21,7 +21,7 @@ class RoomController extends Controller
                 'room_img' => $request['room_img'],
                 'room_token' => date('Y-m-d H:i:s') . Str::random(100),
             ]);
-            if ($request['exist_file']) {
+            if ($request['file']) {
                 $request['file']->storeAs('public/', $request['room_img']);
             }
             // 自分自身をルームに招待し入室
@@ -34,7 +34,7 @@ class RoomController extends Controller
             'room_name' => $request['room_name'],
             'room_img' => $request['room_img'],
         ]);
-        if ($request['exist_file']) {
+        if ($request['file']) {
             $request['file']->storeAs('public/', $request['room_img']);
         }
         if ($request['room_img'] != $request['img_oldname']) {
