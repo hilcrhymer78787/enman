@@ -37,8 +37,8 @@
                     <v-spacer></v-spacer>
                     <div class="pt-2" style="width:75%;">
                         <v-select @change="onChangeRoom()" :readonly="onChangeRoomloading" :loading="onChangeRoomloading" v-model="selectedRoomId" color="teal" prepend-icon="mdi-home" label="部屋名" :items="loginInfo.rooms" item-value="room_id" item-text="room_name" class="my-5" dense></v-select>
-                        <v-text-field :value="roomMateNames(loginInfo.room_joined_users)" readonly color="teal" prepend-icon="mdi-account-group" label="ルームメイト" dense style="font-size:12px;"></v-text-field>
-                        <v-text-field :value="roomMateNames(loginInfo.room_inviting_users)" v-if="loginInfo.room_inviting_users.length" readonly color="teal" prepend-icon="mdi-account-plus" label="招待中" dense style="font-size:12px;"></v-text-field>
+                        <MypageRoomMateNames :users="loginInfo.room_joined_users" :prependIcon="'mdi-account-group'" :label="'ルームメイト'" />
+                        <MypageRoomMateNames :users="loginInfo.room_inviting_users" v-if="loginInfo.room_inviting_users.length" :prependIcon="'mdi-account-plus'" :label="'招待中'" />
                     </div>
                 </v-card-text>
                 <v-divider></v-divider>
@@ -62,8 +62,8 @@
                     <v-spacer></v-spacer>
                     <div class="pt-2" style="width:75%;">
                         <v-text-field v-model="room.room_name" readonly color="teal" prepend-icon="mdi-home" label="部屋名" class="my-3" dense></v-text-field>
-                        <v-text-field :value="roomMateNames(room.joined_users)" readonly color="teal" prepend-icon="mdi-account-group" label="ルームメイト" dense style="font-size:12px;"></v-text-field>
-                        <v-text-field :value="roomMateNames(room.inviting_users)" v-if="room.inviting_users.length" readonly color="teal" prepend-icon="mdi-account-plus" label="招待中" dense style="font-size:12px;"></v-text-field>
+                        <MypageRoomMateNames :users="room.joined_users" :prependIcon="'mdi-account-group'" :label="'ルームメイト'" />
+                        <MypageRoomMateNames :users="room.inviting_users" v-if="room.inviting_users.length" :prependIcon="'mdi-account-plus'" :label="'招待中'" />
                     </div>
                 </v-card-text>
                 <div class="d-flex px-3 pb-3">
@@ -88,18 +88,6 @@
 
 <script lang="ts">
 import { mapState } from "vuex";
-export type calendarType = {
-    date: string;
-    works: workType[];
-};
-export type workType = {
-    id: number;
-    member: string;
-    members_id: number;
-    place: string;
-    places_id: number;
-    price: number;
-};
 export default {
     data() {
         return {
@@ -129,33 +117,29 @@ export default {
             this.onChangeRoomloading = true;
             await this.$axios
                 .put(`/api/user/update/room_id?room_id=${this.selectedRoomId}`)
-                .catch((err) => {
+                .then(async (): Promise<void> => {
+                    await this.$store.dispatch("setLoginInfoByToken");
+                })
+                .catch((): void => {
                     alert("通信に失敗しました");
+                })
+                .finally((): void => {
+                    this.onChangeRoomloading = false;
                 });
-            await this.$store.dispatch("setLoginInfoByToken");
-            this.onChangeRoomloading = false;
-        },
-        roomMateNames(users) {
-            let outputData = "";
-            users.forEach((user, index) => {
-                if (index != 0) {
-                    outputData = outputData + "、";
-                }
-                outputData = outputData + user.name;
-            });
-            return outputData;
         },
         async joinRoom(invitationId: number, roomIndex: number): Promise<void> {
             this.$set(this.joinRoomloadings, roomIndex, true);
             await this.$axios
                 .put(`/api/invitation/update?invitation_id=${invitationId}`)
-                .then(async (res) => {
+                .then(async (): Promise<void> => {
                     await this.$store.dispatch("setLoginInfoByToken");
                 })
-                .catch((err) => {
+                .catch((): void => {
                     alert("通信に失敗しました");
+                })
+                .finally((): void => {
+                    this.$set(this.joinRoomloadings, roomIndex, false);
                 });
-            this.$set(this.joinRoomloadings, roomIndex, false);
         },
         async rejectRoom(
             invitationId: number,
@@ -168,13 +152,15 @@ export default {
             this.$set(this.rejectRoomloadings, roomIndex, true);
             await this.$axios
                 .delete(`/api/invitation/delete?invitation_id=${invitationId}`)
-                .then(async (res) => {
+                .then(async (): Promise<void> => {
                     await this.$store.dispatch("setLoginInfoByToken");
                 })
-                .catch((err) => {
+                .catch((): void => {
                     alert("通信に失敗しました");
+                })
+                .finally((): void => {
+                    this.$set(this.rejectRoomloadings, roomIndex, false);
                 });
-            this.$set(this.rejectRoomloadings, roomIndex, false);
         },
     },
     watch: {

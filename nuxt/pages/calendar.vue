@@ -40,6 +40,18 @@
 <script lang="ts">
 import moment from "moment";
 import { mapState } from "vuex";
+export type calendarType = {
+    date: string;
+    works: workType[];
+};
+export type workType = {
+    id: number;
+    member: string;
+    members_id: number;
+    place: string;
+    places_id: number;
+    price: number;
+};
 export default {
     middleware({ redirect, route }) {
         if (!route.query.year || !route.query.month) {

@@ -18,7 +18,7 @@ class UserService
         $users = Invitation::where('invitation_room_id', $roomId)
             ->where('invitation_status', 2)
             ->leftjoin('users', 'invitations.invitation_to_user_id', '=', 'users.id')
-            ->select('id', 'name', 'email', 'user_img')
+            ->select('id', 'name')
             ->get();
 
         return $users;

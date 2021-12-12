@@ -17,7 +17,7 @@ export default {
         ...mapState(["todayTasks"]),
     },
     methods: {
-        fetchData() {
+        fetchData() :void{
             this.$store.dispatch("setTodayTasks");
         },
     },
