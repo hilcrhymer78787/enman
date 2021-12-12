@@ -5,7 +5,7 @@
 import moment from "moment";
 import { mapState } from "vuex";
 export default {
-    middleware({ redirect, route }) {
+    middleware({ redirect, route }: any) {
         if (!route.query.year || !route.query.month || !route.query.day) {
             let year = moment().year();
             let month = moment().month() + 1;
@@ -17,7 +17,7 @@ export default {
         ...mapState(["todayTasks"]),
     },
     methods: {
-        fetchData() :void{
+        fetchData(): void {
             this.$store.dispatch("setTodayTasks");
         },
     },

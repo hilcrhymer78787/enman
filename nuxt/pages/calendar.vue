@@ -54,7 +54,7 @@ export type userType = {
     minute: number;
 };
 export default {
-    middleware({ redirect, route }) {
+    middleware({ redirect, route }: any) {
         if (!route.query.year || !route.query.month) {
             let year = moment().year();
             let month = moment().month() + 1;
@@ -74,7 +74,7 @@ export default {
         calendars(): calendarType[] {
             let outputData: calendarType[] = [];
             for (let day = 1; day <= this.lastDay; day++) {
-                let date:string = moment(
+                let date: string = moment(
                     new Date(this.year, this.month - 1, day)
                 ).format("YYYY-MM-DD");
                 outputData.push({
