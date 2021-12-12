@@ -24,50 +24,54 @@
     </v-dialog>
 </template>
 
-<script>
+<script lang="ts">
 import { mapState } from "vuex";
 export default {
     layout: "login",
     data() {
         return {
             isShowTestUser: process.env.IS_SHOW_TEST_USER,
-            loading: false,
-            noError: false,
-            errorMessage: "",
+            loading: false as boolean,
+            noError: false as boolean,
+            errorMessage: "" as string,
             form: {
-                email: "",
-                password: "",
+                email: "" as string,
+                password: "" as string,
             },
             emailRules: [
-                (v) => !!v || "メールアドレスは必須です",
-                (v) => /.+@.+\..+/.test(v) || "正しい形式で入力してください",
+                (v: string): boolean | string =>
+                    !!v || "メールアドレスは必須です",
+                (v: string): boolean | string =>
+                    /.+@.+\..+/.test(v) || "正しい形式で入力してください",
             ],
             passwordRules: [
-                (v) => !!v || "パスワードは必須です",
-                (v) =>
+                (v: string): boolean | string => !!v || "パスワードは必須です",
+                (v: string): boolean | string =>
                     (v && v.length >= 8) ||
                     "パスワードは8桁以上で設定してください",
             ],
-            passwordShow: false,
+            passwordShow: false as boolean,
         };
     },
     computed: {
         ...mapState(["loginInfo"]),
     },
     methods: {
-        async testAuthentication() {
+        async testAuthentication(): Promise<void> {
             this.loading = true;
             await this.$axios
                 .get(`/api/user/test_authentication`)
-                .then((res) => {
+                .then((res: any): void => {
                     this.$store.dispatch("setTokenRedirect", res.data.token);
                 })
-                .catch(() => {
+                .catch((): void => {
                     alert("通信エラーです");
+                })
+                .finally((): void => {
+                    this.loading = false;
                 });
-            this.loading = false;
         },
-        async login() {
+        async login(): Promise<void> {
             this.$refs.form.validate();
             if (!this.noError) {
                 return;
@@ -76,17 +80,19 @@ export default {
             this.errorMessage = "";
             await this.$axios
                 .post(`/api/user/basic_authentication`, this.form)
-                .then((res) => {
+                .then((res: any): void => {
                     this.$store.dispatch("setTokenRedirect", res.data.token);
                 })
-                .catch((err) => {
+                .catch((err: any): void => {
                     if (err.response.data.errorMessage) {
                         this.errorMessage = err.response.data.errorMessage;
                     } else {
                         alert("通信エラーです");
                     }
+                })
+                .finally((): void => {
+                    this.loading = false;
                 });
-            this.loading = false;
         },
     },
 };

@@ -4,11 +4,8 @@
     </v-dialog>
 </template>
 
-<script>
+<script lang="ts">
 export default {
     layout:'login',
 };
 </script>
-
-<style>
-</style>

@@ -3,7 +3,7 @@
     <v-img v-else :src="backUrl+'/storage/'+src" aspect-ratio="1" class="rounded-circle"></v-img>
 </template>
 
-<script>
+<script lang="ts">
 export default {
     props: ["src"],
     data() {
