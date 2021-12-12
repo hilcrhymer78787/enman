@@ -10,7 +10,7 @@
             </ul>
 
             <ul class="content">
-                <li v-for="n in first_day" :key="n" class="content_item blank"></li>
+                <li v-for="n in firstDay" :key="n" class="content_item blank"></li>
                 <li v-for="(calendar, index) in calendars" :key="calendar.date" v-ripple class="content_item main">
                     <div @click="$router.push(`/calendar?year=${year}&month=${month}&day=${index + 1}`)" class="content_item_inner">
                         <CalendarDayIcon :day="index + 1" />
@@ -42,15 +42,17 @@ import moment from "moment";
 import { mapState } from "vuex";
 export type calendarType = {
     date: string;
-    works: workType[];
+    work: workType[];
 };
 export type workType = {
+    sum_minute: number;
+    work_date: string;
+    users: userType;
+};
+export type userType = {
     id: number;
-    member: string;
-    members_id: number;
-    place: string;
-    places_id: number;
-    price: number;
+    name: string;
+    minute: number;
 };
 export default {
     middleware({ redirect, route }) {
@@ -71,18 +73,19 @@ export default {
     },
     computed: {
         ...mapState(["loginInfo", "works", "focusTasks"]),
-        calendars() {
+        calendars(): calendarType[] {
             let outputData = [];
-            for (let day = 1; day <= this.lastday; day++) {
+            for (let day = 1; day <= this.lastDay; day++) {
                 outputData.push({
                     date: moment(
                         new Date(this.year, this.month - 1, day)
                     ).format("YYYY-MM-DD"),
                 });
             }
-            outputData.forEach((calendar) => {
+            outputData.forEach((calendar: calendarType): void => {
                 let calendarWork = this.works.daily.filter(
-                    (work) => work.work_date === calendar.date
+                    (work: workType): boolean =>
+                        work.work_date === calendar.date
                 )[0];
                 if (calendarWork) {
                     calendar.work = calendarWork;
@@ -95,46 +98,46 @@ export default {
             });
             return outputData;
         },
-        year() {
+        year(): string {
             return this.$route.query.year;
         },
-        month() {
+        month(): string {
             return this.$route.query.month;
         },
-        day() {
+        day(): string {
             return this.$route.query.day;
         },
-        lastday() {
+        lastDay(): number {
             return new Date(this.year, this.month, 0).getDate();
         },
-        first_day() {
+        firstDay(): number {
             return new Date(this.year, this.month - 1, 1).getDay();
         },
-        lastDayCount() {
+        lastDayCount(): number {
             return (
-                6 - new Date(this.year, this.month - 1, this.lastday).getDay()
+                6 - new Date(this.year, this.month - 1, this.lastDay).getDay()
             );
         },
     },
     methods: {
-        fetchData() {
+        fetchData(): void {
             this.$store.dispatch("setFocusTasks");
             this.$store.dispatch("setWorks");
         },
-        onCloseDialog() {
+        onCloseDialog(): void {
             this.$router.push(
                 `/calendar?year=${this.year}&month=${this.month}`
             );
         },
     },
-    mounted() {
+    mounted(): void {
         this.$store.dispatch("setWorks");
     },
     watch: {
-        year() {
+        year(): void {
             this.$store.dispatch("setWorks");
         },
-        month() {
+        month(): void {
             this.$store.dispatch("setWorks");
         },
     },

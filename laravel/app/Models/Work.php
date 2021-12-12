@@ -25,5 +25,6 @@ class Work extends Model
         'work_task_id'=>'integer',
         'work_user_id'=>'integer',
         'work_minute'=>'integer',
+        'sum_minute'=>'integer',
     ];
 }
