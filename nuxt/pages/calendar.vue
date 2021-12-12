@@ -54,7 +54,7 @@
         </v-dialog>
     </div>
 </template>
-<script>
+<script lang="ts">
 import moment from "moment";
 import { mapState } from "vuex";
 export default {
@@ -67,11 +67,11 @@ export default {
     },
     data() {
         return {
-            week: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
-            dialog: false,
-            isShowPieGraph: false,
-            dialogLoading: false,
-            date: "",
+            week: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"] as string[],
+            dialog: false as boolean,
+            isShowPieGraph: false as boolean,
+            dialogLoading: false as boolean,
+            date: "" as string,
             tasks: [],
         };
     },
@@ -121,12 +121,12 @@ export default {
         nowDay() {
             return moment(new Date()).format("D");
         },
-        nowYear(){
+        nowYear() {
             return moment(new Date()).format("Y");
         },
-        nowMonth(){
+        nowMonth() {
             return moment(new Date()).format("M");
-        }
+        },
     },
     methods: {
         onClickPrevMonth() {
@@ -189,7 +189,7 @@ export default {
                 })
                 .catch((err) => {
                     alert("通信に失敗しました");
-                })
+                });
         },
     },
     mounted() {

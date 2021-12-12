@@ -86,34 +86,46 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
 import { mapState } from "vuex";
+export type calendarType = {
+    date: string;
+    works: workType[];
+};
+export type workType = {
+    id: number;
+    member: string;
+    members_id: number;
+    place: string;
+    places_id: number;
+    price: number;
+};
 export default {
     data() {
         return {
-            selectedRoomId: 0,
-            onChangeRoomloading: false,
-            joinRoomloadings: [],
-            rejectRoomloadings: [],
-            createUserDialog: false,
-            modeCreateRoomDialog: false,
-            createRoomDialog: false,
+            selectedRoomId: 0 as number,
+            onChangeRoomloading: false as boolean,
+            joinRoomloadings: [] as boolean[],
+            rejectRoomloadings: [] as boolean[],
+            createUserDialog: false as boolean,
+            modeCreateRoomDialog: false as boolean,
+            createRoomDialog: false as boolean,
         };
     },
     computed: {
         ...mapState(["loginInfo"]),
     },
     methods: {
-        logout() {
+        logout(): void {
             if (confirm("ログアウトしますか？")) {
                 this.$store.dispatch("logout");
             }
         },
-        openCreateRoomDialog(mode) {
+        openCreateRoomDialog(mode: string): void {
             this.modeCreateRoomDialog = mode;
             this.createRoomDialog = true;
         },
-        async onChangeRoom() {
+        async onChangeRoom(): Promise<void> {
             this.onChangeRoomloading = true;
             await this.$axios
                 .put(`/api/user/update/room_id?room_id=${this.selectedRoomId}`)
@@ -133,7 +145,7 @@ export default {
             });
             return outputData;
         },
-        async joinRoom(invitationId, roomIndex) {
+        async joinRoom(invitationId: number, roomIndex: number): Promise<void> {
             this.$set(this.joinRoomloadings, roomIndex, true);
             await this.$axios
                 .put(`/api/invitation/update?invitation_id=${invitationId}`)
@@ -145,7 +157,11 @@ export default {
                 });
             this.$set(this.joinRoomloadings, roomIndex, false);
         },
-        async rejectRoom(invitationId, roomIndex, roomName) {
+        async rejectRoom(
+            invitationId: number,
+            roomIndex: number,
+            roomName: string
+        ): Promise<void> {
             if (!confirm(`「${roomName}」への招待を拒否しますか？`)) {
                 return;
             }
@@ -162,11 +178,11 @@ export default {
         },
     },
     watch: {
-        loginInfo() {
+        loginInfo(): void {
             this.selectedRoomId = this.loginInfo.room_id;
         },
     },
-    mounted() {
+    mounted(): void {
         this.selectedRoomId = this.loginInfo.room_id;
     },
 };
