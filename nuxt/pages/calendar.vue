@@ -3,19 +3,7 @@
 
         <!-- カレンダー -->
         <v-card>
-            <v-toolbar color="teal" dark style="box-shadow:none;">
-                <v-spacer></v-spacer>
-                <div class="d-flex">
-                    <v-btn @click="onClickPrevMonth()" icon>
-                        <v-icon style="font-size:30px;">mdi-chevron-left</v-icon>
-                    </v-btn>
-                    <h1>{{ year }}年 {{ month }}月</h1>
-                    <v-btn @click="onClickNextMonth()" icon>
-                        <v-icon style="font-size:30px;">mdi-chevron-right</v-icon>
-                    </v-btn>
-                </div>
-                <v-spacer></v-spacer>
-            </v-toolbar>
+            <CalendarPagenation />
 
             <ul class="indent pa-0">
                 <li v-for="day in week" :key="day" class="indent_item">{{day}}</li>
@@ -40,7 +28,6 @@
             </ul>
         </v-card>
 
-        <!-- <pre>{{works}}</pre> -->
         <div style="padding:50px 50px 0;">
             <PieGraph mode="monthly" v-if="works.monthly.length && isShowPieGraph" :propsDatas="works.monthly" />
         </div>
@@ -129,40 +116,13 @@ export default {
         },
     },
     methods: {
-        onClickPrevMonth() {
-            if (this.month == 1) {
-                this.$router.push(
-                    `/calendar?year=${Number(this.year) - 1}&month=12`
-                );
-            } else {
-                this.$router.push(
-                    `/calendar?year=${this.year}&month=${
-                        Number(this.month) - 1
-                    }`
-                );
-            }
-        },
-        onClickNextMonth() {
-            if (this.month == 12) {
-                this.$router.push(
-                    `/calendar?year=${Number(this.year) + 1}&month=1`
-                );
-            } else {
-                this.$router.push(
-                    `/calendar?year=${this.year}&month=${
-                        Number(this.month) + 1
-                    }`
-                );
-            }
-        },
         async onClickCalendar(date) {
             this.dialog = true;
-            this.dialogLoading = true;
             this.date = date;
             await this.getTasks();
-            this.dialogLoading = false;
         },
         async getTasks() {
+            this.dialogLoading = true;
             const day = moment(this.date).format("D");
             await this.$axios
                 .get(
@@ -177,7 +137,9 @@ export default {
                         this.$set(task, "minute", minute);
                     });
                 })
-                .finally(() => {});
+                .finally(() => {
+                    this.dialogLoading = false;
+                });
         },
         async getWorks() {
             this.$axios
@@ -204,10 +166,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-h1 {
-    width: 183px;
-    text-align: center;
-}
 .indent {
     display: flex;
     &_item {
@@ -229,8 +187,6 @@ h1 {
     padding: 0;
     background-color: white;
     &_item {
-        &_inner {
-        }
         width: calc(100% / 7);
         border-right: 1px solid #e0e0e0;
         border-top: 1px solid #e0e0e0;
