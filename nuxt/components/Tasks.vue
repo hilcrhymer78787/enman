@@ -115,6 +115,14 @@ export default {
             this.dialog = true;
             this.focusTask = task;
         },
+        openTaskDialog(task) {
+            if (task) {
+                this.focusTask = task;
+            } else {
+                this.focusTask = null;
+            }
+            this.taskDialog = true;
+        },
         async onClickCheckBoxBlank(task, taskIndex) {
             this.$set(this.loadings, taskIndex, true);
             await this.$axios
@@ -171,16 +179,8 @@ export default {
                     this.deleteTaskLoading = false;
                 });
         },
-        openTaskDialog(task) {
-            if (task) {
-                this.focusTask = task;
-            } else {
-                this.focusTask = null;
-            }
-            this.taskDialog = true;
-        },
     },
-    async mounted() {
+    mounted() {
         this.displayTasks = this.tasks;
         this.$store.commit("setFocusTasks", []);
         this.$emit("fetchData");

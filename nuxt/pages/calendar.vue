@@ -13,11 +13,7 @@
                 <li v-for="n in first_day" :key="n" class="content_item blank"></li>
                 <li v-for="(calendar, index) in calendars" :key="calendar.date" v-ripple class="content_item main">
                     <div @click="$router.push(`/calendar?year=${year}&month=${month}&day=${index + 1}`)" class="content_item_inner">
-                        <div class="content_item_icn">
-                            <div class="content_item_icn_num" :class="{nowDay:index + 1 == nowDay && year == nowYear && month == nowMonth}">
-                                {{ index + 1 }}
-                            </div>
-                        </div>
+                        <CalendarDayIcon :day="index + 1" />
                         <v-responsive class="pa-1 pie_graph" aspect-ratio="1">
                             <div v-if="calendar.work" class="pie_graph_cover">{{calendar.work.sum_minute}}</div>
                             <PieGraph mode="daily" :propsDatas="calendar.work.users" v-if="calendar.work && isShowPieGraph" />
@@ -107,15 +103,6 @@ export default {
                 6 - new Date(this.year, this.month - 1, this.lastday).getDay()
             );
         },
-        nowDay(): string {
-            return moment().format("D");
-        },
-        nowYear(): string {
-            return moment().format("Y");
-        },
-        nowMonth(): string {
-            return moment().format("M");
-        },
     },
     methods: {
         fetchData() {
@@ -183,26 +170,6 @@ export default {
         &.main:hover {
             cursor: pointer;
             background-color: #00968734;
-        }
-        &_icn {
-            padding-top: 5px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            &_num {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                width: 20px;
-                height: 20px;
-                font-size: 14px;
-                border-radius: 50%;
-                &.nowDay {
-                    background-color: #009688;
-                    color: white;
-                    font-size: 12px;
-                }
-            }
         }
     }
 }
