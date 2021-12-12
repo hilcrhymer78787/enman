@@ -7,9 +7,9 @@
         <v-card-text class="pa-3" style="min-height:35vh;">
             <v-form ref="form" v-model="noError">
                 <v-card v-for="(work,workIndex) in task.works" :key="workIndex" class="d-flex align-center mb-4" style="height:70px;overflow: hidden;">
-                    <v-select class="pt-3 pl-3" style="width:46%;" label="担当者" :items="users(work.work_user_id)" v-model="work.work_user_id" item-value="val" item-text="txt" :rules="[v => !!v || 'Item is required']" dense></v-select>
+                    <v-select class="pt-3 pl-3" style="width:46%;" label="担当者" :items="users(work.work_user_id)" v-model="work.work_user_id" item-value="val" item-text="txt" :rules="[v => !!v || '担当者は必須です']" dense></v-select>
                     <v-spacer></v-spacer>
-                    <v-select class="pt-3" style="width:30%;" label="稼働時間" :items="$MINUTE" v-model="work.work_minute" item-value="val" item-text="txt" :rules="[v => !!v || 'Item is required']" dense></v-select>
+                    <v-select class="pt-3" style="width:30%;" label="稼働時間" :items="$MINUTE" v-model="work.work_minute" item-value="val" item-text="txt" :rules="[v => !!v || '稼働時間は必須です']" dense></v-select>
                     <v-spacer></v-spacer>
                     <v-btn @click="removeWork(workIndex)" class="close_wrap" v-ripple style="width:12%;" icon>
                         <v-icon color="white">mdi-close</v-icon>

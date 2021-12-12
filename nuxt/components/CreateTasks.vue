@@ -7,8 +7,8 @@
         <v-divider></v-divider>
         <v-card-text class="pa-3" style="min-height:30vh;">
             <v-form ref="form" v-model="noError">
-                <v-text-field validate-on-blur v-model="form.task_name" :rules="[v => !!v || 'Item is required']" label="タスクの名前" prepend-icon="mdi-format-title" required></v-text-field>
-                <v-select v-model="form.task_default_minute" :items="$MINUTE" :rules="[v => !!v || 'Item is required']" label="想定時間" prepend-icon="mdi-clock-outline" required item-value="val" item-text="txt"></v-select>
+                <v-text-field validate-on-blur v-model="form.task_name" :rules="[v => !!v || 'タスクの名前は必須です']" label="タスクの名前" prepend-icon="mdi-format-title" required></v-text-field>
+                <v-select v-model="form.task_default_minute" :items="$MINUTE" :rules="[v => !!v || '想定時間は必須です']" label="想定時間" prepend-icon="mdi-clock-outline" required item-value="val" item-text="txt"></v-select>
             </v-form>
         </v-card-text>
 
