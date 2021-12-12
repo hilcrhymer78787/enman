@@ -1,6 +1,5 @@
 <template>
     <div class="calendar">
-
         <!-- カレンダー -->
         <v-card>
             <CalendarPagenation />
@@ -68,29 +67,23 @@ export default {
             dialog: false as boolean,
             isShowPieGraph: false as boolean,
             dialogLoading: false as boolean,
-            tasks: [],
         };
     },
     computed: {
         ...mapState(["loginInfo", "works", "focusTasks"]),
         calendars(): calendarType[] {
-            let outputData = [];
+            let outputData: calendarType[] = [];
             for (let day = 1; day <= this.lastDay; day++) {
+                let date:string = moment(
+                    new Date(this.year, this.month - 1, day)
+                ).format("YYYY-MM-DD");
                 outputData.push({
-                    date: moment(
-                        new Date(this.year, this.month - 1, day)
-                    ).format("YYYY-MM-DD"),
+                    date: date as string,
+                    work: this.works.daily.filter(
+                        (work: workType): boolean => work.work_date === date
+                    )[0],
                 });
             }
-            outputData.forEach((calendar: calendarType): void => {
-                let calendarWork = this.works.daily.filter(
-                    (work: workType): boolean =>
-                        work.work_date === calendar.date
-                )[0];
-                if (calendarWork) {
-                    calendar.work = calendarWork;
-                }
-            });
             // 円グラフ再描画
             this.isShowPieGraph = false;
             this.$nextTick(() => {
