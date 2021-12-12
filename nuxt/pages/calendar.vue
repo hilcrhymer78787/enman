@@ -11,8 +11,8 @@
 
             <ul class="content">
                 <li v-for="n in first_day" :key="n" class="content_item blank"></li>
-                <li @click="onClickCalendar(calendar.date)" v-for="(calendar, index) in calendars" :key="calendar.date" v-ripple class="content_item main">
-                    <div class="content_item_inner">
+                <li v-for="(calendar, index) in calendars" :key="calendar.date" v-ripple class="content_item main">
+                    <div @click="$router.push(`/calendar?year=${year}&month=${month}&day=${index + 1}`)" class="content_item_inner">
                         <div class="content_item_icn">
                             <div class="content_item_icn_num" :class="{nowDay:index + 1 == nowDay && year == nowYear && month == nowMonth}">
                                 {{ index + 1 }}
@@ -36,8 +36,8 @@
             <PieGraph mode="monthly" v-if="works.tasks && isShowPieGraph" :propsDatas="works.tasks" />
         </div>
 
-        <v-dialog v-model="dialog" scrollable>
-            <Tasks mode="calendar" @onCloseDialog="dialog = false" @getWorks="getWorks" @getTasks="getTasks" v-if="!dialogLoading" :date="date" :tasks="tasks" />
+        <v-dialog @click:outside="onCloseDialog" :value="day" scrollable>
+            <Tasks mode="calendar" @onCloseDialog="onCloseDialog" @fetchData="fetchData" v-if="day" :tasks="focusTasks" />
         </v-dialog>
     </div>
 </template>
@@ -46,9 +46,9 @@ import moment from "moment";
 import { mapState } from "vuex";
 export default {
     middleware({ redirect, route }) {
-        let year = new Date().getFullYear();
-        let month = new Date().getMonth() + 1;
         if (!route.query.year || !route.query.month) {
+            let year = moment().year();
+            let month = moment().month() + 1;
             redirect(`/calendar?year=${year}&month=${month}`);
         }
     },
@@ -58,15 +58,13 @@ export default {
             dialog: false as boolean,
             isShowPieGraph: false as boolean,
             dialogLoading: false as boolean,
-            date: "" as string,
             tasks: [],
         };
     },
     computed: {
-        ...mapState(["loginInfo", "works"]),
+        ...mapState(["loginInfo", "works", "focusTasks"]),
         calendars() {
             let outputData = [];
-
             for (let day = 1; day <= this.lastday; day++) {
                 outputData.push({
                     date: moment(
@@ -82,6 +80,7 @@ export default {
                     calendar.work = calendarWork;
                 }
             });
+            // 円グラフ再描画
             this.isShowPieGraph = false;
             this.$nextTick(() => {
                 this.isShowPieGraph = true;
@@ -94,6 +93,9 @@ export default {
         month() {
             return this.$route.query.month;
         },
+        day() {
+            return this.$route.query.day;
+        },
         lastday() {
             return new Date(this.year, this.month, 0).getDate();
         },
@@ -105,61 +107,36 @@ export default {
                 6 - new Date(this.year, this.month - 1, this.lastday).getDay()
             );
         },
-        nowDay() {
-            return moment(new Date()).format("D");
+        nowDay(): string {
+            return moment().format("D");
         },
-        nowYear() {
-            return moment(new Date()).format("Y");
+        nowYear(): string {
+            return moment().format("Y");
         },
-        nowMonth() {
-            return moment(new Date()).format("M");
+        nowMonth(): string {
+            return moment().format("M");
         },
     },
     methods: {
-        async onClickCalendar(date) {
-            this.dialog = true;
-            this.date = date;
-            await this.getTasks();
+        fetchData() {
+            this.$store.dispatch("setFocusTasks");
+            this.$store.dispatch("setWorks");
         },
-        async getTasks() {
-            this.dialogLoading = true;
-            const day = moment(this.date).format("D");
-            await this.$axios
-                .get(
-                    `/api/task/read?year=${this.year}&month=${this.month}&day=${day}`
-                )
-                .then((res) => {
-                    this.tasks = res.data;
-                    this.tasks.forEach((task) => {
-                        let minute = task.works.reduce(function (sum, work) {
-                            return sum + work.work_minute;
-                        }, 0);
-                        this.$set(task, "minute", minute);
-                    });
-                })
-                .finally(() => {
-                    this.dialogLoading = false;
-                });
-        },
-        async getWorks() {
-            this.$axios
-                .get(
-                    `/api/work/read?year=${this.year}&month=${this.month}&day=${this.day}`
-                )
-                .then((res) => {
-                    this.$store.commit("setWorks", res.data);
-                })
-                .catch((err) => {
-                    alert("通信に失敗しました");
-                });
+        onCloseDialog() {
+            this.$router.push(
+                `/calendar?year=${this.year}&month=${this.month}`
+            );
         },
     },
     mounted() {
-        this.getWorks();
+        this.$store.dispatch("setWorks");
     },
     watch: {
-        $route() {
-            this.getWorks();
+        year() {
+            this.$store.dispatch("setWorks");
+        },
+        month() {
+            this.$store.dispatch("setWorks");
         },
     },
 };

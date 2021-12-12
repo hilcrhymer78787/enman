@@ -83,20 +83,9 @@ export default {
             }
             this.saveLoading = true;
             await this.$axios
-                .post(
-                    `/api/work/create`,
-                    this.task
-                )
+                .post(`/api/work/create`, this.task)
                 .then((res) => {
-                    if (this.mode == "today") {
-                        this.$store.dispatch("setTodayTasks");
-                    } else {
-                        this.$emit("getTasks");
-                        this.$emit("getWorks");
-                    }
-                })
-                .catch((err) => {
-                    alert("通信に失敗しました");
+                    this.$emit("fetchData");
                 })
                 .finally(() => {
                     this.saveLoading = false;
@@ -112,19 +101,17 @@ export default {
                 return;
             }
             this.deleteLoading = true;
-            const date = this.date;
-            const task_id = this.task.task_id;
-            await this.$axios.delete(
-                `/api/work/delete?date=${date}&task_id=${task_id}`
-            );
-            if (this.mode == "today") {
-                await this.$store.dispatch("setTodayTasks");
-            } else {
-                await this.$emit("getTasks");
-                this.$emit("getWorks");
-            }
-            this.deleteLoading = false;
-            this.$emit("onCloseModal");
+            await this.$axios
+                .delete(
+                    `/api/work/delete?date=${this.date}&task_id=${this.task.task_id}`
+                )
+                .then((res) => {
+                    this.$emit("fetchData");
+                })
+                .finally(() => {
+                    this.deleteLoading = false;
+                    this.$emit("onCloseModal");
+                });
         },
     },
     mounted() {
@@ -146,7 +133,7 @@ export default {
         }
         if (!this.focusTask.works.length) {
             let obj = {};
-            this.$set(obj, "work_user_id", this.loginInfo['id']);
+            this.$set(obj, "work_user_id", this.loginInfo["id"]);
             this.$set(obj, "work_minute", this.focusTask.task_default_minute);
             this.task.works.push(obj);
         }

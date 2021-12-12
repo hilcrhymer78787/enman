@@ -1,6 +1,8 @@
+import moment from 'moment'
 export const state = () => ({
     loginInfo: null,
     todayTasks: [],
+    focusTasks: [],
     works: {
         daily: [],
         monthly: [],
@@ -20,13 +22,22 @@ export const mutations = {
         });
         state.todayTasks = todayTasks
     },
+    setFocusTasks(state, focusTasks) {
+        focusTasks.forEach((task) => {
+            let minute = task.works.reduce(function (sum, work) {
+                return sum + work.work_minute;
+            }, 0);
+            task.minute = minute
+        });
+        state.focusTasks = focusTasks
+    },
     setWorks(state, works) {
         state.works = works
     },
 }
 
 export const actions = {
-    setTokenRedirect({},token) {
+    setTokenRedirect({ }, token) {
         this.$cookies.set("token", token, {
             maxAge: 60 * 60 * 24 * 30,
         });
@@ -41,7 +52,6 @@ export const actions = {
                         $nuxt.$router.push("/");
                     }
                     commit('setLoginInfo', res.data)
-                    dispatch('setTodayTasks')
                 }
             })
             .catch(() => {
@@ -55,7 +65,7 @@ export const actions = {
         }
         commit('setLoginInfo', false)
     },
-    async setTodayTasks({ state, commit }) {
+    async setTodayTasks({ commit }) {
         const today = new Date();
         const year = today.getFullYear();
         const month = today.getMonth() + 1;
@@ -67,8 +77,26 @@ export const actions = {
             .then((res) => {
                 commit('setTodayTasks', res.data)
             })
-            .catch((err) => {
-                alert("通信に失敗しました");
+    },
+    async setFocusTasks({ commit }) {
+        const year = $nuxt.$route.query.year
+        const month = $nuxt.$route.query.month
+        const day = $nuxt.$route.query.day
+        await this.$axios
+            .get(
+                `/api/task/read?year=${year}&month=${month}&day=${day}`
+            )
+            .then((res) => {
+                commit('setFocusTasks', res.data)
             })
+    },
+    async setWorks({ commit }) {
+        const year = $nuxt.$route.query.year
+        const month = $nuxt.$route.query.month
+        await this.$axios
+        .get(`/api/work/read?year=${year}&month=${month}`)
+        .then((res) => {
+            commit("setWorks", res.data);
+        });
     },
 }

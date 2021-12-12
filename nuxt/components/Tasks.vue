@@ -57,7 +57,7 @@
         </v-card>
 
         <v-dialog v-model="dialog" scrollable>
-            <CreateWorks @onCloseModal="dialog = false" :date="date" :mode="mode" @getTasks="$emit('getTasks')" @getWorks="$emit('getWorks')" :focusTask="focusTask" v-if="dialog" />
+            <CreateWorks @onCloseModal="dialog = false" :date="date" :mode="mode" @fetchData="$emit('fetchData')" :focusTask="focusTask" v-if="dialog" />
         </v-dialog>
 
         <v-dialog v-model="taskDialog" scrollable>
@@ -71,7 +71,7 @@
 import vuedraggable from "vuedraggable";
 import { mapState } from "vuex";
 export default {
-    props: ["tasks", "date", "mode"],
+    props: ["tasks", "mode"],
     components: {
         vuedraggable: vuedraggable,
     },
@@ -91,6 +91,18 @@ export default {
     },
     computed: {
         ...mapState(["loginInfo"]),
+        year() {
+            return this.$route.query.year;
+        },
+        month() {
+            return this.$route.query.month;
+        },
+        day() {
+            return this.$route.query.day;
+        },
+        date() {
+            return `${this.year}-${this.month}-${this.day}`;
+        },
     },
     methods: {
         dragged() {
@@ -105,24 +117,23 @@ export default {
         },
         async onClickCheckBoxBlank(task, taskIndex) {
             this.$set(this.loadings, taskIndex, true);
-            await this.$axios.post(`/api/work/create`, {
-                date: this.date,
-                task_id: task.task_id,
-                works: [
-                    {
-                        work_user_id: this.loginInfo.id,
-                        work_minute: task.task_default_minute,
-                    },
-                ],
-            });
-            if (this.mode == "today") {
-                await this.$store.dispatch("setTodayTasks");
-            } else {
-                await this.$emit("getTasks", this.date);
-                this.$emit("getWorks");
-            }
-
-            this.$set(this.loadings, taskIndex, false);
+            await this.$axios
+                .post(`/api/work/create`, {
+                    date: this.date,
+                    task_id: task.task_id,
+                    works: [
+                        {
+                            work_user_id: this.loginInfo.id,
+                            work_minute: task.task_default_minute,
+                        },
+                    ],
+                })
+                .then(() => {
+                    this.$emit("fetchData");
+                })
+                .finally(() => {
+                    this.$set(this.loadings, taskIndex, false);
+                });
         },
         async onClickCheckBoxMarked(task, taskIndex) {
             if (
@@ -133,18 +144,16 @@ export default {
                 return;
             }
             this.$set(this.loadings, taskIndex, true);
-            const date = this.date;
-            const task_id = task.task_id;
-            await this.$axios.delete(
-                `/api/work/delete?date=${date}&task_id=${task_id}`
-            );
-            if (this.mode == "today") {
-                await this.$store.dispatch("setTodayTasks");
-            } else {
-                await this.$emit("getTasks", this.date);
-                this.$emit("getWorks");
-            }
-            this.$set(this.loadings, taskIndex, false);
+            await this.$axios
+                .delete(
+                    `/api/work/delete?date=${this.date}&task_id=${task.task_id}`
+                )
+                .then(() => {
+                    this.$emit("fetchData");
+                })
+                .finally(() => {
+                    this.$set(this.loadings, taskIndex, false);
+                });
         },
         async deleteTask(task) {
             if (
@@ -153,10 +162,14 @@ export default {
                 return;
             }
             this.deleteTaskLoading = true;
-            const task_id = task.task_id;
-            await this.$axios.delete(`/api/task/delete?task_id=${task_id}`);
-            await this.$store.dispatch("setTodayTasks");
-            this.deleteTaskLoading = false;
+            await this.$axios
+                .delete(`/api/task/delete?task_id=${task.task_id}`)
+                .then(() => {
+                    this.$emit("fetchData");
+                })
+                .finally(() => {
+                    this.deleteTaskLoading = false;
+                });
         },
         openTaskDialog(task) {
             if (task) {
@@ -169,7 +182,9 @@ export default {
     },
     async mounted() {
         this.displayTasks = this.tasks;
-        this.$store.dispatch("setTodayTasks");
+        this.$store.commit("setFocusTasks", []);
+        this.$emit("fetchData");
+        // スクロール対応
         this.$nextTick(() => {
             const scrollArea = document.querySelector("#scrollArea");
             const scrollAreaInner = document.querySelector("#scrollAreaInner");
