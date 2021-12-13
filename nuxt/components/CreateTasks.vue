@@ -15,31 +15,54 @@
         <v-divider></v-divider>
         <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn class="mr-2" @click="$emit('onCloseTaskDialog')"><v-icon>mdi-close</v-icon></v-btn>
+            <v-btn class="mr-2" @click="$emit('onCloseTaskDialog')">
+                <v-icon>mdi-close</v-icon>
+            </v-btn>
             <v-btn color="teal" :loading="loading" dark @click="submit()">登録</v-btn>
         </v-card-actions>
     </v-card>
 </template>
-<script>
+
+<script lang="ts">
 import { mapState } from "vuex";
+import { PropOptions } from "vue";
+export type taskType = {
+    task_id: number;
+    name: string;
+    task_default_minute: number;
+    task_is_everyday: number;
+    task_sort_key: number;
+    minute: number;
+    works: workType[];
+};
+export type workType = {
+    work_id: number;
+    work_date: string;
+    work_minute: number;
+    work_user_id: number;
+    work_user_name: string;
+    work_user_img: string;
+};
 export default {
-    props: ["focusTask"],
+    props: {
+        focusTask: Object as PropOptions<taskType>,
+    },
     data: () => ({
-        loading: false,
-        noError: false,
+        loading: false as boolean,
+        noError: false as boolean,
         form: {
-            task_id: 0,
-            task_name: "",
-            task_default_minute: "",
-            task_is_everyday: 1,
-            task_room_id: 1,
+            task_id: 0 as number,
+            task_name: "" as string,
+            task_default_minute: "" as string,
+            task_is_everyday: 1 as number,
+            task_room_id: 1 as number,
         },
     }),
     computed: {
         ...mapState(["loginInfo"]),
     },
     methods: {
-        async submit() {
+        async submit(): Promise<void> {
             this.$refs.form.validate();
             if (!this.noError) {
                 return;
@@ -47,19 +70,19 @@ export default {
             this.loading = true;
             await this.$axios
                 .post(`/api/task/create`, { task: this.form })
-                .then((res) => {
+                .then((): void => {
                     this.$store.dispatch("setTodayTasks");
                 })
-                .catch((err) => {
+                .catch((): void => {
                     alert("通信に失敗しました");
                 })
-                .finally(() => {
+                .finally((): void => {
                     this.loading = false;
                     this.$emit("onCloseTaskDialog");
                 });
         },
     },
-    mounted() {
+    mounted(): void {
         this.$set(this.form, "task_room_id", this.loginInfo.room_id);
         if (this.focusTask) {
             this.$set(this.form, "task_id", this.focusTask.task_id);
