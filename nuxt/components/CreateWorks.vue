@@ -26,41 +26,73 @@
             <v-spacer></v-spacer>
             <v-btn color="teal" :loading="saveLoading" dark @click="onClickSave()">登録</v-btn>
         </v-card-actions>
+        <pre>{{focusTask}}</pre>
     </v-card>
 </template>
 
-<script>
+<script lang="ts">
+import { PropOptions } from "vue";
 import { mapState } from "vuex";
+export type userType = {
+    id: number;
+    name: string;
+};
+export type taskType = {
+    task_id: number;
+    name: string;
+    task_default_minute: number;
+    task_is_everyday: number;
+    task_sort_key: number;
+    minute: number;
+    works: workType[];
+};
+export type workType = {
+    work_id: number;
+    work_date: string;
+    work_minute: number;
+    work_user_id: number;
+    work_user_name: string;
+    work_user_img: string;
+};
+export type selectType = {
+    val: number;
+    txt: string;
+};
 export default {
-    props: ["focusTask", "date", "mode"],
-
+    props: {
+        focusTask: Object as PropOptions<taskType>,
+        date: String,
+        mode: String,
+    },
     data() {
         return {
-            deleteLoading: false,
-            saveLoading: false,
-            noError: false,
-            task: {},
+            deleteLoading: false as boolean,
+            saveLoading: false as boolean,
+            noError: false as boolean,
+            task: {} as taskType,
         };
     },
     computed: {
         ...mapState(["loginInfo"]),
     },
     methods: {
-        users(userId) {
-            let outputData = [];
-            this.$store.state.loginInfo.room_joined_users.forEach((user) => {
-                const userDuplicateJudge =
-                    this.task.works.filter(
-                        (work) => work.work_user_id == user.id
-                    ).length == 0;
+        users(userId: number): object[] {
+            let outputData: selectType[] = [];
+            this.$store.state.loginInfo.room_joined_users.forEach(
+                (user: userType) => {
+                    const userDuplicateJudge =
+                        this.task.works.filter(
+                            (work: workType) => work.work_user_id == user.id
+                        ).length == 0;
 
-                if (userDuplicateJudge || userId == user.id) {
-                    outputData.push({ val: user.id, txt: user.name });
+                    if (userDuplicateJudge || userId == user.id) {
+                        outputData.push({ val: user.id, txt: user.name });
+                    }
                 }
-            });
+            );
             return outputData;
         },
-        addWork() {
+        addWork(): void {
             this.$refs.form.validate();
             if (!this.noError) {
                 return;
@@ -70,13 +102,13 @@ export default {
                 minute: 0,
             });
         },
-        removeWork(workIndex) {
+        removeWork(workIndex: number): void {
             if (this.task.works.length == 1) {
                 return;
             }
             this.task.works.splice(workIndex, 1);
         },
-        async onClickSave() {
+        async onClickSave(): Promise<void> {
             this.$refs.form.validate();
             if (!this.noError) {
                 return;
@@ -84,15 +116,15 @@ export default {
             this.saveLoading = true;
             await this.$axios
                 .post(`/api/work/create`, this.task)
-                .then((res) => {
+                .then((): void => {
                     this.$emit("fetchData");
                 })
-                .finally(() => {
+                .finally((): void => {
                     this.saveLoading = false;
                     this.$emit("onCloseModal");
                 });
         },
-        async onClickDelete() {
+        async onClickDelete(): Promise<void> {
             if (
                 !confirm(
                     `${this.date}、「${this.task.name}」の稼働情報を全て削除しますか？`
@@ -105,22 +137,22 @@ export default {
                 .delete(
                     `/api/work/delete?date=${this.date}&task_id=${this.task.task_id}`
                 )
-                .then((res) => {
+                .then((): void => {
                     this.$emit("fetchData");
                 })
-                .finally(() => {
+                .finally((): void => {
                     this.deleteLoading = false;
                     this.$emit("onCloseModal");
                 });
         },
     },
-    mounted() {
+    mounted(): void {
         this.$set(this.task, "date", this.date);
         for (const [key, value] of Object.entries(this.focusTask)) {
             if (Array.isArray(value)) {
-                let array = [];
+                let array: object[] = [];
                 value.forEach((valueObj) => {
-                    let obj = {};
+                    let obj: object = {};
                     for (const [key2, value2] of Object.entries(valueObj)) {
                         this.$set(obj, key2, value2);
                     }
@@ -132,7 +164,7 @@ export default {
             }
         }
         if (!this.focusTask.works.length) {
-            let obj = {};
+            let obj: object = {};
             this.$set(obj, "work_user_id", this.loginInfo["id"]);
             this.$set(obj, "work_minute", this.focusTask.task_default_minute);
             this.task.works.push(obj);
