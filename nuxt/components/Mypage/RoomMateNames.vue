@@ -7,7 +7,11 @@ export type userType = {
     name: string;
 };
 export default {
-    props: ["users", "prependIcon", "label"],
+    props: {
+        users: Object,
+        prependIcon: String,
+        label: String,
+    },
     methods: {
         roomMateNames(users: userType[]): string {
             let outputData = "";

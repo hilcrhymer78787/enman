@@ -5,7 +5,9 @@
 
 <script lang="ts">
 export default {
-    props: ["src"],
+    props: {
+        src: String,
+    },
     data() {
         return {
             backUrl: process.env.API_BASE_URL,

@@ -9,7 +9,9 @@
 <script lang="ts">
 import moment from "moment";
 export default {
-    props: ["day"],
+    props: {
+        day: Number,
+    },
     computed: {
         isToday() {
             return (

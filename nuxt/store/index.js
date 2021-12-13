@@ -1,4 +1,3 @@
-import moment from 'moment'
 export const state = () => ({
     loginInfo: null,
     todayTasks: [],

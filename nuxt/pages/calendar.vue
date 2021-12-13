@@ -86,7 +86,7 @@ export default {
             }
             // 円グラフ再描画
             this.isShowPieGraph = false;
-            this.$nextTick(() => {
+            this.$nextTick((): void => {
                 this.isShowPieGraph = true;
             });
             return outputData;
