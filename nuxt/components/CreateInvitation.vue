@@ -33,8 +33,9 @@ export default {
             successMessage: "" as string,
             email: "" as string,
             emailRules: [
-                (v: string) => !!v || "メールアドレスは必須です",
-                (v: string) =>
+                (v: string): boolean | string =>
+                    !!v || "メールアドレスは必須です",
+                (v: string): boolean | string =>
                     /.+@.+\..+/.test(v) || "正しい形式で入力してください",
             ] as object[],
         };

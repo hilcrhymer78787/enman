@@ -44,70 +44,78 @@
     </v-card>
 </template>
 
-<script>
+<script lang="ts">
 import { mapState } from "vuex";
 import moment from "moment";
 export default {
-    props: ["mode"],
+    props: {
+        mode: String,
+    },
     data() {
         return {
-            uploadedImage: null,
-            file: null,
-            loading: false,
-            noError: false,
-            errorMessage: "",
-            imagePickerDialog: false,
-            createInvitationDialog: false,
+            uploadedImage: "" as string,
+            file: "" as any,
+            loading: false as boolean,
+            noError: false as boolean,
+            errorMessage: "" as string,
+            imagePickerDialog: false as boolean,
+            createInvitationDialog: false as boolean,
             form: {
-                room_id: 0,
-                room_name: "",
-                room_img: "https://picsum.photos/500/300?image=40",
+                room_id: 0 as number,
+                room_name: "" as string,
+                room_img: "https://picsum.photos/500/300?image=40" as string,
             },
-            nameRules: [(v) => !!v || "部屋名は必須です"],
+            nameRules: [
+                (v: string): boolean | string => !!v || "部屋名は必須です",
+            ],
         };
     },
     computed: {
         ...mapState(["loginInfo"]),
     },
     methods: {
-        fileSelected(e) {
+        fileSelected(e: any) {
             this.file = e.target.files[0];
             this.$set(
                 this.form,
                 "room_img",
                 moment().format("YYYYMMDDHHmmss") + this.file.name
             );
-            let reader = new FileReader();
-            reader.onload = (e) => {
+            let reader: any = new FileReader();
+            reader.onload = (e: any) => {
                 this.uploadedImage = e.target.result;
             };
             reader.readAsDataURL(this.file);
         },
-        async createRoom() {
+        async createRoom(): Promise<void> {
             this.errorMessage = "";
             this.$refs.form.validate();
             // バリデーションエラー
             if (!this.noError) {
                 return;
             }
-            let postData = new FormData();
-            if(this.file){
+            let postData: any = new FormData();
+            if (this.file) {
                 postData.append("file", this.file);
             }
-            Object.keys(this.form).forEach((key) => {
+            Object.keys(this.form).forEach((key: string) => {
                 postData.append(key, this.form[key]);
             });
             this.loading = true;
             await this.$axios
                 .post(`/api/room/create`, postData)
-                .catch((err) => {
+                .then((): void => {
+                    this.$store.dispatch("setLoginInfoByToken");
+                })
+                .catch((): void => {
                     alert("通信に失敗しました");
+                })
+                .finally((): void => {
+                    this.$emit("onCloseDialog");
+                    this.loading = false;
                 });
-            await this.$store.dispatch("setLoginInfoByToken");
-            this.$emit("onCloseDialog");
-            this.loading = false;
         },
-        onSelectedImg(n) {
+        onSelectedImg(n: number): void {
             this.$set(
                 this.form,
                 "room_img",
@@ -115,7 +123,7 @@ export default {
             );
         },
     },
-    mounted() {
+    mounted(): void {
         if (this.mode == "edit") {
             this.$set(this.form, "room_id", this.loginInfo.room_id);
             this.$set(this.form, "room_name", this.loginInfo.room_name);
