@@ -13,7 +13,7 @@
                 <div id="scrollAreaInner">
                     <vuedraggable @change="dragged()" :options="{animation: 200,  delay: 50 }" v-model="displayTasks">
                         <div v-for="(task,taskIndex) in displayTasks" :key="taskIndex">
-                            <swiper @slideChangeTransitionStart="hoge()" :options="swiperOption">
+                            <swiper :options="swiperOption">
                                 <swiper-slide class="swiper_btn" v-if="mode == 'today'">
                                     <v-btn @click="deleteTask(task)" :loading="deleteTaskLoading" color="error" dark class="pa-0 mr-3">削除</v-btn>
                                     <v-btn @click="openTaskDialog(task)" color="orange" dark class="pa-0">編集</v-btn>
@@ -67,55 +67,73 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
 import vuedraggable from "vuedraggable";
 import { mapState } from "vuex";
+import { PropOptions } from "vue";
+export type taskType = {
+    task_id: number;
+    name: string;
+    task_default_minute: number;
+    task_is_everyday: number;
+    task_sort_key: number;
+    minute: number;
+    works: workType[];
+};
+export type workType = {
+    work_id: number;
+    work_date: string;
+    work_minute: number;
+    work_user_id: number;
+    work_user_name: string;
+    work_user_img: string;
+};
 export default {
-    props: ["tasks", "mode"],
+    props: {
+        mode: String,
+        tasks: Object as PropOptions<taskType[]>,
+    },
     components: {
         vuedraggable: vuedraggable,
     },
     data() {
         return {
-            displayTasks: [],
+            displayTasks: [] as taskType[],
             swiperOption: {
-                initialSlide: 1,
-                slidesPerView: "auto",
-            },
-            deleteTaskLoading: false,
-            taskDialog: false,
-            dialog: false,
-            focusTask: null,
-            loadings: [],
+                initialSlide: 1 as number,
+                slidesPerView: "auto" as string,
+            } as object,
+            deleteTaskLoading: false as boolean,
+            taskDialog: false as boolean,
+            dialog: false as boolean,
+            focusTask: {} as taskType,
+            loadings: [] as boolean[],
         };
     },
     computed: {
         ...mapState(["loginInfo"]),
-        year() {
+        year(): string {
             return this.$route.query.year;
         },
-        month() {
+        month(): string {
             return this.$route.query.month;
         },
-        day() {
+        day(): string {
             return this.$route.query.day;
         },
-        date() {
+        date(): string {
             return `${this.year}-${this.month}-${this.day}`;
         },
     },
     methods: {
-        dragged() {
+        dragged(): void {
             this.$axios.post(`/api/task/sortset`, { tasks: this.displayTasks });
         },
-        hoge() {
-            return;
-        },
-        onFocusTask(task) {
+        onFocusTask(task: taskType) {
             this.dialog = true;
             this.focusTask = task;
         },
-        openTaskDialog(task) {
+        openTaskDialog(task: taskType) {
             if (task) {
                 this.focusTask = task;
             } else {
@@ -123,7 +141,10 @@ export default {
             }
             this.taskDialog = true;
         },
-        async onClickCheckBoxBlank(task, taskIndex) {
+        async onClickCheckBoxBlank(
+            task: taskType,
+            taskIndex: number
+        ): Promise<void> {
             this.$set(this.loadings, taskIndex, true);
             await this.$axios
                 .post(`/api/work/create`, {
@@ -136,14 +157,17 @@ export default {
                         },
                     ],
                 })
-                .then(() => {
+                .then((): void => {
                     this.$emit("fetchData");
                 })
-                .finally(() => {
+                .finally((): void => {
                     this.$set(this.loadings, taskIndex, false);
                 });
         },
-        async onClickCheckBoxMarked(task, taskIndex) {
+        async onClickCheckBoxMarked(
+            task: taskType,
+            taskIndex: number
+        ): Promise<void> {
             if (
                 !confirm(
                     `${this.date}、「${task.name}」の稼働情報を全て削除しますか？`
@@ -156,14 +180,14 @@ export default {
                 .delete(
                     `/api/work/delete?date=${this.date}&task_id=${task.task_id}`
                 )
-                .then(() => {
+                .then((): void => {
                     this.$emit("fetchData");
                 })
-                .finally(() => {
+                .finally((): void => {
                     this.$set(this.loadings, taskIndex, false);
                 });
         },
-        async deleteTask(task) {
+        async deleteTask(task: taskType): Promise<void> {
             if (
                 !confirm(`「${task.name}」に関するデータを全て削除しますか？`)
             ) {
@@ -172,10 +196,10 @@ export default {
             this.deleteTaskLoading = true;
             await this.$axios
                 .delete(`/api/task/delete?task_id=${task.task_id}`)
-                .then(() => {
+                .then((): void => {
                     this.$emit("fetchData");
                 })
-                .finally(() => {
+                .finally((): void => {
                     this.deleteTaskLoading = false;
                 });
         },
@@ -185,13 +209,14 @@ export default {
         this.$store.commit("setFocusTasks", []);
         this.$emit("fetchData");
         // スクロール対応
-        this.$nextTick(() => {
-            const scrollArea = document.querySelector("#scrollArea");
-            const scrollAreaInner = document.querySelector("#scrollAreaInner");
+        this.$nextTick((): void => {
+            const scrollArea: any = document.querySelector("#scrollArea");
+            const scrollAreaInner: any =
+                document.querySelector("#scrollAreaInner");
             if (!scrollArea) {
                 return;
             }
-            scrollArea.addEventListener("scroll", () => {
+            scrollArea.addEventListener("scroll", (): void => {
                 if (scrollArea.scrollTop == 0) {
                     scrollArea.scrollTo({ top: 1 });
                 }
@@ -205,7 +230,7 @@ export default {
         });
     },
     watch: {
-        tasks() {
+        tasks(): void {
             this.displayTasks = this.tasks;
         },
     },

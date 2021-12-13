@@ -49,7 +49,9 @@
 import { mapState } from "vuex";
 import moment from "moment";
 export default {
-    props: ["mode"],
+    props: {
+        mode: String,
+    },
     data() {
         return {
             uploadedImage: "" as string,
