@@ -22,27 +22,28 @@
     </v-card>
 </template>
 
-<script>
+<script lang="ts">
 import { mapState } from "vuex";
 export default {
     data() {
         return {
-            loading: false,
-            noError: false,
-            errorMessage: "",
-            successMessage: "",
-            email: "",
+            loading: false as boolean,
+            noError: false as boolean,
+            errorMessage: "" as string,
+            successMessage: "" as string,
+            email: "" as string,
             emailRules: [
-                (v) => !!v || "メールアドレスは必須です",
-                (v) => /.+@.+\..+/.test(v) || "正しい形式で入力してください",
-            ],
+                (v: string) => !!v || "メールアドレスは必須です",
+                (v: string) =>
+                    /.+@.+\..+/.test(v) || "正しい形式で入力してください",
+            ] as object[],
         };
     },
     computed: {
         ...mapState(["loginInfo"]),
     },
     methods: {
-        async CreateInvitation() {
+        async CreateInvitation(): Promise<void> {
             this.errorMessage = "";
             this.successMessage = "";
             this.$refs.form.validate();
@@ -53,35 +54,32 @@ export default {
             this.loading = true;
             await this.$axios
                 .post(`/api/invitation/create?email=${this.email}`)
-                .then((res) => {
-                        this.successMessage = res.data;
+                .then((res: any): void => {
+                    this.successMessage = res.data;
+                    this.$stFore.dispatch("setLoginInfoByToken");
                 })
-                .catch((err) => {
+                .catch((err: any): void => {
                     if (err.response.data.errorMessage) {
                         this.errorMessage = err.response.data.errorMessage;
                     } else {
                         this.errorMessage = "通信に失敗しました";
                     }
+                })
+                .finally((): void => {
+                    this.loading = false;
                 });
-            await this.$store.dispatch("setLoginInfoByToken");
-            this.loading = false;
         },
-        onSelectedImg(n) {
+        onSelectedImg(n: number): void {
             this.$set(
                 this.form,
                 "invitation_img",
                 `https://picsum.photos/500/300?image=${n}`
             );
         },
-        resetForm() {
+        resetForm(): void {
             this.successMessage = "";
             this.email = "";
         },
-    },
-    mounted() {
-        // this.$set(this.form, "invitation_id", this.loginInfo.invitation_id);
-        // this.$set(this.form, "invitation_name", this.loginInfo.invitation_name);
-        // this.$set(this.form, "invitation_img", this.loginInfo.invitation_img);
     },
 };
 </script>
