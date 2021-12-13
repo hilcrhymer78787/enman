@@ -45,48 +45,52 @@
     </v-card>
 </template>
 
-<script>
+<script lang="ts">
 import { mapState } from "vuex";
 import moment from "moment";
 export default {
     props: ["mode"],
     data() {
         return {
-            uploadedImage: null,
-            file: null,
-            loading: false,
-            noError: false,
-            errorMessage: "",
-            imagePickerDialog: false,
-            passwordEdit: true,
+            uploadedImage: "" as string,
+            file: "" as any,
+            loading: false as boolean,
+            noError: false as boolean,
+            errorMessage: "" as string,
+            imagePickerDialog: false as boolean,
+            passwordEdit: true as boolean,
             form: {
-                id: 0,
-                name: "",
-                email: "",
-                password: "",
-                passwordAgain: "",
-                user_img: "https://picsum.photos/500/300?image=40",
-                token: "",
-            },
-            nameRules: [(v) => !!v || "名前は必須です"],
+                id: 0 as number,
+                name: "" as string,
+                email: "" as string,
+                password: "" as string,
+                passwordAgain: "" as string,
+                user_img: "https://picsum.photos/500/300?image=40" as string,
+                token: "" as string,
+            } as object,
+            nameRules: [
+                (v: string): string | boolean => !!v || "名前は必須です",
+            ],
             emailRules: [
-                (v) => !!v || "メールアドレスは必須です",
-                (v) => /.+@.+\..+/.test(v) || "正しい形式で入力してください",
+                (v: string): string | boolean =>
+                    !!v || "メールアドレスは必須です",
+                (v: string): string | boolean =>
+                    /.+@.+\..+/.test(v) || "正しい形式で入力してください",
             ],
             passwordRules: [
-                (v) => !!v || "パスワードは必須です",
-                (v) =>
+                (v: string): string | boolean => !!v || "パスワードは必須です",
+                (v: string): string | boolean =>
                     (v && v.length >= 8) ||
                     "パスワードは8桁以上で設定してください",
             ],
             passwordAgainRules: [
-                (v) => !!v || "パスワードは必須です",
-                (v) =>
+                (v: string): string | boolean => !!v || "パスワードは必須です",
+                (v: string): string | boolean =>
                     (v && v.length >= 8) ||
                     "パスワードは8桁以上で設定してください",
             ],
-            passwordShow: false,
-            passwordAgainShow: false,
+            passwordShow: false as boolean,
+            passwordAgainShow: false as boolean,
         };
     },
     computed: {
@@ -96,20 +100,20 @@ export default {
         },
     },
     methods: {
-        fileSelected(e) {
+        fileSelected(e: any) {
             this.file = e.target.files[0];
             this.$set(
                 this.form,
                 "user_img",
                 moment().format("YYYYMMDDHHmmss") + this.file.name
             );
-            let reader = new FileReader();
-            reader.onload = (e) => {
+            let reader: any = new FileReader();
+            reader.onload = (e: any) => {
                 this.uploadedImage = e.target.result;
             };
             reader.readAsDataURL(this.file);
         },
-        async login() {
+        async login(): Promise<void> {
             this.errorMessage = "";
             this.$refs.form.validate();
             // バリデーションエラー
@@ -123,7 +127,7 @@ export default {
             }
             // ログインAPI
             let postData = new FormData();
-            if(this.file){
+            if (this.file) {
                 postData.append("file", this.file);
             }
             Object.keys(this.form).forEach((key) => {
@@ -133,33 +137,36 @@ export default {
             this.loading = true;
             await this.$axios
                 .post(`/api/user/create`, postData)
-                .then(async (res) => {
+                .then((res: any) => {
                     if (this.mode == "create") {
-                        this.$store.dispatch('setTokenRedirect',res.data.token)
+                        this.$store.dispatch(
+                            "setTokenRedirect",
+                            res.data.token
+                        );
                     } else {
                         this.$store.dispatch("setLoginInfoByToken");
                         this.$emit("onCloseDialog");
                     }
                 })
-                .catch((err) => {
+                .catch((err: any): void => {
                     if (err.response.data.errorMessage) {
                         this.errorMessage = err.response.data.errorMessage;
                     } else {
                         this.errorMessage = "通信に失敗しました";
                     }
                 })
-                .finally(() => {
+                .finally((): void => {
                     this.loading = false;
                 });
         },
-        onSelectedImg(n) {
+        onSelectedImg(n: number): void {
             this.$set(
                 this.form,
                 "user_img",
                 `https://picsum.photos/500/300?image=${n}`
             );
         },
-        async deleteAccount() {
+        async deleteAccount(): Promise<void> {
             if (
                 !confirm(
                     `「${this.loginInfo.name}」のアカウント情報を全て削除しますか？`
@@ -177,18 +184,20 @@ export default {
             this.loading = true;
             await this.$axios
                 .delete(`/api/user/delete`)
-                .then((res) => {
+                .then((): void => {
                     this.$emit("onCloseDialog");
                 })
-                .catch((err) => {
+                .catch((): void => {
                     alert("通信に失敗しました");
+                })
+                .finally((): void => {
+                    // ログアウト
+                    this.$store.dispatch("logout");
+                    this.loading = false;
                 });
-            // ログアウト
-            this.$store.dispatch("logout");
-            this.loading = false;
         },
     },
-    mounted() {
+    mounted(): void {
         if (this.mode == "edit") {
             this.passwordEdit = false;
             this.$set(this.form, "token", this.loginInfo.token);
@@ -201,7 +210,7 @@ export default {
             this.$set(this.form, "img_oldname", this.loginInfo.user_img);
         }
     },
-    beforeDestroy() {
+    beforeDestroy(): void {
         this.file = null;
     },
 };
