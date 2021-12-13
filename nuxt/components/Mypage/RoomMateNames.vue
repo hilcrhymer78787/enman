@@ -9,9 +9,9 @@ export type userType = {
 };
 export default {
     props: {
-        users: { type: Array } as PropOptions<userType[]>,
-        prependIcon: { type: String },
-        label: { type: String },
+        users: Array as PropOptions<userType[]>,
+        prependIcon: String,
+        label: String,
     },
     methods: {
         roomMateNames(users: userType[]): string {

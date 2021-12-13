@@ -14,32 +14,32 @@
     </v-toolbar>
 </template>
 
-<script>
+<script lang="ts">
 import moment from "moment";
 export default {
     computed: {
-        year() {
+        year(): string {
             return this.$route.query.year;
         },
-        month() {
+        month(): string {
             return this.$route.query.month;
         },
-        nextYear() {
+        nextYear(): string {
             return moment(this.year + "-" + this.month)
                 .add(1, "months")
                 .format("Y");
         },
-        nextMonth() {
+        nextMonth(): string {
             return moment(this.year + "-" + this.month)
                 .add(1, "months")
                 .format("M");
         },
-        beforeYear() {
+        beforeYear(): string {
             return moment(this.year + "-" + this.month)
                 .subtract(1, "months")
                 .format("Y");
         },
-        beforeMonth() {
+        beforeMonth(): string {
             return moment(this.year + "-" + this.month)
                 .subtract(1, "months")
                 .format("M");

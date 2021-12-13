@@ -16,16 +16,18 @@
         <v-divider></v-divider>
         <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn @click="$emit('onCloseDialog')"><v-icon>mdi-close</v-icon></v-btn>
+            <v-btn @click="$emit('onCloseDialog')">
+                <v-icon>mdi-close</v-icon>
+            </v-btn>
         </v-card-actions>
     </v-card>
 </template>
 
-<script>
+<script lang="ts">
 export default {
     methods: {
-        onSelectedImg(n) {
-            this.$emit('onSelectedImg',n)
+        onSelectedImg(n: number): void {
+            this.$emit("onSelectedImg", n);
             this.$emit("onCloseDialog");
         },
     },
