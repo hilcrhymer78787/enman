@@ -33,7 +33,7 @@
                 </v-container>
             </v-main>
 
-            <v-bottom-navigation  v-if="$vuetify.breakpoint.xs" app light fixed color="teal">
+            <v-bottom-navigation v-if="$vuetify.breakpoint.xs" app light fixed color="teal">
                 <v-btn v-for="(nav,i) in navs" :key="i" :style="`width:calc(100% / 3); height:100%;background-color:white;`" :to="nav.to" router light>
                     <span>{{nav.ttl}}</span>
                     <v-badge :value="nav.badgeValue" :content="nav.badgeContent" color="teal" offset-x="5" offset-y="15">
@@ -46,34 +46,41 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
 import { mapState } from "vuex";
+export type navType = {
+    ttl: string;
+    icon: string;
+    to: string;
+    badgeValue: number;
+    badgeContent: number;
+};
 export default {
     computed: {
         ...mapState(["loginInfo"]),
-        navs() {
+        navs(): navType[] {
             return [
                 {
                     ttl: "タスク",
                     icon: "mdi-playlist-check",
                     to: "/",
-                    badgeValue: false,
-                    badgeContent: false,
-                },
+                    badgeValue: 0,
+                    badgeContent: 0,
+                } as navType,
                 {
                     ttl: "カレンダー",
                     icon: "mdi-calendar-check",
                     to: "/calendar",
-                    badgeValue: false,
-                    badgeContent: false,
-                },
+                    badgeValue: 0,
+                    badgeContent: 0,
+                } as navType,
                 {
                     ttl: "マイページ",
                     icon: "mdi-account",
                     to: "/mypage",
                     badgeValue: this.loginInfo.invited_rooms.length,
                     badgeContent: this.loginInfo.invited_rooms.length,
-                },
+                } as navType,
             ];
         },
     },
