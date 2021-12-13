@@ -8,9 +8,9 @@ export type userType = {
 };
 export default {
     props: {
-        users: Object,
-        prependIcon: String,
-        label: String,
+        users: { type: Object as () => userType },
+        prependIcon: { type: String },
+        label: { type: String },
     },
     methods: {
         roomMateNames(users: userType[]): string {
@@ -26,6 +26,3 @@ export default {
     },
 };
 </script>
-
-<style>
-</style>
