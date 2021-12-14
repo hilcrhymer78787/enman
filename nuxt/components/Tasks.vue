@@ -91,7 +91,7 @@ export type workType = {
 export default {
     props: {
         mode: String,
-        tasks: Object as PropOptions<taskType[]>,
+        tasks: Array as PropOptions<taskType[]>,
     },
     components: {
         vuedraggable: vuedraggable,
