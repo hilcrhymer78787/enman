@@ -23,22 +23,22 @@
             </ul>
         </v-card>
 
-        <v-card class="mb-5">
+        <v-card v-if="works.sum_minute && isShowPieGraph" class="mb-5">
             <v-toolbar color="teal" dark style="box-shadow:none;">
                 <span>ユーザー別データ</span>
                 <v-spacer></v-spacer>
                 <span>{{$route.query.year}}年{{$route.query.month}}月</span>
             </v-toolbar>
-            <PieGraphCard v-if="works.sum_minute && isShowPieGraph" :propsDatas="works.monthly" :center="works.sum_minute" />
+            <PieGraphCard :propsDatas="works.monthly" :center="works.sum_minute" />
         </v-card>
 
-        <v-card class="mb-5">
+        <v-card v-if="works.sum_minute && isShowPieGraph" class="mb-5">
             <v-toolbar color="teal" dark style="box-shadow:none;">
                 <span>タスク別データ</span>
                 <v-spacer></v-spacer>
                 <span>{{$route.query.year}}年{{$route.query.month}}月</span>
             </v-toolbar>
-            <PieGraphCard v-if="works.sum_minute && isShowPieGraph" :propsDatas="works.tasks" :center="works.sum_minute" />
+            <PieGraphCard :propsDatas="works.tasks" :center="works.sum_minute" />
         </v-card>
 
         <v-dialog @click:outside="onCloseDialog" :value="day" scrollable>
