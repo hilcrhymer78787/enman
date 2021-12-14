@@ -48,7 +48,9 @@ class WorkController extends Controller
                 ->where('work_user_id', $user['id'])
                 ->sum('work_minute');
             $user['minute'] = intval($minute);
-            $user['ratio'] = $user['minute'] / $data['monthly_sum_minute'];
+            if ($data['monthly_sum_minute']) {
+                $user['ratio'] = $user['minute'] / $data['monthly_sum_minute'];
+            }
         }
         $data['monthly'] = $users;
 
@@ -62,7 +64,9 @@ class WorkController extends Controller
                 ->select('name', 'id', 'user_img')
                 ->sum('work_minute');
             $task['minute'] = intval($minute);
-            $task['ratio'] = $task['minute'] / $data['monthly_sum_minute'];
+            if ($data['monthly_sum_minute']) {
+                $task['ratio'] = $task['minute'] / $data['monthly_sum_minute'];
+            }
         }
         $data['tasks'] = $tasks;
 
