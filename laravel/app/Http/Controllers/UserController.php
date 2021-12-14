@@ -92,6 +92,9 @@ class UserController extends Controller
 
         // 編集の場合
         $loginInfo = (new UserService())->getLoginInfoByToken($request->header('token'));
+        if(!$loginInfo){
+            return response()->json(['errorMessage' => 'トークンが有効期限切れです'], 500);
+        }
         // 重複確認
         $existEmail = User::where('email', $request['email'])->first();
         if ($existEmail && $loginInfo['email'] != $request['email']) {
