@@ -1,7 +1,7 @@
 <template>
     <div class="calendar">
         <!-- カレンダー -->
-        <v-card>
+        <v-card class="mb-5">
             <CalendarPagenation />
 
             <ul class="indent pa-0">
@@ -23,11 +23,21 @@
             </ul>
         </v-card>
 
-        <v-card style="margin:50px 0;">
+        <v-card class="mb-5">
+            <v-toolbar color="teal" dark style="box-shadow:none;">
+                <span>ユーザー別データ</span>
+                <v-spacer></v-spacer>
+                <span>{{$route.query.year}}年{{$route.query.month}}月</span>
+            </v-toolbar>
             <PieGraphCard v-if="works.sum_minute && isShowPieGraph" :propsDatas="works.monthly" :center="works.sum_minute" />
         </v-card>
 
-        <v-card style="margin:50px 0;">
+        <v-card class="mb-5">
+            <v-toolbar color="teal" dark style="box-shadow:none;">
+                <span>タスク別データ</span>
+                <v-spacer></v-spacer>
+                <span>{{$route.query.year}}年{{$route.query.month}}月</span>
+            </v-toolbar>
             <PieGraphCard v-if="works.sum_minute && isShowPieGraph" :propsDatas="works.tasks" :center="works.sum_minute" />
         </v-card>
 

@@ -1,5 +1,5 @@
 <template>
-    <v-card flat>
+    <div>
         <v-responsive class="pie_graph pa-5" aspect-ratio="1">
             <div class="pie_graph_cover">{{conversionTime(center)}}</div>
             <PieGraph mode="monthly" :propsDatas="propsDatas" />
@@ -24,7 +24,7 @@
         <v-dialog @click:outside="focusData = ''" :value="focusData" scrollable>
             <PieGraphModal v-if="focusData" :focusData="focusData" @onCloseDialog="focusData = ''" />
         </v-dialog>
-    </v-card>
+    </div>
 </template>
 
 <script lang="ts">
