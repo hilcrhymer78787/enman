@@ -62,8 +62,21 @@ const POINTS = [
     { txt: "9pt", val: 9 },
     { txt: "10pt", val: 10 },
 ]
+const GRAPH_COLORS = [
+    "#2196f390",
+    "#ff525290",
+    "#fff9b1",
+    "#d7e7af",
+    "#a5d4ad",
+    "#a3bce2",
+    "#a59aca",
+    "#cfa7cd",
+    "#f4b4d0",
+    "#f5b2b2",
+]
 
 export default (context, inject) => {
     inject('MINUTE', MINUTE)
     inject('POINTS', POINTS)
+    inject('GRAPH_COLORS', GRAPH_COLORS)
 }

@@ -23,13 +23,53 @@
             </ul>
         </v-card>
 
-        <div style="padding:50px 50px 0;">
-            <PieGraph mode="monthly" v-if="works.monthly.length && isShowPieGraph" :propsDatas="works.monthly" />
-        </div>
+        <v-card v-if="works.monthly.length && isShowPieGraph" style="margin:50px 0;">
+            <v-responsive class="pie_graph" aspect-ratio="1" style="padding:50px;">
+                <div class="pie_graph_cover" style="font-size:25px;">計{{conversionTime(works.monthly_sum_minute)}}</div>
+                <PieGraph mode="monthly" :propsDatas="works.monthly" />
+            </v-responsive>
+            <v-divider></v-divider>
+            <v-simple-table>
+                <thead>
+                    <tr>
+                        <th class="text-left">名前</th>
+                        <th class="text-left">時間</th>
+                        <th class="text-left">割合</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(user,index) in works.monthly" :key="index">
+                        <td :style="`background-color:${$GRAPH_COLORS[index]};`">{{user.name}}</td>
+                        <td>{{conversionTime(user.minute)}}</td>
+                        <td>{{Math.floor((user.ratio)*1000)/10}}%</td>
+                    </tr>
+                </tbody>
+            </v-simple-table>
+        </v-card>
 
-        <div style="padding:50px;">
-            <PieGraph mode="monthly" v-if="works.tasks && isShowPieGraph" :propsDatas="works.tasks" />
-        </div>
+        <v-card v-if="works.tasks && isShowPieGraph" style="margin:50px 0;">
+            <v-responsive class="pie_graph" aspect-ratio="1" style="padding:50px;">
+                <div class="pie_graph_cover" style="font-size:25px;">計{{conversionTime(works.monthly_sum_minute)}}</div>
+                <PieGraph mode="monthly" :propsDatas="works.tasks" />
+            </v-responsive>
+            <v-divider></v-divider>
+            <v-simple-table>
+                <thead>
+                    <tr>
+                        <th class="text-left">名前</th>
+                        <th class="text-left">時間</th>
+                        <th class="text-left">割合</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(task,index) in works.tasks" :key="index">
+                        <td :style="`background-color:${$GRAPH_COLORS[index]};`">{{task.name}}</td>
+                        <td>{{conversionTime(task.minute)}}</td>
+                        <td>{{Math.floor((task.ratio)*1000)/10}}%</td>
+                    </tr>
+                </tbody>
+            </v-simple-table>
+        </v-card>
 
         <v-dialog @click:outside="onCloseDialog" :value="day" scrollable>
             <Tasks mode="calendar" @onCloseDialog="onCloseDialog" @fetchData="fetchData" v-if="day" :tasks="focusTasks" />
@@ -121,6 +161,11 @@ export default {
             this.$router.push(
                 `/calendar?year=${this.year}&month=${this.month}`
             );
+        },
+        conversionTime(minute: number): string {
+            const time: number = Math.floor(minute / 60);
+            const newMinute: number = minute % 60;
+            return `${time}:${newMinute}`;
         },
     },
     mounted(): void {

@@ -12,18 +12,7 @@ export default {
                 datasets: [
                     {
                         data: [],
-                        backgroundColor: [
-                            "#2196f390",
-                            "#ff525290",
-                            "#fff9b1",
-                            "#d7e7af",
-                            "#a5d4ad",
-                            "#a3bce2",
-                            "#a59aca",
-                            "#cfa7cd",
-                            "#f4b4d0",
-                            "#f5b2b2",
-                        ],
+                        backgroundColor: this.$GRAPH_COLORS,
                     },
                 ],
             },
