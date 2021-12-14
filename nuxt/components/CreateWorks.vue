@@ -26,7 +26,6 @@
             <v-spacer></v-spacer>
             <v-btn color="teal" :loading="saveLoading" dark @click="onClickSave()">登録</v-btn>
         </v-card-actions>
-        <pre>{{focusTask}}</pre>
     </v-card>
 </template>
 
