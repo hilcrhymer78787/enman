@@ -34,7 +34,7 @@ class WorkController extends Controller
         }
         $data['daily'] = $works;
 
-        $data['monthly_sum_minute'] = Work::where('work_room_id', $loginInfo['user_room_id'])
+        $data['sum_minute'] = Work::where('work_room_id', $loginInfo['user_room_id'])
             ->whereYear('work_date', $request['year'])
             ->whereMonth('work_date', $request['month'])
             ->sum('work_minute');
@@ -49,10 +49,10 @@ class WorkController extends Controller
                 ->where('work_user_id', $user['id'])
                 ->sum('work_minute');
             $user['minute'] = intval($minute);
-            if ($data['monthly_sum_minute']) {
-                $user['ratio'] = $user['minute'] / $data['monthly_sum_minute'];
+            if ($data['sum_minute']) {
+                $user['ratio'] = $user['minute'] / $data['sum_minute'];
             }
-            $user['monthly_sum_minute'] = Work::where('work_room_id', $loginInfo['user_room_id'])
+            $user['sum_minute'] = Work::where('work_room_id', $loginInfo['user_room_id'])
                 ->whereYear('work_date', $request['year'])
                 ->whereMonth('work_date', $request['month'])
                 ->where('work_user_id', $user['id'])
@@ -67,8 +67,8 @@ class WorkController extends Controller
                     ->select('name', 'id', 'user_img')
                     ->sum('work_minute');
                 $task['minute'] = intval($minute);
-                if ($user['monthly_sum_minute']) {
-                    $task['ratio'] = $task['minute'] / $user['monthly_sum_minute'];
+                if ($user['sum_minute']) {
+                    $task['ratio'] = $task['minute'] / $user['sum_minute'];
                 }
             }
             $user['datas'] = $tasks;
@@ -85,10 +85,10 @@ class WorkController extends Controller
                 ->select('name', 'id', 'user_img')
                 ->sum('work_minute');
             $task['minute'] = intval($minute);
-            if ($data['monthly_sum_minute']) {
-                $task['ratio'] = $task['minute'] / $data['monthly_sum_minute'];
+            if ($data['sum_minute']) {
+                $task['ratio'] = $task['minute'] / $data['sum_minute'];
             }
-            $task['monthly_sum_minute'] = Work::where('work_room_id', $loginInfo['user_room_id'])
+            $task['sum_minute'] = Work::where('work_room_id', $loginInfo['user_room_id'])
                 ->whereYear('work_date', $request['year'])
                 ->whereMonth('work_date', $request['month'])
                 ->where('work_task_id', $task['task_id'])
@@ -102,8 +102,8 @@ class WorkController extends Controller
                     ->where('work_user_id', $user['id'])
                     ->sum('work_minute');
                 $user['minute'] = intval($minute);
-                if ($task['monthly_sum_minute']) {
-                    $user['ratio'] = $user['minute'] / $task['monthly_sum_minute'];
+                if ($task['sum_minute']) {
+                    $user['ratio'] = $user['minute'] / $task['sum_minute'];
                 }
             }
             $task['datas'] = $users;

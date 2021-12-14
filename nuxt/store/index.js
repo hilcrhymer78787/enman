@@ -5,7 +5,7 @@ export const state = () => ({
     works: {
         daily: [],
         monthly: [],
-        monthly_sum_minute:0,
+        sum_minute:0,
     },
 })
 

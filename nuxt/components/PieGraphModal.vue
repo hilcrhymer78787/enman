@@ -8,7 +8,7 @@
         </v-card-title>
         <v-divider></v-divider>
         <v-card-text class="pa-0">
-            <PieGraphCard :propsDatas="focusData.datas" :center="focusData.monthly_sum_minute" mode="modal" />
+            <PieGraphCard :propsDatas="focusData.datas" :center="focusData.sum_minute" mode="modal" />
         </v-card-text>
         <v-divider></v-divider>
         <v-card-actions>

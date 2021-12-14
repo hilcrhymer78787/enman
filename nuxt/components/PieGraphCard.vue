@@ -37,7 +37,7 @@ export default {
     },
     methods: {
         onClickData(data: any) {
-            if (data.monthly_sum_minute == 0) {
+            if (data.sum_minute == 0) {
                 return;
             }
             if (this.mode == "modal") {
