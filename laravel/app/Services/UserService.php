@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Services;
+
 use App\Models\User;
 use App\Models\Invitation;
 
@@ -9,8 +10,9 @@ class UserService
     public function getLoginInfoByToken($token)
     {
         $loginInfo = User::where('token', $token)
-        ->leftjoin('rooms', 'users.user_room_id', '=', 'rooms.room_id')
-        ->first();
+            ->leftjoin('rooms', 'users.user_room_id', '=', 'rooms.room_id')
+            ->select('id', 'email', 'name', 'user_img', 'room_id', 'user_room_id', 'room_name', 'room_img')
+            ->first();
         return $loginInfo;
     }
     public function getJoinedUsersByRoomId($roomId)
