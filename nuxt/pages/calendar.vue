@@ -23,9 +23,13 @@
             </ul>
         </v-card>
 
-        <PieGraphCard v-if="works.monthly_sum_minute && isShowPieGraph" :propsDatas="works.monthly" :monthly_sum_minute="works.monthly_sum_minute" style="margin:50px 0;" />
+        <v-card style="margin:50px 0;">
+            <PieGraphCard v-if="works.monthly_sum_minute && isShowPieGraph" :propsDatas="works.monthly" :center="works.monthly_sum_minute" />
+        </v-card>
 
-        <PieGraphCard v-if="works.monthly_sum_minute && isShowPieGraph" :propsDatas="works.tasks" :monthly_sum_minute="works.monthly_sum_minute" style="margin:50px 0;" />
+        <v-card style="margin:50px 0;">
+            <PieGraphCard v-if="works.monthly_sum_minute && isShowPieGraph" :propsDatas="works.tasks" :center="works.monthly_sum_minute" />
+        </v-card>
 
         <v-dialog @click:outside="onCloseDialog" :value="day" scrollable>
             <Tasks mode="calendar" @onCloseDialog="onCloseDialog" @fetchData="fetchData" v-if="day" :tasks="focusTasks" />

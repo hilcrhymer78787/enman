@@ -39,6 +39,7 @@ class WorkController extends Controller
             ->whereMonth('work_date', $request['month'])
             ->sum('work_minute');
 
+
         // 月ごとのデータ
         $users = (new UserService())->getJoinedUsersByRoomId($loginInfo['user_room_id']);
         foreach ($users as $user) {
@@ -51,6 +52,26 @@ class WorkController extends Controller
             if ($data['monthly_sum_minute']) {
                 $user['ratio'] = $user['minute'] / $data['monthly_sum_minute'];
             }
+            $user['monthly_sum_minute'] = Work::where('work_room_id', $loginInfo['user_room_id'])
+                ->whereYear('work_date', $request['year'])
+                ->whereMonth('work_date', $request['month'])
+                ->where('work_user_id', $user['id'])
+                ->sum('work_minute');
+            $tasks = (new TaskService())->getTasksByRoomId($loginInfo['user_room_id']);
+            foreach ($tasks as $task) {
+                $minute = Work::where('work_room_id', $loginInfo['user_room_id'])
+                    ->whereYear('work_date', $request['year'])
+                    ->whereMonth('work_date', $request['month'])
+                    ->where('work_task_id', $task['task_id'])
+                    ->where('work_user_id', $user['id'])
+                    ->select('name', 'id', 'user_img')
+                    ->sum('work_minute');
+                $task['minute'] = intval($minute);
+                if ($user['monthly_sum_minute']) {
+                    $task['ratio'] = $task['minute'] / $user['monthly_sum_minute'];
+                }
+            }
+            $user['datas'] = $tasks;
         }
         $data['monthly'] = $users;
 
@@ -67,6 +88,25 @@ class WorkController extends Controller
             if ($data['monthly_sum_minute']) {
                 $task['ratio'] = $task['minute'] / $data['monthly_sum_minute'];
             }
+            $task['monthly_sum_minute'] = Work::where('work_room_id', $loginInfo['user_room_id'])
+                ->whereYear('work_date', $request['year'])
+                ->whereMonth('work_date', $request['month'])
+                ->where('work_task_id', $task['task_id'])
+                ->sum('work_minute');
+            $users = (new UserService())->getJoinedUsersByRoomId($loginInfo['user_room_id']);
+            foreach ($users as $user) {
+                $minute = Work::where('work_room_id', $loginInfo['user_room_id'])
+                    ->whereYear('work_date', $request['year'])
+                    ->whereMonth('work_date', $request['month'])
+                    ->where('work_task_id', $task['task_id'])
+                    ->where('work_user_id', $user['id'])
+                    ->sum('work_minute');
+                $user['minute'] = intval($minute);
+                if ($task['monthly_sum_minute']) {
+                    $user['ratio'] = $user['minute'] / $task['monthly_sum_minute'];
+                }
+            }
+            $task['datas'] = $users;
         }
         $data['tasks'] = $tasks;
 

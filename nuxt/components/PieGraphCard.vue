@@ -1,7 +1,7 @@
 <template>
-    <v-card>
+    <v-card flat>
         <v-responsive class="pie_graph pa-5" aspect-ratio="1">
-            <div class="pie_graph_cover">計{{conversionTime(monthly_sum_minute)}}</div>
+            <div class="pie_graph_cover">{{conversionTime(center)}}</div>
             <PieGraph mode="monthly" :propsDatas="propsDatas" />
         </v-responsive>
         <v-divider></v-divider>
@@ -14,24 +14,45 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="(data,index) in propsDatas" :key="index">
+                <tr @click="onClickData(data)" v-for="(data,index) in propsDatas" :key="index">
                     <td :style="`background-color:${$GRAPH_COLORS[index]};`">{{data.name}}</td>
                     <td>{{conversionTime(data.minute)}}</td>
                     <td>{{Math.floor((data.ratio)*1000)/10}}%</td>
                 </tr>
             </tbody>
         </v-simple-table>
+        <v-dialog @click:outside="focusData = ''" :value="focusData" scrollable>
+            <PieGraphModal v-if="focusData" :focusData="focusData" @onCloseDialog="focusData = ''" />
+        </v-dialog>
     </v-card>
 </template>
 
 <script lang="ts">
 export default {
-    props: ["propsDatas", "monthly_sum_minute"],
+    props: ["propsDatas", "center", "mode"],
+    data() {
+        return {
+            focusData: "",
+        };
+    },
     methods: {
+        onClickData(data: any) {
+            if (data.monthly_sum_minute == 0) {
+                return;
+            }
+            if (this.mode == "modal") {
+                return;
+            }
+            this.focusData = data;
+        },
         conversionTime(minute: number): string {
             const time: number = Math.floor(minute / 60);
             const newMinute: number = minute % 60;
-            return `${time}:${newMinute}`;
+            if (time == 0) {
+                return `${newMinute}分`;
+            } else {
+                return `${time}時間${newMinute}分`;
+            }
         },
     },
 };

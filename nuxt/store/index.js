@@ -33,6 +33,7 @@ export const mutations = {
     },
     setWorks(state, works) {
         state.works = works
+        console.log(works)
     },
 }
 
