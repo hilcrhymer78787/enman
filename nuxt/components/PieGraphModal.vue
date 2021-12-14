@@ -1,6 +1,11 @@
 <template>
     <v-card>
-        <v-card-title>{{focusData.name}}</v-card-title>
+        <v-card-title>
+            <span>{{focusData.name}}</span>
+            <v-spacer></v-spacer>
+            <span v-if="$route.query.year">{{$route.query.year}}年</span>
+            <span v-if="$route.query.month">{{$route.query.month}}月</span>
+        </v-card-title>
         <v-divider></v-divider>
         <v-card-text class="pa-0">
             <PieGraphCard :propsDatas="focusData.datas" :center="focusData.monthly_sum_minute" mode="modal" />
