@@ -24,7 +24,7 @@
         </v-card>
 
         <v-card v-if="works.monthly.length && isShowPieGraph" style="margin:50px 0;">
-            <v-responsive class="pie_graph" aspect-ratio="1" style="padding:50px;">
+            <v-responsive class="pie_graph pa-5" aspect-ratio="1">
                 <div class="pie_graph_cover" style="font-size:25px;">計{{conversionTime(works.monthly_sum_minute)}}</div>
                 <PieGraph mode="monthly" :propsDatas="works.monthly" />
             </v-responsive>
@@ -48,7 +48,7 @@
         </v-card>
 
         <v-card v-if="works.tasks && isShowPieGraph" style="margin:50px 0;">
-            <v-responsive class="pie_graph" aspect-ratio="1" style="padding:50px;">
+            <v-responsive class="pie_graph pa-5" aspect-ratio="1">
                 <div class="pie_graph_cover" style="font-size:25px;">計{{conversionTime(works.monthly_sum_minute)}}</div>
                 <PieGraph mode="monthly" :propsDatas="works.tasks" />
             </v-responsive>
