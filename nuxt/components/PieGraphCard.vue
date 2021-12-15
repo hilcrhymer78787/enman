@@ -75,4 +75,9 @@ export default {
         color: teal;
     }
 }
+tbody{
+    tr{
+        cursor: pointer;
+    }
+}
 </style>
