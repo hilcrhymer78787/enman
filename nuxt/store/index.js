@@ -3,9 +3,10 @@ export const state = () => ({
     todayTasks: [],
     focusTasks: [],
     works: {
-        daily: [],
-        monthly: [],
-        sum_minute:0,
+        days: [],
+        users: [],
+        tasks: [],
+        minute:0,
     },
 })
 
@@ -33,7 +34,6 @@ export const mutations = {
     },
     setWorks(state, works) {
         state.works = works
-        console.log(works)
     },
 }
 

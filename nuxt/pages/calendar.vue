@@ -14,8 +14,8 @@
                     <div @click="$router.push(`/calendar?year=${year}&month=${month}&day=${index + 1}`)" class="content_item_inner">
                         <CalendarDayIcon :day="index + 1" />
                         <v-responsive class="pa-1 pie_graph" aspect-ratio="1">
-                            <div v-if="calendar.work" class="pie_graph_cover">{{calendar.work.sum_minute}}</div>
-                            <PieGraph mode="daily" :propsDatas="calendar.work.users" v-if="calendar.work && isShowPieGraph" />
+                            <div v-if="calendar.work" class="pie_graph_cover">{{calendar.work.minute}}</div>
+                            <PieGraph mode="days" :propsDatas="calendar.work.users" v-if="calendar.work && isShowPieGraph" />
                         </v-responsive>
                     </div>
                 </li>
@@ -23,22 +23,22 @@
             </ul>
         </v-card>
 
-        <v-card v-if="works.sum_minute && isShowPieGraph" class="mb-5">
+        <v-card v-if="works.minute && isShowPieGraph" class="mb-5">
             <v-toolbar color="teal" dark style="box-shadow:none;">
                 <span>ユーザー別データ</span>
                 <v-spacer></v-spacer>
                 <span>{{$route.query.year}}年{{$route.query.month}}月</span>
             </v-toolbar>
-            <PieGraphCard :propsDatas="works.monthly" :center="works.sum_minute" />
+            <PieGraphCard :propsDatas="works.users" :center="works.minute" />
         </v-card>
 
-        <v-card v-if="works.sum_minute && isShowPieGraph" class="mb-5">
+        <v-card v-if="works.minute && isShowPieGraph" class="mb-5">
             <v-toolbar color="teal" dark style="box-shadow:none;">
                 <span>タスク別データ</span>
                 <v-spacer></v-spacer>
                 <span>{{$route.query.year}}年{{$route.query.month}}月</span>
             </v-toolbar>
-            <PieGraphCard :propsDatas="works.tasks" :center="works.sum_minute" />
+            <PieGraphCard :propsDatas="works.tasks" :center="works.minute" />
         </v-card>
 
         <v-dialog @click:outside="onCloseDialog" :value="day" scrollable>
@@ -54,7 +54,7 @@ export type calendarType = {
     work: workType[];
 };
 export type workType = {
-    sum_minute: number;
+    minute: number;
     work_date: string;
     users: userType;
 };
@@ -89,7 +89,7 @@ export default {
                 ).format("YYYY-MM-DD");
                 outputData.push({
                     date: date as string,
-                    work: this.works.daily.filter(
+                    work: this.works.days.filter(
                         (work: workType): boolean => work.work_date === date
                     )[0],
                 });

@@ -30,7 +30,7 @@ export default {
             this.datas.datasets[0].data.push(data.minute);
             this.datas.labels.push(data.name);
         });
-        if (this.mode == "monthly") {
+        if (this.mode == "users") {
             this.options.legend.display = false;
             this.addPlugin({
                 afterDraw(chart, go) {

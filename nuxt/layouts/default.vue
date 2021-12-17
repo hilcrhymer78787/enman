@@ -75,6 +75,13 @@ export default {
                     badgeContent: 0,
                 } as navType,
                 {
+                    ttl: "統計",
+                    icon: "mdi-chart-bar",
+                    to: "/analytics",
+                    badgeValue: 0,
+                    badgeContent: 0,
+                } as navType,
+                {
                     ttl: "マイページ",
                     icon: "mdi-account",
                     to: "/mypage",
