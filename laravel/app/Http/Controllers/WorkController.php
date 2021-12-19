@@ -6,38 +6,44 @@ use Illuminate\Http\Request;
 use App\Services\UserService;
 use App\Services\TaskService;
 use App\Models\Work;
-use App\Models\Task;
-use App\Models\Invitation;
 
 class WorkController extends Controller
 {
-    public function read(Request $request)
+    public function read_calendar(Request $request)
+    {
+        $loginInfo = (new UserService())->getLoginInfoByToken($request->header('token'));
+        // 日別データ
+        $year_month = $request['year'] . '-' . $request['month'];
+        $last_day = date('d', strtotime("last day of " . $year_month));
+
+        $return['calendars'] = [];
+        for ($day = 1; $day <= $last_day; $day++) {
+            $calendar['date'] = date('Y-m-d', strtotime($year_month . '-' . $day));
+            $calendar['minute'] = (int)Work::where('work_room_id', $loginInfo['user_room_id'])
+                ->where('work_date', $calendar['date'])
+                ->sum('work_minute');
+            $calendar['users'] = (new UserService())->getJoinedUsersByRoomId($loginInfo['user_room_id']);
+            foreach ($calendar['users'] as $user) {
+                $user['minute'] = (int)Work::where('work_room_id', $loginInfo['user_room_id'])
+                    ->where('work_date', $calendar['date'])
+                    ->where('work_user_id', $user['id'])
+                    ->sum('work_minute');
+            }
+            array_push($return['calendars'], $calendar);
+        }
+        return $return;
+    }
+    public function read_analytics(Request $request)
     {
         $loginInfo = (new UserService())->getLoginInfoByToken($request->header('token'));
         function getQuery($request)
         {
             $loginInfo = (new UserService())->getLoginInfoByToken($request->header('token'));
             return Work::where('work_room_id', $loginInfo['user_room_id'])
-                ->whereYear('work_date', $request['year'])
-                ->whereMonth('work_date', $request['month']);
-            // ->whereBetween("work_date", ['2021-12-01', '2021-12-31']);
+                ->whereBetween("work_date", [$request['start_date'], $request['last_date']]);
         }
         // 合計値
         $return['minute'] = (int) getQuery($request)->sum('work_minute');
-
-        // 日別データ
-        $return['days'] = getQuery($request)->selectRaw('sum(work_minute) as `minute`, work_date')
-            ->groupByRaw('work_date')
-            ->get();
-        foreach ($return['days'] as $work) {
-            $work['users'] = (new UserService())->getJoinedUsersByRoomId($loginInfo['user_room_id']);
-            foreach ($work['users'] as $user) {
-                $user['minute'] = (int)Work::where('work_room_id', $loginInfo['user_room_id'])
-                    ->where('work_date', $work['work_date'])
-                    ->where('work_user_id', $user['id'])
-                    ->sum('work_minute');
-            }
-        }
 
         // ユーザー別データ
         $return['users'] = (new UserService())->getJoinedUsersByRoomId($loginInfo['user_room_id']);

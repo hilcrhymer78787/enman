@@ -1,6 +1,6 @@
 <template>
     <div>
-        <pre>{{test}}</pre>
+        <pre>{{calendars}}</pre>
     </div>
 </template>
 
@@ -14,8 +14,11 @@ export default {
         };
     },
     computed: {
-        ...mapState(["works"]),
+        ...mapState(["calendars"]),
     },
+    mounted(){
+        this.$store.dispatch('setCalendars')
+    }
 };
 </script>
 
