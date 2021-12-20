@@ -16,7 +16,7 @@
                         <v-responsive class="pa-1 pie_graph" aspect-ratio="1">
                             <div v-if="calendar.minute">
                                 <div class="pie_graph_cover">{{calendar.minute}}</div>
-                                <PieGraph mode="days" :propsDatas="calendar.users" v-if="isShowPieGraph" />
+                                <PieGraphWrap mode="days" :propsDatas="calendar.users" />
                             </div>
                         </v-responsive>
                     </div>
@@ -61,7 +61,6 @@ export default {
         return {
             week: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"] as string[],
             dialog: false as boolean,
-            isShowPieGraph: false as boolean,
             dialogLoading: false as boolean,
         };
     },
@@ -109,13 +108,6 @@ export default {
         },
         month(): void {
             this.fetchData();
-        },
-        calendars(): void {
-            // 円グラフ再描画
-            this.isShowPieGraph = false;
-            this.$nextTick((): void => {
-                this.isShowPieGraph = true;
-            });
         },
     },
 };

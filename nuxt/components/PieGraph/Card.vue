@@ -2,7 +2,7 @@
     <div>
         <v-responsive class="pie_graph pa-5" aspect-ratio="1">
             <div class="pie_graph_cover">{{conversionTime(center)}}</div>
-            <PieGraph mode="users" :propsDatas="propsDatas" />
+            <PieGraphWrap mode="users" :propsDatas="propsDatas" />
         </v-responsive>
         <v-divider></v-divider>
         <v-simple-table>

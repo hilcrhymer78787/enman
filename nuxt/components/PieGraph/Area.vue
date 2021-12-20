@@ -22,20 +22,6 @@
 <script>
 export default {
     props: ["works", "subttl"],
-    data() {
-        return {
-            isShowPieGraph: false,
-        };
-    },
-    watch: {
-        works() {
-            // 円グラフ再描画
-            this.isShowPieGraph = false;
-            this.$nextTick(() => {
-                this.isShowPieGraph = true;
-            });
-        },
-    },
 };
 </script>
 
