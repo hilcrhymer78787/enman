@@ -18,6 +18,11 @@ export default {
                 this.isShowPieGraph = true;
             });
         },
+        onResize() {
+            setTimeout(() => {
+                this.reMount();
+            }, 200);
+        },
     },
     watch: {
         propsDatas() {
@@ -25,10 +30,10 @@ export default {
         },
     },
     mounted() {
-        window.addEventListener("resize", this.reMount);
+        window.addEventListener("resize", this.onResize);
     },
     beforeDestroy() {
-        window.removeEventListener("resize", this.reMount);
+        window.removeEventListener("resize", this.onResize);
     },
 };
 </script>
