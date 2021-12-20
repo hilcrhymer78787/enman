@@ -8,7 +8,6 @@
             </v-card-title>
             <PieGraphCard :propsDatas="works.users" :center="works.minute" />
         </v-card>
-
         <v-card v-if="works.minute" class="mb-5">
             <v-card-title>
                 <span>タスク別データ</span>
@@ -23,6 +22,20 @@
 <script>
 export default {
     props: ["works", "subttl"],
+    data() {
+        return {
+            isShowPieGraph: false,
+        };
+    },
+    watch: {
+        works() {
+            // 円グラフ再描画
+            this.isShowPieGraph = false;
+            this.$nextTick(() => {
+                this.isShowPieGraph = true;
+            });
+        },
+    },
 };
 </script>
 
