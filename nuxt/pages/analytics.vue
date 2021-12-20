@@ -1,7 +1,7 @@
 <template>
     <div>
         <AnalyticsForm class="mb-5"/>
-        <PieGraphArea v-if="analyticsWorks" :works="analyticsWorks" subttl="全期間" />
+        <PieGraphArea v-if="analyticsWorks" :works="analyticsWorks" :subttl="analyticsWorks.span" />
     </div>
 </template>
 

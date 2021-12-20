@@ -40,14 +40,25 @@ class WorkController extends Controller
         {
             $loginInfo = (new UserService())->getLoginInfoByToken($request->header('token'));
             $query = Work::where('work_room_id', $loginInfo['user_room_id']);
-            if($request['start_date']){
-                $query->where("work_date",">=",$request['start_date']);
+            if ($request['start_date']) {
+                $query->where("work_date", ">=", $request['start_date']);
             }
-            if($request['last_date']){
-                $query->where("work_date","<=",$request['last_date']);
+            if ($request['last_date']) {
+                $query->where("work_date", "<=", $request['last_date']);
             }
             return $query;
         }
+        // 検索範囲
+        if ($request['start_date'] && $request['last_date']) {
+            $return['span'] = date('Y年m月d日', strtotime($request['start_date'])) . '~' . date('Y年m月d日', strtotime($request['last_date']));
+        } elseif ($request['start_date']) {
+            $return['span'] = date('Y年m月d日', strtotime($request['start_date'])) . '~';
+        } elseif ($request['last_date']) {
+            $return['span'] = '~' . date('Y年m月d日', strtotime($request['last_date']));
+        } else {
+            $return['span'] = '全期間';
+        }
+
         // 合計値
         $return['minute'] = (int) getQuery($request)->sum('work_minute');
 
