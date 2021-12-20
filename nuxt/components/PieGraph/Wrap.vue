@@ -1,5 +1,5 @@
 <template>
-    <PieGraph :mode="mode" :propsDatas="propsDatas" />
+    <PieGraph v-if="isShowPieGraph" :mode="mode" :propsDatas="propsDatas" />
 </template>
 
 <script>
@@ -7,7 +7,8 @@ export default {
     props: ["mode", "propsDatas"],
     data() {
         return {
-            isShowPieGraph: false,
+            isShowPieGraph: true,
+            timeoutId:"",
         };
     },
     methods: {
@@ -19,9 +20,10 @@ export default {
             });
         },
         onResize() {
-            setTimeout(() => {
+            clearTimeout(this.timeoutId)
+            this.timeoutId = setTimeout(() => {
                 this.reMount();
-            }, 200);
+            }, 100);
         },
     },
     watch: {
@@ -31,9 +33,11 @@ export default {
     },
     mounted() {
         window.addEventListener("resize", this.onResize);
+        window.addEventListener("orientationchange", this.onResize);
     },
     beforeDestroy() {
         window.removeEventListener("resize", this.onResize);
+        window.addEventListener("orientationchange", this.onResize);
     },
 };
 </script>
