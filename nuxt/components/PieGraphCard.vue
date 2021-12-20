@@ -2,7 +2,7 @@
     <div>
         <v-responsive class="pie_graph pa-5" aspect-ratio="1">
             <div class="pie_graph_cover">{{conversionTime(center)}}</div>
-            <PieGraph mode="monthly" :propsDatas="propsDatas" />
+            <PieGraph mode="users" :propsDatas="propsDatas" />
         </v-responsive>
         <v-divider></v-divider>
         <v-simple-table>
@@ -37,7 +37,7 @@ export default {
     },
     methods: {
         onClickData(data: any) {
-            if (data.sum_minute == 0) {
+            if (data.minute == 0) {
                 return;
             }
             if (this.mode == "modal") {

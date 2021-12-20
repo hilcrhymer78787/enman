@@ -6,111 +6,85 @@ use Illuminate\Http\Request;
 use App\Services\UserService;
 use App\Services\TaskService;
 use App\Models\Work;
-use App\Models\Task;
-use App\Models\Invitation;
 
 class WorkController extends Controller
 {
-    public function read(Request $request)
+    public function read_calendar(Request $request)
     {
         $loginInfo = (new UserService())->getLoginInfoByToken($request->header('token'));
+        // 日別データ
+        $year_month = $request['year'] . '-' . $request['month'];
+        $last_day = date('d', strtotime("last day of " . $year_month));
 
-        // 1日ごとのデータ
-        $works = Work::where('work_room_id', $loginInfo['user_room_id'])
-            ->whereYear('work_date', $request['year'])
-            ->whereMonth('work_date', $request['month'])
-            ->selectRaw('sum(work_minute) as `sum_minute`, work_date')
-            ->groupByRaw('work_date')
-            ->get();
-        foreach ($works as $work) {
-            $work['users'] = (new UserService())->getJoinedUsersByRoomId($loginInfo['user_room_id']);
-            foreach ($work['users'] as $user) {
-                $minute = Work::where('work_room_id', $loginInfo['user_room_id'])
-                    ->where('work_date', $work['work_date'])
+        $return['calendars'] = [];
+        for ($day = 1; $day <= $last_day; $day++) {
+            $calendar['date'] = date('Y-m-d', strtotime($year_month . '-' . $day));
+            $calendar['minute'] = (int)Work::where('work_room_id', $loginInfo['user_room_id'])
+                ->where('work_date', $calendar['date'])
+                ->sum('work_minute');
+            $calendar['users'] = (new UserService())->getJoinedUsersByRoomId($loginInfo['user_room_id']);
+            foreach ($calendar['users'] as $user) {
+                $user['minute'] = (int)Work::where('work_room_id', $loginInfo['user_room_id'])
+                    ->where('work_date', $calendar['date'])
                     ->where('work_user_id', $user['id'])
                     ->sum('work_minute');
-                $user['minute'] = intval($minute);
             }
+            array_push($return['calendars'], $calendar);
         }
-        $data['daily'] = $works;
-
-        $data['sum_minute'] = Work::where('work_room_id', $loginInfo['user_room_id'])
-            ->whereYear('work_date', $request['year'])
-            ->whereMonth('work_date', $request['month'])
-            ->sum('work_minute');
-
-
-        // 月ごとのデータ
-        $users = (new UserService())->getJoinedUsersByRoomId($loginInfo['user_room_id']);
-        foreach ($users as $user) {
-            $minute = Work::where('work_room_id', $loginInfo['user_room_id'])
-                ->whereYear('work_date', $request['year'])
-                ->whereMonth('work_date', $request['month'])
-                ->where('work_user_id', $user['id'])
-                ->sum('work_minute');
-            $user['minute'] = intval($minute);
-            if ($data['sum_minute']) {
-                $user['ratio'] = $user['minute'] / $data['sum_minute'];
+        return $return;
+    }
+    public function read_analytics(Request $request)
+    {
+        $loginInfo = (new UserService())->getLoginInfoByToken($request->header('token'));
+        function getQuery($request)
+        {
+            $loginInfo = (new UserService())->getLoginInfoByToken($request->header('token'));
+            $query = Work::where('work_room_id', $loginInfo['user_room_id']);
+            if($request['start_date']){
+                $query->where("work_date",">=",$request['start_date']);
             }
-            $user['sum_minute'] = Work::where('work_room_id', $loginInfo['user_room_id'])
-                ->whereYear('work_date', $request['year'])
-                ->whereMonth('work_date', $request['month'])
+            if($request['last_date']){
+                $query->where("work_date","<=",$request['last_date']);
+            }
+            return $query;
+        }
+        // 合計値
+        $return['minute'] = (int) getQuery($request)->sum('work_minute');
+
+        // ユーザー別データ
+        $return['users'] = (new UserService())->getJoinedUsersByRoomId($loginInfo['user_room_id']);
+        foreach ($return['users'] as $user) {
+            $user['minute'] = (int) getQuery($request)
                 ->where('work_user_id', $user['id'])
                 ->sum('work_minute');
+            $user['ratio'] = $return['minute'] ? $user['minute'] / $return['minute'] : 0;
             $tasks = (new TaskService())->getTasksByRoomId($loginInfo['user_room_id']);
             foreach ($tasks as $task) {
-                $minute = Work::where('work_room_id', $loginInfo['user_room_id'])
-                    ->whereYear('work_date', $request['year'])
-                    ->whereMonth('work_date', $request['month'])
-                    ->where('work_task_id', $task['task_id'])
+                $task['minute'] = (int)getQuery($request)->where('work_task_id', $task['task_id'])
                     ->where('work_user_id', $user['id'])
-                    ->select('name', 'id', 'user_img')
                     ->sum('work_minute');
-                $task['minute'] = intval($minute);
-                if ($user['sum_minute']) {
-                    $task['ratio'] = $task['minute'] / $user['sum_minute'];
-                }
+                $task['ratio'] = $user['minute'] ? $task['minute'] / $user['minute'] : 0;
             }
             $user['datas'] = $tasks;
         }
-        $data['monthly'] = $users;
 
-        // 月ごとのタスクの合計
-        $tasks = (new TaskService())->getTasksByRoomId($loginInfo['user_room_id']);
-        foreach ($tasks as $task) {
-            $minute = Work::where('work_room_id', $loginInfo['user_room_id'])
-                ->whereYear('work_date', $request['year'])
-                ->whereMonth('work_date', $request['month'])
-                ->where('work_task_id', $task['task_id'])
-                ->select('name', 'id', 'user_img')
+        // タスク別のデータ
+        $return['tasks'] = (new TaskService())->getTasksByRoomId($loginInfo['user_room_id']);
+        foreach ($return['tasks'] as $task) {
+            $task['minute'] = (int)getQuery($request)->where('work_task_id', $task['task_id'])
                 ->sum('work_minute');
-            $task['minute'] = intval($minute);
-            if ($data['sum_minute']) {
-                $task['ratio'] = $task['minute'] / $data['sum_minute'];
-            }
-            $task['sum_minute'] = Work::where('work_room_id', $loginInfo['user_room_id'])
-                ->whereYear('work_date', $request['year'])
-                ->whereMonth('work_date', $request['month'])
-                ->where('work_task_id', $task['task_id'])
-                ->sum('work_minute');
+            $task['ratio'] = $return['minute'] ? $task['minute'] / $return['minute'] : 0;
             $users = (new UserService())->getJoinedUsersByRoomId($loginInfo['user_room_id']);
             foreach ($users as $user) {
-                $minute = Work::where('work_room_id', $loginInfo['user_room_id'])
-                    ->whereYear('work_date', $request['year'])
-                    ->whereMonth('work_date', $request['month'])
-                    ->where('work_task_id', $task['task_id'])
+                $user['minute'] = (int)getQuery($request)->where('work_task_id', $task['task_id'])
                     ->where('work_user_id', $user['id'])
                     ->sum('work_minute');
-                $user['minute'] = intval($minute);
-                if ($task['sum_minute']) {
-                    $user['ratio'] = $user['minute'] / $task['sum_minute'];
-                }
+                $user['ratio'] = $task['minute'] ? $user['minute'] / $task['minute'] : 0;
             }
             $task['datas'] = $users;
         }
-        $data['tasks'] = $tasks;
 
-        return $data;
+        return $return;
     }
     public function create(Request $request)
     {

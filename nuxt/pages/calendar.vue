@@ -14,8 +14,10 @@
                     <div @click="$router.push(`/calendar?year=${year}&month=${month}&day=${index + 1}`)" class="content_item_inner">
                         <CalendarDayIcon :day="index + 1" />
                         <v-responsive class="pa-1 pie_graph" aspect-ratio="1">
-                            <div v-if="calendar.work" class="pie_graph_cover">{{calendar.work.sum_minute}}</div>
-                            <PieGraph mode="daily" :propsDatas="calendar.work.users" v-if="calendar.work && isShowPieGraph" />
+                            <div v-if="calendar.minute">
+                                <div class="pie_graph_cover">{{calendar.minute}}</div>
+                                <PieGraph mode="days" :propsDatas="calendar.users" v-if="isShowPieGraph" />
+                            </div>
                         </v-responsive>
                     </div>
                 </li>
@@ -23,23 +25,7 @@
             </ul>
         </v-card>
 
-        <v-card v-if="works.sum_minute && isShowPieGraph" class="mb-5">
-            <v-toolbar color="teal" dark style="box-shadow:none;">
-                <span>ユーザー別データ</span>
-                <v-spacer></v-spacer>
-                <span>{{$route.query.year}}年{{$route.query.month}}月</span>
-            </v-toolbar>
-            <PieGraphCard :propsDatas="works.monthly" :center="works.sum_minute" />
-        </v-card>
-
-        <v-card v-if="works.sum_minute && isShowPieGraph" class="mb-5">
-            <v-toolbar color="teal" dark style="box-shadow:none;">
-                <span>タスク別データ</span>
-                <v-spacer></v-spacer>
-                <span>{{$route.query.year}}年{{$route.query.month}}月</span>
-            </v-toolbar>
-            <PieGraphCard :propsDatas="works.tasks" :center="works.sum_minute" />
-        </v-card>
+        <PieGraphArea v-if="calendarWorks && isShowPieGraph" :works="calendarWorks" :subttl="`${$route.query.year}年${$route.query.month}月`" />
 
         <v-dialog @click:outside="onCloseDialog" :value="day" scrollable>
             <Tasks mode="calendar" @onCloseDialog="onCloseDialog" @fetchData="fetchData" v-if="day" :tasks="focusTasks" />
@@ -54,7 +40,7 @@ export type calendarType = {
     work: workType[];
 };
 export type workType = {
-    sum_minute: number;
+    minute: number;
     work_date: string;
     users: userType;
 };
@@ -80,27 +66,7 @@ export default {
         };
     },
     computed: {
-        ...mapState(["loginInfo", "works", "focusTasks"]),
-        calendars(): calendarType[] {
-            let outputData: calendarType[] = [];
-            for (let day = 1; day <= this.lastDay; day++) {
-                let date: string = moment(
-                    new Date(this.year, this.month - 1, day)
-                ).format("YYYY-MM-DD");
-                outputData.push({
-                    date: date as string,
-                    work: this.works.daily.filter(
-                        (work: workType): boolean => work.work_date === date
-                    )[0],
-                });
-            }
-            // 円グラフ再描画
-            this.isShowPieGraph = false;
-            this.$nextTick((): void => {
-                this.isShowPieGraph = true;
-            });
-            return outputData;
-        },
+        ...mapState(["loginInfo", "calendars", "calendarWorks", "focusTasks"]),
         year(): string {
             return this.$route.query.year;
         },
@@ -125,7 +91,8 @@ export default {
     methods: {
         fetchData(): void {
             this.$store.dispatch("setFocusTasks");
-            this.$store.dispatch("setWorks");
+            this.$store.dispatch("setCalendars");
+            this.$store.dispatch("setCalendarWorks");
         },
         onCloseDialog(): void {
             this.$router.push(
@@ -134,14 +101,21 @@ export default {
         },
     },
     mounted(): void {
-        this.$store.dispatch("setWorks");
+        this.fetchData();
     },
     watch: {
         year(): void {
-            this.$store.dispatch("setWorks");
+            this.fetchData();
         },
         month(): void {
-            this.$store.dispatch("setWorks");
+            this.fetchData();
+        },
+        calendars(): void {
+            // 円グラフ再描画
+            this.isShowPieGraph = false;
+            this.$nextTick((): void => {
+                this.isShowPieGraph = true;
+            });
         },
     },
 };
