@@ -14,21 +14,9 @@ export const mutations = {
         state.loginInfo = loginInfo
     },
     setTodayTasks(state, todayTasks) {
-        todayTasks.forEach((task) => {
-            let minute = task.works.reduce(function (sum, work) {
-                return sum + work.work_minute;
-            }, 0);
-            task.minute = minute
-        });
         state.todayTasks = todayTasks
     },
     setFocusTasks(state, focusTasks) {
-        focusTasks.forEach((task) => {
-            let minute = task.works.reduce(function (sum, work) {
-                return sum + work.work_minute;
-            }, 0);
-            task.minute = minute
-        });
         state.focusTasks = focusTasks
     },
     setCalendars(state, calendars) {

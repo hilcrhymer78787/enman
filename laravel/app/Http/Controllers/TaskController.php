@@ -19,16 +19,14 @@ class TaskController extends Controller
         $tasks = (new TaskService())->getTasksByRoomId($loginInfo['user_room_id']);
 
         foreach ($tasks as $task) {
-            $works = Work::where('work_room_id', $loginInfo['user_room_id'])
-                ->where('work_task_id', $task['task_id'])
+            $query = Work::where('work_task_id', $task['task_id'])
                 ->whereYear('work_date', $request['year'])
                 ->whereMonth('work_date', $request['month'])
-                ->whereDay('work_date', $request['day'])
-                ->leftjoin('users', 'works.work_user_id', '=', 'users.id')
+                ->whereDay('work_date', $request['day']);
+            $task['minute'] = (int)$query->sum('work_minute');
+            $task['works'] = $query->leftjoin('users', 'works.work_user_id', '=', 'users.id')
                 ->select('work_id', 'work_date', 'work_minute', 'work_user_id', 'name as work_user_name', 'user_img as work_user_img')
                 ->get();
-
-            $task['works'] = $works;
         }
         return $tasks;
     }
