@@ -1,14 +1,14 @@
 <template>
     <div>
         <v-card>
-            <v-toolbar color="teal" height="70px" dark class="d-block" style="box-shadow:none;">
-                <v-toolbar-title>タスク</v-toolbar-title>
+            <v-card-title>
+                <span>タスク</span>
                 <v-spacer></v-spacer>
                 <span class="pt-1 mr-3">{{date}}</span>
                 <v-btn v-if="mode == 'today'" @click="openTaskDialog()" light height="35px" width="35px" fab elevation="0">
                     <v-icon color="teal">mdi-plus</v-icon>
                 </v-btn>
-            </v-toolbar>
+            </v-card-title>
             <v-card-text id="scrollArea" :style="mode != 'today' ? 'height: 60vh;overflow-y:scroll;':''" class="pa-0">
                 <div id="scrollAreaInner">
                     <vuedraggable @change="dragged()" :options="{animation: 200,  delay: 50 }" v-model="displayTasks">

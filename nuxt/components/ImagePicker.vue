@@ -1,8 +1,6 @@
 <template>
     <v-card>
-        <v-toolbar color="teal" dark>
-            <v-toolbar-title>アイコン画像を選択してください</v-toolbar-title>
-        </v-toolbar>
+        <v-card-title>アイコン画像を選択してください</v-card-title>
         <v-divider></v-divider>
         <v-card-text class="pa-3" style="min-height:30vh;">
             <ul>

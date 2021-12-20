@@ -3,10 +3,8 @@
     <div>
         <v-form ref="form">
             <v-card class="mb-5">
-                <v-toolbar color="teal" dark style="box-shadow:none;">
-                    <v-toolbar-title>マイページ</v-toolbar-title>
-                </v-toolbar>
-                <v-card-text class="d-flex align-center">
+                <v-card-title>マイページ</v-card-title>
+                <v-card-text class="d-flex align-center pa-4">
                     <div class="mx-auto img_frame" style="width:30%;">
                         <PartsImg :src="loginInfo.user_img" />
                     </div>
@@ -27,10 +25,8 @@
 
         <v-form ref="form">
             <v-card class="mb-5">
-                <v-toolbar color="teal" dark style="box-shadow:none;">
-                    <v-toolbar-title>マイルーム</v-toolbar-title>
-                </v-toolbar>
-                <v-card-text class="d-flex align-center">
+                <v-card-title>マイルーム</v-card-title>
+                <v-card-text class="d-flex align-center pa-4">
                     <div class="pb-2 mx-auto img_frame" style="width:20%;">
                         <PartsImg :src="loginInfo.room_img" />
                     </div>
@@ -51,11 +47,9 @@
         </v-form>
 
         <v-card v-if="loginInfo.invited_rooms.length" class="mb-5">
-            <v-toolbar color="teal" dark style="box-shadow:none;">
-                <v-toolbar-title>招待されている部屋</v-toolbar-title>
-            </v-toolbar>
+            <v-card-title>招待されている部屋</v-card-title>
             <div v-for="(room,roomIndex) in loginInfo.invited_rooms" :key="roomIndex">
-                <v-card-text class="d-flex align-center pb-0">
+                <v-card-text class="d-flex align-center pb-0 pt-4">
                     <div class="pb-2 mx-auto img_frame" style="width:20%;">
                         <PartsImg :src="room.room_img" />
                     </div>

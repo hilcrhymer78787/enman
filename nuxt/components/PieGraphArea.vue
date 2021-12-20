@@ -1,20 +1,20 @@
 <template>
     <div>
         <v-card v-if="works.minute" class="mb-5">
-            <v-toolbar color="teal" dark style="box-shadow:none;">
+            <v-card-title>
                 <span>ユーザー別データ</span>
                 <v-spacer></v-spacer>
                 <span>{{subttl}}</span>
-            </v-toolbar>
+            </v-card-title>
             <PieGraphCard :propsDatas="works.users" :center="works.minute" />
         </v-card>
 
         <v-card v-if="works.minute" class="mb-5">
-            <v-toolbar color="teal" dark style="box-shadow:none;">
+            <v-card-title>
                 <span>タスク別データ</span>
                 <v-spacer></v-spacer>
                 <span>{{subttl}}</span>
-            </v-toolbar>
+            </v-card-title>
             <PieGraphCard :propsDatas="works.tasks" :center="works.minute" />
         </v-card>
     </div>
