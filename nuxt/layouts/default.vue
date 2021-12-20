@@ -13,8 +13,8 @@
                     </v-list-item-content>
                 </v-list-item>
                 <v-divider></v-divider>
-                <v-list dense>
-                    <v-list-item v-for="nav in navs" :key="nav.ttl" :to="nav.to" router light>
+                <v-list nav dense>
+                    <v-list-item v-for="nav in navs" :key="nav.ttl" :to="nav.to" active-class="hoge" router light>
                         <v-list-item-icon>
                             <v-badge :value="nav.badgeValue" :content="nav.badgeContent" color="teal" offset-x="5" offset-y="15">
                                 <v-icon>{{nav.icon}}</v-icon>
@@ -63,7 +63,7 @@ export default {
                 {
                     ttl: "タスク",
                     icon: "mdi-playlist-check",
-                    to: "/",
+                    to: "/task",
                     badgeValue: 0,
                     badgeContent: 0,
                 } as navType,
