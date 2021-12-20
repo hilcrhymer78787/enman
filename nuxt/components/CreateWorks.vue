@@ -24,6 +24,9 @@
         <v-card-actions>
             <v-btn color="error" :loading="deleteLoading" @click="onClickDelete()">削除</v-btn>
             <v-spacer></v-spacer>
+            <v-btn class="mr-2" @click="$emit('onCloseModal')">
+                <v-icon>mdi-close</v-icon>
+            </v-btn>
             <v-btn color="teal" :loading="saveLoading" dark @click="onClickSave()">登録</v-btn>
         </v-card-actions>
     </v-card>
