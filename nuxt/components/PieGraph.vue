@@ -26,6 +26,7 @@ export default {
         };
     },
     mounted() {
+        let self = this
         this.propsDatas.forEach((data) => {
             this.datas.datasets[0].data.push(data.minute);
             this.datas.labels.push(data.name);
@@ -51,11 +52,19 @@ export default {
                                 ctx.font = Chart.helpers.fontString(fontSize);
 
                                 // ラベルをパーセント表示に変更
-                                let labelString = chart.data.labels[index];
+                                let labelString =
+                                    (dataset.data[index] / dataSum) * 100 >=
+                                    self.$PIE_GRAPH_LABEL_HIDDEN
+                                        ? chart.data.labels[index]
+                                        : "";
                                 let dataString =
-                                    Math.round(
-                                        (dataset.data[index] / dataSum) * 100
-                                    ).toString() + "%";
+                                    (dataset.data[index] / dataSum) * 100 >=
+                                    self.$PIE_GRAPH_LABEL_HIDDEN
+                                        ? Math.round(
+                                              (dataset.data[index] / dataSum) *
+                                                  100
+                                          ).toString() + "%"
+                                        : "";
 
                                 // positionの設定
                                 ctx.textAlign = "center";
@@ -72,7 +81,7 @@ export default {
                                     ctx.fillText(
                                         dataString,
                                         position.x,
-                                        position.y + fontSize / 2 -1
+                                        position.y + fontSize / 2 - 1
                                     ); // データの百分率
                                 }
 
