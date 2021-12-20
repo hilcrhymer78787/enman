@@ -4,9 +4,9 @@
         <v-card-text class="pa-4">
             <v-form class="py-5">
                 <div class="d-flex">
-                    <v-text-field @click="startDateDialog = true" style="width:45%;" readonly v-model="param.start_date" placeholder="範囲指定なし" prepend-inner-icon="mdi-calendar" color="teal" outlined dense light clearable hide-details></v-text-field>
+                    <v-text-field @click="startDateDialog = true" style="width:45%;" readonly v-model="param.start_date" placeholder="指定なし" prepend-inner-icon="mdi-calendar" color="teal" outlined dense light clearable hide-details></v-text-field>
                     <div class="form_icon" style="width:10%;">~</div>
-                    <v-text-field @click="lastDateDialog = true" style="width:45%;" readonly v-model="param.last_date" placeholder="範囲指定なし" prepend-inner-icon="mdi-calendar" color="teal" outlined dense light clearable hide-details></v-text-field>
+                    <v-text-field @click="lastDateDialog = true" style="width:45%;" readonly v-model="param.last_date" placeholder="指定なし" prepend-inner-icon="mdi-calendar" color="teal" outlined dense light clearable hide-details></v-text-field>
                 </div>
             </v-form>
         </v-card-text>
