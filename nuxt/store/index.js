@@ -5,11 +5,8 @@ export const state = () => ({
     todayTasks: [],
     focusTasks: [],
     calendars: [],
-    calendarWorks: {
-        minute: 0,
-        users: [],
-        tasks: [],
-    },
+    calendarWorks: null,
+    analyticsWorks: null,
 })
 
 export const mutations = {
@@ -39,6 +36,9 @@ export const mutations = {
     },
     setCalendarWorks(state, calendarWorks) {
         state.calendarWorks = calendarWorks
+    },
+    setAnalyticsWorks(state, analyticsWorks) {
+        state.analyticsWorks = analyticsWorks
     },
 }
 
@@ -97,24 +97,26 @@ export const actions = {
             })
     },
     async setCalendars({ commit }) {
+        commit("setCalendars", null);
         const year = $nuxt.$route.query.year
         const month = $nuxt.$route.query.month
         let dayCount = new Date(year, month, 0).getDate();
         let dummyCalendar = []
-        for(let day = 1; day <= dayCount; day++){
+        for (let day = 1; day <= dayCount; day++) {
             let date = moment(`${year}-${month}-${day}`).format("YYYY-MM-DD")
-            dummyCalendar.push({date:date})
+            dummyCalendar.push({ date: date })
         }
         commit("setCalendars", dummyCalendar);
         await this.$axios
             .get(`/api/work/read/calendar?year=${year}&month=${month}`)
             .then((res) => {
-                if(month == $nuxt.$route.query.month){
+                if (month == $nuxt.$route.query.month) {
                     commit("setCalendars", res.data.calendars);
                 }
             });
     },
     async setCalendarWorks({ commit }) {
+        commit("setCalendarWorks", null);
         const year = $nuxt.$route.query.year
         const month = $nuxt.$route.query.month
         const param = {
@@ -125,6 +127,13 @@ export const actions = {
             .post(`/api/work/read/analytics`, param)
             .then((res) => {
                 commit("setCalendarWorks", res.data);
+            });
+    },
+    async setAnalyticsWorks({ commit }, param) {
+        await this.$axios
+            .post(`/api/work/read/analytics`, param)
+            .then((res) => {
+                commit("setAnalyticsWorks", res.data);
             });
     },
 }

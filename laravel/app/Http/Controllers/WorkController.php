@@ -39,8 +39,14 @@ class WorkController extends Controller
         function getQuery($request)
         {
             $loginInfo = (new UserService())->getLoginInfoByToken($request->header('token'));
-            return Work::where('work_room_id', $loginInfo['user_room_id'])
-                ->whereBetween("work_date", [$request['start_date'], $request['last_date']]);
+            $query = Work::where('work_room_id', $loginInfo['user_room_id']);
+            if($request['start_date']){
+                $query->where("work_date",">=",$request['start_date']);
+            }
+            if($request['last_date']){
+                $query->where("work_date","<=",$request['last_date']);
+            }
+            return $query;
         }
         // 合計値
         $return['minute'] = (int) getQuery($request)->sum('work_minute');

@@ -25,23 +25,7 @@
             </ul>
         </v-card>
 
-        <v-card v-if="calendarWorks.minute && isShowPieGraph" class="mb-5">
-            <v-toolbar color="teal" dark style="box-shadow:none;">
-                <span>ユーザー別データ</span>
-                <v-spacer></v-spacer>
-                <span>{{$route.query.year}}年{{$route.query.month}}月</span>
-            </v-toolbar>
-            <PieGraphCard :propsDatas="calendarWorks.users" :center="calendarWorks.minute" />
-        </v-card>
-
-        <v-card v-if="calendarWorks.minute && isShowPieGraph" class="mb-5">
-            <v-toolbar color="teal" dark style="box-shadow:none;">
-                <span>タスク別データ</span>
-                <v-spacer></v-spacer>
-                <span>{{$route.query.year}}年{{$route.query.month}}月</span>
-            </v-toolbar>
-            <PieGraphCard :propsDatas="calendarWorks.tasks" :center="calendarWorks.minute" />
-        </v-card>
+        <PieGraphArea v-if="calendarWorks && isShowPieGraph" :works="calendarWorks" :subttl="`${$route.query.year}年${$route.query.month}月`" />
 
         <v-dialog @click:outside="onCloseDialog" :value="day" scrollable>
             <Tasks mode="calendar" @onCloseDialog="onCloseDialog" @fetchData="fetchData" v-if="day" :tasks="focusTasks" />

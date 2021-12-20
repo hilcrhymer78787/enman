@@ -1,6 +1,6 @@
 <template>
     <div>
-        <pre>{{calendars}}</pre>
+        <PieGraphArea v-if="analyticsWorks && isShowPieGraph" :works="analyticsWorks" subttl="全期間" />
     </div>
 </template>
 
@@ -9,16 +9,19 @@ import { mapState } from "vuex";
 export default {
     data() {
         return {
-            test: "",
             isShowPieGraph: true,
+            param: {
+                start_date: "",
+                last_date: "",
+            },
         };
     },
     computed: {
-        ...mapState(["calendars"]),
+        ...mapState(["analyticsWorks"]),
     },
-    mounted(){
-        this.$store.dispatch('setCalendars')
-    }
+    mounted() {
+        this.$store.dispatch("setAnalyticsWorks", this.param);
+    },
 };
 </script>
 
