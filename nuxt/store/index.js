@@ -45,7 +45,6 @@ export const actions = {
     setLoginInfoByToken({ commit, dispatch }) {
         if (setLoginInfoByTokenCancel) {
             setLoginInfoByTokenCancel()
-            console.log('cancell!!!')
         }
         this.$axios.get(`/api/user/bearer_authentication`, {
             cancelToken: new CancelToken(c => {
@@ -53,7 +52,6 @@ export const actions = {
             }),
         })
             .then((res) => {
-                console.log(res.data, 'then')
                 // トークンが有効
                 if (this.$cookies.get("token")) {
                     if (($nuxt.$route.name == 'login' || $nuxt.$route.name == 'login-newUser')) {
@@ -66,7 +64,9 @@ export const actions = {
                 if (err.response) {
                     dispatch('logout')
                 }
-                console.log(err.response, 'catch')
+                if(err.response.status == 429){
+                    alert('一定時間にアクセスが集中したため、しばらくアクセスできません')
+                }
             })
     },
     logout({ commit }) {
