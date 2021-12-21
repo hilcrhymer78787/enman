@@ -64,8 +64,16 @@ export default {
                 .then((res: any): void => {
                     this.$store.dispatch("setTokenRedirect", res.data.token);
                 })
-                .catch((): void => {
-                    alert("通信エラーです");
+                .catch((err: any): void => {
+                    if (err.response.data.errorMessage) {
+                        this.errorMessage = err.response.data.errorMessage;
+                    } else if (err.response.status == 429) {
+                        alert(
+                            "一定時間にアクセスが集中したため、しばらくアクセスできません"
+                        );
+                    } else {
+                        alert("通信エラーです");
+                    }
                 })
                 .finally((): void => {
                     this.loading = false;
@@ -86,6 +94,10 @@ export default {
                 .catch((err: any): void => {
                     if (err.response.data.errorMessage) {
                         this.errorMessage = err.response.data.errorMessage;
+                    } else if (err.response.status == 429) {
+                        alert(
+                            "一定時間にアクセスが集中したため、しばらくアクセスできません"
+                        );
                     } else {
                         alert("通信エラーです");
                     }
