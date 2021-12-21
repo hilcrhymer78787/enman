@@ -3,6 +3,7 @@ import axios from 'axios'
 const CancelToken = axios.CancelToken;
 let setCalendarsCancel = null;
 let setCalendarWorksCancel = null;
+let setLoginInfoByTokenCancel = null;
 
 export const state = () => ({
     loginInfo: null,
@@ -42,8 +43,17 @@ export const actions = {
         $nuxt.$router.push("/");
     },
     setLoginInfoByToken({ commit, dispatch }) {
-        this.$axios.get(`/api/user/bearer_authentication`)
+        if (setLoginInfoByTokenCancel) {
+            setLoginInfoByTokenCancel()
+            console.log('cancell!!!')
+        }
+        this.$axios.get(`/api/user/bearer_authentication`, {
+            cancelToken: new CancelToken(c => {
+                setLoginInfoByTokenCancel = c
+            }),
+        })
             .then((res) => {
+                console.log(res.data,'then')
                 // トークンが有効
                 if (this.$cookies.get("token")) {
                     if (($nuxt.$route.name == 'login' || $nuxt.$route.name == 'login-newUser')) {
@@ -52,8 +62,11 @@ export const actions = {
                     commit('setLoginInfo', res.data)
                 }
             })
-            .catch(() => {
-                dispatch('logout')
+            .catch((err) => {
+                if(err.response){
+                    dispatch('logout')
+                }
+                console.log(err.response,'catch')
             })
     },
     logout({ commit }) {
