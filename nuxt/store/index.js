@@ -1,4 +1,8 @@
 import moment from 'moment'
+import axios from 'axios'
+const CancelToken = axios.CancelToken;
+let setCalendarsCancel = null;
+let setCalendarWorksCancel = null;
 
 export const state = () => ({
     loginInfo: null,
@@ -95,8 +99,15 @@ export const actions = {
             dummyCalendar.push({ date: date })
         }
         commit("setCalendars", dummyCalendar);
+        if (setCalendarsCancel) {
+            setCalendarsCancel()
+        }
         await this.$axios
-            .get(`/api/work/read/calendar?year=${year}&month=${month}`)
+            .get(`/api/work/read/calendar?year=${year}&month=${month}`, {
+                cancelToken: new CancelToken(c => {
+                    setCalendarsCancel = c
+                }),
+            })
             .then((res) => {
                 if (month == $nuxt.$route.query.month) {
                     commit("setCalendars", res.data.calendars);
@@ -111,8 +122,15 @@ export const actions = {
             start_date: moment(`${year}-${month}`).startOf('month').format("YYYY-MM-DD"),
             last_date: moment(`${year}-${month}`).endOf('month').format("YYYY-MM-DD"),
         }
+        if (setCalendarWorksCancel) {
+            setCalendarWorksCancel()
+        }
         await this.$axios
-            .post(`/api/work/read/analytics`, param)
+            .post(`/api/work/read/analytics`, param, {
+                cancelToken: new CancelToken(c => {
+                    setCalendarWorksCancel = c
+                }),
+            })
             .then((res) => {
                 commit("setCalendarWorks", res.data);
             });
