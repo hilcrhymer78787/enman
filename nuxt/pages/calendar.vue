@@ -10,7 +10,7 @@
 
             <ul class="content">
                 <li v-for="n in firstDay" :key="n" class="content_item blank"></li>
-                <li v-for="(calendar, index) in calendars" :key="calendar.date" v-ripple class="content_item main">
+                <li v-for="(calendar, index) in displayCalendars" :key="calendar.date" v-ripple class="content_item main">
                     <div @click="$router.push(`/calendar?year=${year}&month=${month}&day=${index + 1}`)" class="content_item_inner">
                         <CalendarDayIcon :day="index + 1" />
                         <v-responsive class="pa-1 pie_graph" aspect-ratio="1">
@@ -37,7 +37,8 @@ import moment from "moment";
 import { mapState } from "vuex";
 export type calendarType = {
     date: string;
-    work: workType[];
+    minute: string;
+    users: userType[];
 };
 export type workType = {
     minute: number;
@@ -85,6 +86,26 @@ export default {
             return (
                 6 - new Date(this.year, this.month - 1, this.lastDay).getDay()
             );
+        },
+        displayCalendars(): calendarType[] {
+            let outputData = [];
+            for (let day = 1; day <= this.lastDay; day++) {
+                let date: string = moment(
+                    new Date(this.year, this.month - 1, day)
+                ).format("YYYY-MM-DD");
+                let calendar = this.calendars.filter(
+                    (calendar: calendarType): boolean => calendar.date == date
+                )[0];
+                if (calendar) {
+                    outputData.push(calendar);
+                } else {
+                    outputData.push({
+                        date: date,
+                        minute:0,
+                    });
+                }
+            }
+            return outputData;
         },
     },
     methods: {

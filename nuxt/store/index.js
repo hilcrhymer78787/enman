@@ -53,7 +53,7 @@ export const actions = {
             }),
         })
             .then((res) => {
-                console.log(res.data,'then')
+                console.log(res.data, 'then')
                 // トークンが有効
                 if (this.$cookies.get("token")) {
                     if (($nuxt.$route.name == 'login' || $nuxt.$route.name == 'login-newUser')) {
@@ -63,10 +63,10 @@ export const actions = {
                 }
             })
             .catch((err) => {
-                if(err.response){
+                if (err.response) {
                     dispatch('logout')
                 }
-                console.log(err.response,'catch')
+                console.log(err.response, 'catch')
             })
     },
     logout({ commit }) {
@@ -102,16 +102,8 @@ export const actions = {
             })
     },
     async setCalendars({ commit }) {
-        commit("setCalendars", null);
         const year = $nuxt.$route.query.year
         const month = $nuxt.$route.query.month
-        let dayCount = new Date(year, month, 0).getDate();
-        let dummyCalendar = []
-        for (let day = 1; day <= dayCount; day++) {
-            let date = moment(`${year}-${month}-${day}`).format("YYYY-MM-DD")
-            dummyCalendar.push({ date: date })
-        }
-        commit("setCalendars", dummyCalendar);
         if (setCalendarsCancel) {
             setCalendarsCancel()
         }
@@ -122,9 +114,7 @@ export const actions = {
                 }),
             })
             .then((res) => {
-                if (month == $nuxt.$route.query.month) {
-                    commit("setCalendars", res.data.calendars);
-                }
+                commit("setCalendars", res.data.calendars);
             });
     },
     async setCalendarWorks({ commit }) {
