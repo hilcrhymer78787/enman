@@ -57,7 +57,7 @@ export default {
                 .post(`/api/invitation/create?email=${this.email}`)
                 .then((res: any): void => {
                     this.successMessage = res.data;
-                    this.$stFore.dispatch("setLoginInfoByToken");
+                    this.$store.dispatch("setLoginInfoByToken");
                 })
                 .catch((err: any): void => {
                     if (err.response.data.errorMessage) {

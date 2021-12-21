@@ -100,14 +100,17 @@ export default {
         },
     },
     mounted(): void {
-        this.fetchData();
+        this.$store.dispatch("setCalendars");
+        this.$store.dispatch("setCalendarWorks");
     },
     watch: {
         year(): void {
-            this.fetchData();
+            this.$store.dispatch("setCalendars");
+            this.$store.dispatch("setCalendarWorks");
         },
         month(): void {
-            this.fetchData();
+            this.$store.dispatch("setCalendars");
+            this.$store.dispatch("setCalendarWorks");
         },
     },
 };
