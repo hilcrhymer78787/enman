@@ -1,14 +1,12 @@
 <template>
     <v-card>
-        <v-card-title>
-            <span>{{focusData.name}}</span>
-            <v-spacer></v-spacer>
-            <span v-if="$route.query.year">{{$route.query.year}}年</span>
-            <span v-if="$route.query.month">{{$route.query.month}}月</span>
+        <v-card-title class="d-block">
+            <div>{{focusData.name}}</div>
+            <div class="subttl">{{subttl}}</div>
         </v-card-title>
         <v-divider></v-divider>
         <v-card-text class="pa-0">
-            <PieGraphCard :propsDatas="focusData.datas" :center="focusData.minute" mode="modal" />
+            <PieGraphCard :propsDatas="focusData.datas" :center="focusData.minute" mode="modal" :subttl="subttl" />
         </v-card-text>
         <v-divider></v-divider>
         <v-card-actions>
@@ -22,9 +20,14 @@
 
 <script>
 export default {
-    props: ["focusData"],
+    props: ["focusData", "subttl"],
 };
 </script>
 
-<style>
+<style lang="scss" scoped>
+.subttl {
+    text-align: right;
+    font-size: 15px;
+    line-height: 15px;
+}
 </style>

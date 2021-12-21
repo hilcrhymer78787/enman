@@ -22,14 +22,14 @@
             </tbody>
         </v-simple-table>
         <v-dialog @click:outside="focusData = ''" :value="focusData" scrollable>
-            <PieGraphModal v-if="focusData" :focusData="focusData" @onCloseDialog="focusData = ''" />
+            <PieGraphModal v-if="focusData" :focusData="focusData" @onCloseDialog="focusData = ''" :subttl="subttl"/>
         </v-dialog>
     </div>
 </template>
 
 <script lang="ts">
 export default {
-    props: ["propsDatas", "center", "mode"],
+    props: ["propsDatas", "center", "mode","subttl"],
     data() {
         return {
             focusData: "",
