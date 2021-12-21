@@ -64,7 +64,7 @@ export const actions = {
                 if (err.response) {
                     dispatch('logout')
                 }
-                if(err.response.status == 429){
+                if(err.response && err.response.status == 429){
                     alert('一定時間にアクセスが集中したため、しばらくアクセスできません')
                 }
             })

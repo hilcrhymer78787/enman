@@ -67,7 +67,7 @@ export default {
                 .catch((err: any): void => {
                     if (err.response.data.errorMessage) {
                         this.errorMessage = err.response.data.errorMessage;
-                    } else if (err.response.status == 429) {
+                    } else if (err.response && err.response.status == 429) {
                         alert(
                             "一定時間にアクセスが集中したため、しばらくアクセスできません"
                         );
@@ -94,7 +94,7 @@ export default {
                 .catch((err: any): void => {
                     if (err.response.data.errorMessage) {
                         this.errorMessage = err.response.data.errorMessage;
-                    } else if (err.response.status == 429) {
+                    } else if (err.response && err.response.status == 429) {
                         alert(
                             "一定時間にアクセスが集中したため、しばらくアクセスできません"
                         );
