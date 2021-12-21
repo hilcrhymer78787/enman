@@ -25,7 +25,7 @@
             </ul>
         </v-card>
 
-        <!-- <PieGraphArea v-if="calendarWorks" :works="calendarWorks" :subttl="`${$route.query.year}年${$route.query.month}月`" /> -->
+        <PieGraphArea v-if="calendarWorks" :works="calendarWorks" :subttl="`${$route.query.year}年${$route.query.month}月`" />
 
         <v-dialog @click:outside="onCloseDialog" :value="day" scrollable>
             <Tasks mode="calendar" @onCloseDialog="onCloseDialog" @fetchData="fetchData" v-if="day" :tasks="focusTasks" />
