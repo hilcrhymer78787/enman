@@ -122,8 +122,8 @@ export const actions = {
         const year = $nuxt.$route.query.year
         const month = $nuxt.$route.query.month
         const param = {
-            start_date: moment(`${year}/${month}/0`).startOf('month').format("YYYY-MM-DD"),
-            last_date: moment(`${year}/${month}/0`).endOf('month').format("YYYY-MM-DD"),
+            start_date: moment(`${year}/${month}/1`).startOf('month').format("YYYY-MM-DD"),
+            last_date: moment(`${year}/${month}/1`).endOf('month').format("YYYY-MM-DD"),
         }
         if (setCalendarWorksCancel) {
             setCalendarWorksCancel()
