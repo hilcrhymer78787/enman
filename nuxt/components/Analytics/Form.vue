@@ -40,7 +40,7 @@ export default {
     methods: {
         async onSearch() {
             this.searchLoading = true;
-            await this.$store.dispatch("setAnalyticsWorks", this.param);
+            await this.$store.dispatch("analytics/setWorks", this.param);
             this.searchLoading = false;
         },
     },

@@ -11,7 +11,6 @@ export const state = () => ({
     focusTasks: [],
     calendars: [],
     calendarWorks: null,
-    analyticsWorks: null,
 })
 
 export const mutations = {
@@ -29,9 +28,6 @@ export const mutations = {
     },
     setCalendarWorks(state, calendarWorks) {
         state.calendarWorks = calendarWorks
-    },
-    setAnalyticsWorks(state, analyticsWorks) {
-        state.analyticsWorks = analyticsWorks
     },
 }
 
@@ -64,7 +60,7 @@ export const actions = {
                 if (err.response) {
                     dispatch('logout')
                 }
-                if(err.response && err.response.status == 429){
+                if (err.response && err.response.status == 429) {
                     alert('一定時間にアクセスが集中したため、しばらくアクセスできません')
                 }
             })
@@ -136,13 +132,6 @@ export const actions = {
             })
             .then((res) => {
                 commit("setCalendarWorks", res.data);
-            });
-    },
-    async setAnalyticsWorks({ commit }, param) {
-        await this.$axios
-            .post(`/api/work/read/analytics`, param)
-            .then((res) => {
-                commit("setAnalyticsWorks", res.data);
             });
     },
 }

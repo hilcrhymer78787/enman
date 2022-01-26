@@ -1,7 +1,7 @@
 <template>
     <div>
-        <AnalyticsForm class="mb-5"/>
-        <PieGraphArea v-if="analyticsWorks" :works="analyticsWorks" :subttl="analyticsWorks.span" />
+        <AnalyticsForm class="mb-5" />
+        <PieGraphArea v-if="works" :works="works" :subttl="works.span" />
     </div>
 </template>
 
@@ -9,10 +9,12 @@
 import { mapState } from "vuex";
 export default {
     computed: {
-        ...mapState(["analyticsWorks"]),
+        ...mapState({
+            works: (state) => state.analytics.works,
+        }),
     },
     mounted() {
-        this.$store.dispatch("setAnalyticsWorks");
+        this.$store.dispatch("analytics/setWorks");
     },
 };
 </script>
