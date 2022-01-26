@@ -33,26 +33,11 @@
 <script lang="ts">
 import { PropOptions } from "vue";
 import { mapState } from "vuex";
+import { workType } from '@/types/work'
+import { taskType } from '@/types/task'
 export type userType = {
     id: number;
     name: string;
-};
-export type taskType = {
-    task_id: number;
-    name: string;
-    task_default_minute: number;
-    task_is_everyday: number;
-    task_sort_key: number;
-    minute: number;
-    works: workType[];
-};
-export type workType = {
-    work_id: number;
-    work_date: string;
-    work_minute: number;
-    work_user_id: number;
-    work_user_name: string;
-    work_user_img: string;
 };
 export type selectType = {
     val: number;

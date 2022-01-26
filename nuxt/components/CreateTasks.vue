@@ -26,23 +26,7 @@
 <script lang="ts">
 import { mapState } from "vuex";
 import { PropOptions } from "vue";
-export type taskType = {
-    task_id: number;
-    name: string;
-    task_default_minute: number;
-    task_is_everyday: number;
-    task_sort_key: number;
-    minute: number;
-    works: workType[];
-};
-export type workType = {
-    work_id: number;
-    work_date: string;
-    work_minute: number;
-    work_user_id: number;
-    work_user_name: string;
-    work_user_img: string;
-};
+import { taskType } from '@/types/task'
 export default {
     props: {
         focusTask: Object as PropOptions<taskType>,
