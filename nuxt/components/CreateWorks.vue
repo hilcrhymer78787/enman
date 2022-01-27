@@ -31,10 +31,14 @@
 </template>
 
 <script lang="ts">
+import Vue from "vue";
 import { PropOptions } from "vue";
 import { mapState } from "vuex";
-import { workType } from '@/types/work'
-import { taskType } from '@/types/task'
+import { workType } from "@/types/work";
+import { taskType } from "@/types/task";
+interface VForm extends Vue {
+    validate(): boolean;
+}
 export type userType = {
     id: number;
     name: string;
@@ -43,7 +47,7 @@ export type selectType = {
     val: number;
     txt: string;
 };
-export default {
+export default Vue.extend({
     props: {
         focusTask: Object as PropOptions<taskType>,
         date: String,
@@ -78,14 +82,15 @@ export default {
             return outputData;
         },
         addWork(): void {
-            this.$refs.form.validate();
+            const form = this.$refs.form as VForm;
+            form.validate();
             if (!this.noError) {
                 return;
             }
             this.task.works.push({
-                user_id: 0,
-                minute: 0,
-            });
+                work_user_id: 0,
+                work_minute: 0,
+            } as workType);
         },
         removeWork(workIndex: number): void {
             if (this.task.works.length == 1) {
@@ -94,7 +99,8 @@ export default {
             this.task.works.splice(workIndex, 1);
         },
         async onClickSave(): Promise<void> {
-            this.$refs.form.validate();
+            const form = this.$refs.form as VForm;
+            form.validate();
             if (!this.noError) {
                 return;
             }
@@ -149,13 +155,13 @@ export default {
             }
         }
         if (!this.focusTask.works.length) {
-            let obj: object = {};
+            let obj = {};
             this.$set(obj, "work_user_id", this.loginInfo["id"]);
             this.$set(obj, "work_minute", this.focusTask.task_default_minute);
-            this.task.works.push(obj);
+            this.task.works.push(obj as workType);
         }
     },
-};
+});
 </script>
 <style lang="scss" scoped>
 .close_wrap {

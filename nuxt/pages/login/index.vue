@@ -25,8 +25,14 @@
 </template>
 
 <script lang="ts">
+import Vue from "vue";
 import { mapState } from "vuex";
-export default {
+
+interface VForm extends Vue {
+  validate(): boolean
+}
+
+export default Vue.extend({
     layout: "login",
     data() {
         return {
@@ -80,7 +86,8 @@ export default {
                 });
         },
         async login(): Promise<void> {
-            this.$refs.form.validate();
+            const form = this.$refs.form as VForm
+            form.validate()
             if (!this.noError) {
                 return;
             }
@@ -107,7 +114,7 @@ export default {
                 });
         },
     },
-};
+});
 </script>
 <style lang="scss" scoped>
 .error_message {

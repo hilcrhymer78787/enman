@@ -47,6 +47,7 @@
 </template>
 
 <script lang="ts">
+import Vue from 'vue'
 import { mapState } from "vuex";
 export type navType = {
     ttl: string;
@@ -55,7 +56,7 @@ export type navType = {
     badgeValue: number;
     badgeContent: number;
 };
-export default {
+export default Vue.extend({
     computed: {
         ...mapState(["loginInfo"]),
         navs(): navType[] {
@@ -91,5 +92,5 @@ export default {
             ];
         },
     },
-};
+});
 </script>

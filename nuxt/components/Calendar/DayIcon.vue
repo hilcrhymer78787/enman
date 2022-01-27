@@ -7,36 +7,37 @@
 </template>
 
 <script lang="ts">
+import Vue from 'vue'
 import moment from "moment";
-export default {
+export default Vue.extend({
     props: {
         day: Number,
     },
     computed: {
-        isToday() {
+        isToday() :boolean{
             return (
                 this.day == this.nowDay &&
                 this.year == this.nowYear &&
                 this.month == this.nowMonth
             );
         },
-        year() {
-            return this.$route.query.year;
+        year() :number{
+            return Number(this.$route.query.year);
         },
-        month() {
-            return this.$route.query.month;
+        month() :number{
+            return Number(this.$route.query.month);
         },
-        nowDay(): string {
-            return moment().format("D");
+        nowDay(): number {
+            return Number(moment().format("D"));
         },
-        nowYear(): string {
-            return moment().format("Y");
+        nowYear(): number {
+            return Number(moment().format("Y"));
         },
-        nowMonth(): string {
-            return moment().format("M");
+        nowMonth(): number {
+            return Number(moment().format("M"));
         },
     },
-};
+});
 </script>
 
 <style lang="scss" scoped>

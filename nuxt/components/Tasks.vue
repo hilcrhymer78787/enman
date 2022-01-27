@@ -68,11 +68,12 @@
 </template>
 
 <script lang="ts">
+import Vue from 'vue'
 import vuedraggable from "vuedraggable";
 import { mapState } from "vuex";
 import { PropOptions } from "vue";
 import { taskType } from '@/types/task'
-export default {
+export default Vue.extend({
     props: {
         mode: String,
         tasks: Array as PropOptions<taskType[]>,
@@ -90,20 +91,20 @@ export default {
             deleteTaskLoading: false as boolean,
             taskDialog: false as boolean,
             dialog: false as boolean,
-            focusTask: {} as taskType,
+            focusTask: {} as taskType | null,
             loadings: [] as boolean[],
         };
     },
     computed: {
         ...mapState(["loginInfo"]),
-        year(): string {
-            return this.$route.query.year;
+        year(): number {
+            return Number(this.$route.query.year);
         },
-        month(): string {
-            return this.$route.query.month;
+        month(): number {
+            return Number(this.$route.query.month);
         },
-        day(): string {
-            return this.$route.query.day;
+        day(): number {
+            return Number(this.$route.query.day);
         },
         date(): string {
             return `${this.year}-${this.month}-${this.day}`;
@@ -218,7 +219,7 @@ export default {
             this.displayTasks = this.tasks;
         },
     },
-};
+});
 </script>
 <style lang="scss" scoped>
 .check {

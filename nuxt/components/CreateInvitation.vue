@@ -23,10 +23,15 @@
 </template>
 
 <script lang="ts">
+import Vue from 'vue'
 import { mapState } from "vuex";
-export default {
+interface VForm extends Vue {
+  validate(): boolean
+}
+export default Vue.extend({
     data() {
         return {
+            form:{} as any,
             loading: false as boolean,
             noError: false as boolean,
             errorMessage: "" as string,
@@ -47,7 +52,8 @@ export default {
         async CreateInvitation(): Promise<void> {
             this.errorMessage = "";
             this.successMessage = "";
-            this.$refs.form.validate();
+            const form = this.$refs.form as VForm
+            form.validate()
             // バリデーションエラー
             if (!this.noError) {
                 return;
@@ -82,7 +88,7 @@ export default {
             this.email = "";
         },
     },
-};
+});
 </script>
 <style lang="scss" scoped>
 .error_message {

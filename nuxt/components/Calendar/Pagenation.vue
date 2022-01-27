@@ -15,10 +15,11 @@
 </template>
 
 <script lang="ts">
-export default {
+import Vue from 'vue'
+export default Vue.extend({
     methods: {
         onClickPrevMonth() {
-            if (this.$route.query.month == 1) {
+            if (Number(this.$route.query.month) == 1) {
                 this.$router.push(
                     `/calendar?year=${
                         Number(this.$route.query.year) - 1
@@ -33,7 +34,7 @@ export default {
             }
         },
         onClickNextMonth() {
-            if (this.$route.query.month == 12) {
+            if (Number(this.$route.query.month) == 12) {
                 this.$router.push(
                     `/calendar?year=${
                         Number(this.$route.query.year) + 1
@@ -48,7 +49,7 @@ export default {
             }
         },
     },
-};
+});
 </script>
 
 <style lang="scss" scoped>

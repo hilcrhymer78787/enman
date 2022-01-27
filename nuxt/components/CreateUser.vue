@@ -46,9 +46,13 @@
 </template>
 
 <script lang="ts">
+import Vue from "vue";
 import { mapState } from "vuex";
 import moment from "moment";
-export default {
+interface VForm extends Vue {
+    validate(): boolean;
+}
+export default Vue.extend({
     props: {
         mode: String,
     },
@@ -69,7 +73,7 @@ export default {
                 passwordAgain: "" as string,
                 user_img: "https://picsum.photos/500/300?image=40" as string,
                 token: "" as string,
-            } as object,
+            } as any,
             nameRules: [
                 (v: string): string | boolean => !!v || "名前は必須です",
             ],
@@ -97,7 +101,7 @@ export default {
     },
     computed: {
         ...mapState(["loginInfo"]),
-        isMatchPassword() {
+        isMatchPassword(): boolean {
             return this.form.password == this.form.passwordAgain;
         },
     },
@@ -117,7 +121,8 @@ export default {
         },
         async login(): Promise<void> {
             this.errorMessage = "";
-            this.$refs.form.validate();
+            const form = this.$refs.form as VForm;
+            form.validate();
             // バリデーションエラー
             if (!this.noError) {
                 return;
@@ -132,7 +137,7 @@ export default {
             if (this.file) {
                 postData.append("file", this.file);
             }
-            Object.keys(this.form).forEach((key) => {
+            Object.keys(this.form).forEach((key: string) => {
                 postData.append(key, this.form[key]);
             });
             this.errorMessage = "";
@@ -215,7 +220,7 @@ export default {
     beforeDestroy(): void {
         this.file = null;
     },
-};
+});
 </script>
 <style lang="scss" scoped>
 .error_message {

@@ -2,9 +2,10 @@
     <Tasks mode="today" @fetchData="fetchData" :tasks="todayTasks" />
 </template>
 <script lang="ts">
+import Vue from "vue";
 import moment from "moment";
 import { mapState } from "vuex";
-export default {
+export default Vue.extend({
     middleware({ redirect, route }: any) {
         if (!route.query.year || !route.query.month || !route.query.day) {
             let year = moment().year();
@@ -21,7 +22,7 @@ export default {
             this.$store.dispatch("setTodayTasks");
         },
     },
-};
+});
 </script>
 
 <style>

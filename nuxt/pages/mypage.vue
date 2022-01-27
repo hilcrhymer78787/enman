@@ -81,8 +81,9 @@
 </template>
 
 <script lang="ts">
+import Vue from 'vue'
 import { mapState } from "vuex";
-export default {
+export default Vue.extend({
     data() {
         return {
             selectedRoomId: 0 as number,
@@ -90,7 +91,7 @@ export default {
             joinRoomloadings: [] as boolean[],
             rejectRoomloadings: [] as boolean[],
             createUserDialog: false as boolean,
-            modeCreateRoomDialog: false as boolean,
+            modeCreateRoomDialog: false as boolean | string,
             createRoomDialog: false as boolean,
         };
     },
@@ -165,5 +166,5 @@ export default {
     mounted(): void {
         this.selectedRoomId = this.loginInfo.room_id;
     },
-};
+})
 </script>

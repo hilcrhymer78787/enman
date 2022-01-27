@@ -22,14 +22,15 @@
 </template>
 
 <script lang="ts">
-export default {
+import Vue from 'vue'
+export default Vue.extend({
     methods: {
         onSelectedImg(n: number): void {
             this.$emit("onSelectedImg", n);
             this.$emit("onCloseDialog");
         },
     },
-};
+});
 </script>
 
 <style lang="scss" scoped>

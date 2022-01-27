@@ -33,6 +33,7 @@
     </div>
 </template>
 <script lang="ts">
+import Vue from 'vue'
 import moment from "moment";
 import { mapState } from "vuex";
 export type calendarType = {
@@ -50,7 +51,7 @@ export type userType = {
     name: string;
     minute: number;
 };
-export default {
+export default Vue.extend({
     middleware({ redirect, route }: any) {
         if (!route.query.year || !route.query.month) {
             let year = moment().year();
@@ -67,14 +68,14 @@ export default {
     },
     computed: {
         ...mapState(["loginInfo", "calendars", "calendarWorks", "focusTasks"]),
-        year(): string {
-            return this.$route.query.year;
+        year(): number {
+            return Number(this.$route.query.year);
         },
-        month(): string {
-            return this.$route.query.month;
+        month(): number {
+            return Number(this.$route.query.month);
         },
-        day(): string {
-            return this.$route.query.day;
+        day(): number {
+            return Number(this.$route.query.day);
         },
         lastDay(): number {
             return new Date(this.year, this.month, 0).getDate();
@@ -134,7 +135,7 @@ export default {
             this.$store.dispatch("setCalendarWorks");
         },
     },
-};
+});
 </script>
 
 <style lang="scss" scoped>
