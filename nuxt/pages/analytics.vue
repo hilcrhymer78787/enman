@@ -5,16 +5,17 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from "vue";
 import { mapState } from "vuex";
-export default {
+export default Vue.extend({
     computed: {
         ...mapState({
-            works: (state) => state.analytics.works,
+            works: (state: any) => state.analytics.works,
         }),
     },
     mounted() {
         this.$store.dispatch("analytics/setWorks");
     },
-};
+});
 </script>

@@ -24,8 +24,9 @@
     </v-card>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import Vue from 'vue'
+export default Vue.extend({
     data() {
         return {
             searchLoading: false,
@@ -44,7 +45,7 @@ export default {
             this.searchLoading = false;
         },
     },
-};
+});
 </script>
 <style lang="scss" scoped>
 .form_icon {
