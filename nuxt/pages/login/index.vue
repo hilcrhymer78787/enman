@@ -27,9 +27,12 @@
 <script lang="ts">
 import Vue from "vue";
 import { mapState } from "vuex";
+import { responseType } from "@/types/response";
+import { errorType } from "@/types/error";
+import { AxiosRequestConfig, AxiosResponse, AxiosError } from "axios";
 
 interface VForm extends Vue {
-  validate(): boolean
+    validate(): boolean;
 }
 
 export default Vue.extend({
@@ -67,12 +70,12 @@ export default Vue.extend({
             this.loading = true;
             await this.$axios
                 .get(`/api/user/test_authentication`)
-                .then((res: any): void => {
+                .then((res: AxiosResponse<responseType>) => {
                     this.$store.dispatch("setTokenRedirect", res.data.token);
                 })
-                .catch((err: any): void => {
-                    if (err.response.data.errorMessage) {
-                        this.errorMessage = err.response.data.errorMessage;
+                .catch((err: AxiosError<errorType>) => {
+                    if (err.response?.data.errorMessage) {
+                        this.errorMessage = err.response?.data.errorMessage;
                     } else if (err.response && err.response.status == 429) {
                         alert(
                             "一定時間にアクセスが集中したため、しばらくアクセスできません"
@@ -81,13 +84,13 @@ export default Vue.extend({
                         alert("通信エラーです");
                     }
                 })
-                .finally((): void => {
+                .finally(() => {
                     this.loading = false;
                 });
         },
         async login(): Promise<void> {
-            const form = this.$refs.form as VForm
-            form.validate()
+            const form = this.$refs.form as VForm;
+            form.validate();
             if (!this.noError) {
                 return;
             }
@@ -95,12 +98,12 @@ export default Vue.extend({
             this.errorMessage = "";
             await this.$axios
                 .post(`/api/user/basic_authentication`, this.form)
-                .then((res: any): void => {
+                .then((res: AxiosResponse<responseType>) => {
                     this.$store.dispatch("setTokenRedirect", res.data.token);
                 })
-                .catch((err: any): void => {
-                    if (err.response.data.errorMessage) {
-                        this.errorMessage = err.response.data.errorMessage;
+                .catch((err: AxiosError) => {
+                    if (err.response?.data.errorMessage) {
+                        this.errorMessage = err.response?.data.errorMessage;
                     } else if (err.response && err.response.status == 429) {
                         alert(
                             "一定時間にアクセスが集中したため、しばらくアクセスできません"
@@ -109,7 +112,7 @@ export default Vue.extend({
                         alert("通信エラーです");
                     }
                 })
-                .finally((): void => {
+                .finally(() => {
                     this.loading = false;
                 });
         },
