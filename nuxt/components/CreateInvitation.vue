@@ -23,13 +23,15 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
+import Vue from "vue";
 import { mapState } from "vuex";
-import { vformType } from '@/types/vuetify/vform'
+import { vformType } from "@/types/vuetify/vform";
+import { errorType } from "@/types/error";
+import { AxiosResponse, AxiosError } from "axios";
 export default Vue.extend({
     data() {
         return {
-            form:{},
+            form: {},
             loading: false as boolean,
             noError: false as boolean,
             errorMessage: "" as string,
@@ -50,8 +52,8 @@ export default Vue.extend({
         async CreateInvitation(): Promise<void> {
             this.errorMessage = "";
             this.successMessage = "";
-            const form = this.$refs.form as vformType
-            form.validate()
+            const form = this.$refs.form as vformType;
+            form.validate();
             // バリデーションエラー
             if (!this.noError) {
                 return;
@@ -59,29 +61,29 @@ export default Vue.extend({
             this.loading = true;
             await this.$axios
                 .post(`/api/invitation/create?email=${this.email}`)
-                .then((res: any): void => {
+                .then((res: AxiosResponse) => {
                     this.successMessage = res.data;
                     this.$store.dispatch("setLoginInfoByToken");
                 })
-                .catch((err: any): void => {
-                    if (err.response.data.errorMessage) {
-                        this.errorMessage = err.response.data.errorMessage;
+                .catch((err: AxiosError<errorType>) => {
+                    if (err.response?.data.errorMessage) {
+                        this.errorMessage = err.response?.data.errorMessage;
                     } else {
                         this.errorMessage = "通信に失敗しました";
                     }
                 })
-                .finally((): void => {
+                .finally(() => {
                     this.loading = false;
                 });
         },
-        onSelectedImg(n: number): void {
+        onSelectedImg(n: number) {
             this.$set(
                 this.form,
                 "invitation_img",
                 `https://picsum.photos/500/300?image=${n}`
             );
         },
-        resetForm(): void {
+        resetForm() {
             this.successMessage = "";
             this.email = "";
         },
