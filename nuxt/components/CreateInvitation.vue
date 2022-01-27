@@ -31,7 +31,7 @@ interface VForm extends Vue {
 export default Vue.extend({
     data() {
         return {
-            form:{} as any,
+            form:{},
             loading: false as boolean,
             noError: false as boolean,
             errorMessage: "" as string,

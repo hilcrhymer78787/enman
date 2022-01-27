@@ -52,7 +52,7 @@ export type userType = {
     minute: number;
 };
 export default Vue.extend({
-    middleware({ redirect, route }: any) {
+    middleware({ redirect, route }) {
         if (!route.query.year || !route.query.month) {
             let year = moment().year();
             let month = moment().month() + 1;

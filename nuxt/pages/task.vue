@@ -6,7 +6,7 @@ import Vue from "vue";
 import moment from "moment";
 import { mapState } from "vuex";
 export default Vue.extend({
-    middleware({ redirect, route }: any) {
+    middleware({ redirect, route }) {
         if (!route.query.year || !route.query.month || !route.query.day) {
             let year = moment().year();
             let month = moment().month() + 1;
