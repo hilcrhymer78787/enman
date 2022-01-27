@@ -4,16 +4,17 @@ import { apiWorkReadAnalyticsResponseType } from '@/types/api/work/read/analytic
 import { AxiosRequestConfig, AxiosResponse, AxiosError } from "axios";
 import moment from 'moment'
 import axios from 'axios'
-export type RootState = ReturnType<typeof state>
+import { RootState } from '~/store'
 const CancelToken = axios.CancelToken;
 let setCalendarWorksCancel: any = null;
+export type AnotherModuleState = ReturnType<typeof state>
 
 export const state = () => ({
     works: null,
     calendarWorks: null,
 })
 
-export const mutations: MutationTree<RootState> = {
+export const mutations: MutationTree<AnotherModuleState> = {
     setWorks(state, works) {
         state.works = works
     },
@@ -22,7 +23,7 @@ export const mutations: MutationTree<RootState> = {
     },
 }
 
-export const actions: ActionTree<RootState, RootState> = {
+export const actions: ActionTree<AnotherModuleState, RootState> = {
     async setWorks({ commit }, param: apiWorkReadAnalyticsRequestType) {
         await this.$axios
             .post(`/api/work/read/analytics`, param)

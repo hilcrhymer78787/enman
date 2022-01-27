@@ -1,7 +1,14 @@
+import 'vue-universal-cookies/typings/vue'
+import { GetterTree, ActionTree, MutationTree } from 'vuex'
+import { apiWorkReadAnalyticsRequestType } from '@/types/api/work/read/analytics/request'
+import { apiWorkReadAnalyticsResponseType } from '@/types/api/work/read/analytics/response'
+import { AxiosRequestConfig, AxiosResponse, AxiosError } from "axios";
+import moment from 'moment'
 import axios from 'axios'
 const CancelToken = axios.CancelToken;
-let setCalendarsCancel = null;
-let setLoginInfoByTokenCancel = null;
+let setCalendarsCancel: any = null;
+let setLoginInfoByTokenCancel: any = null;
+export type RootState = ReturnType<typeof state>
 
 export const state = () => ({
     loginInfo: null,
@@ -9,8 +16,7 @@ export const state = () => ({
     focusTasks: [],
     calendars: [],
 })
-
-export const mutations = {
+export const mutations: MutationTree<RootState> = {
     setLoginInfo(state, loginInfo) {
         state.loginInfo = loginInfo
     },
@@ -25,12 +31,12 @@ export const mutations = {
     },
 }
 
-export const actions = {
+export const actions: ActionTree<RootState, RootState> = {
     setTokenRedirect({ }, token) {
         this.$cookies.set("token", token, {
             maxAge: 60 * 60 * 24 * 30,
         });
-        $nuxt.$router.push("/");
+        this.$router.push("/");
     },
     setLoginInfoByToken({ commit, dispatch }) {
         if (setLoginInfoByTokenCancel) {
@@ -44,8 +50,8 @@ export const actions = {
             .then((res) => {
                 // トークンが有効
                 if (this.$cookies.get("token")) {
-                    if (($nuxt.$route.name == 'login' || $nuxt.$route.name == 'login-newUser')) {
-                        $nuxt.$router.push("/");
+                    if ((this.$router.currentRoute.name == 'login' || this.$router.currentRoute.name == 'login-newUser')) {
+                        this.$router.push("/");
                     }
                     commit('setLoginInfo', res.data)
                 }
@@ -61,8 +67,8 @@ export const actions = {
     },
     logout({ commit }) {
         this.$cookies.remove("token");
-        if (!($nuxt.$route.name == 'login' || $nuxt.$route.name == 'login-newUser')) {
-            $nuxt.$router.push("/login");
+        if (!(this.$router.currentRoute.name == 'login' || this.$router.currentRoute.name == 'login-newUser')) {
+            this.$router.push("/login");
         }
         commit('setLoginInfo', false)
     },
@@ -80,9 +86,9 @@ export const actions = {
             })
     },
     async setFocusTasks({ commit }) {
-        const year = $nuxt.$route.query.year
-        const month = $nuxt.$route.query.month
-        const day = $nuxt.$route.query.day
+        const year = this.$router.currentRoute.query.year
+        const month = this.$router.currentRoute.query.month
+        const day = this.$router.currentRoute.query.day
         await this.$axios
             .get(
                 `/api/task/read?year=${year}&month=${month}&day=${day}`
@@ -92,8 +98,8 @@ export const actions = {
             })
     },
     async setCalendars({ commit }) {
-        const year = $nuxt.$route.query.year
-        const month = $nuxt.$route.query.month
+        const year = this.$router.currentRoute.query.year
+        const month = this.$router.currentRoute.query.month
         if (setCalendarsCancel) {
             setCalendarsCancel()
         }
