@@ -33,7 +33,8 @@
     </div>
 </template>
 <script lang="ts">
-import Vue from 'vue'
+import Vue from "vue";
+import { apiWorkReadAnalyticsResponseType } from "@/types/api/work/read/analytics/response";
 import moment from "moment";
 import { mapState } from "vuex";
 export type calendarType = {
@@ -67,7 +68,13 @@ export default Vue.extend({
         };
     },
     computed: {
-        ...mapState(["loginInfo", "calendars", "calendarWorks", "focusTasks"]),
+        ...mapState({
+            loginInfo: (state: any) => state.loginInfo,
+            calendars: (state: any) => state.calendars,
+            focusTasks: (state: any) => state.focusTasks,
+            calendarWorks: (state: any): apiWorkReadAnalyticsResponseType =>
+                state.analytics.calendarWorks,
+        }),
         year(): number {
             return Number(this.$route.query.year);
         },
@@ -102,7 +109,7 @@ export default Vue.extend({
                 } else {
                     outputData.push({
                         date: date,
-                        minute:0,
+                        minute: 0,
                     });
                 }
             }
@@ -110,29 +117,29 @@ export default Vue.extend({
         },
     },
     methods: {
-        fetchData(): void {
+        fetchData() {
             this.$store.dispatch("setFocusTasks");
             this.$store.dispatch("setCalendars");
-            this.$store.dispatch("setCalendarWorks");
+            this.$store.dispatch("analytics/setCalendarWorks");
         },
-        onCloseDialog(): void {
+        onCloseDialog() {
             this.$router.push(
                 `/calendar?year=${this.year}&month=${this.month}`
             );
         },
     },
-    mounted(): void {
+    mounted() {
         this.$store.dispatch("setCalendars");
-        this.$store.dispatch("setCalendarWorks");
+        this.$store.dispatch("analytics/setCalendarWorks");
     },
     watch: {
-        year(): void {
+        year() {
             this.$store.dispatch("setCalendars");
-            this.$store.dispatch("setCalendarWorks");
+            this.$store.dispatch("analytics/setCalendarWorks");
         },
-        month(): void {
+        month() {
             this.$store.dispatch("setCalendars");
-            this.$store.dispatch("setCalendarWorks");
+            this.$store.dispatch("analytics/setCalendarWorks");
         },
     },
 });
