@@ -68,11 +68,12 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
+import Vue from "vue";
 import vuedraggable from "vuedraggable";
 import { mapState } from "vuex";
 import { PropOptions } from "vue";
-import { taskType } from '@/types/task'
+import { taskType } from "@/types/task";
+import { apiWorkCreateRequestType } from "@/types/api/work/create/request";
 export default Vue.extend({
     props: {
         mode: String,
@@ -131,17 +132,18 @@ export default Vue.extend({
             taskIndex: number
         ): Promise<void> {
             this.$set(this.loadings, taskIndex, true);
+            let apiParam: apiWorkCreateRequestType = {
+                date: this.date,
+                task_id: task.task_id,
+                works: [
+                    {
+                        work_user_id: this.loginInfo.id,
+                        work_minute: task.task_default_minute,
+                    },
+                ],
+            };
             await this.$axios
-                .post(`/api/work/create`, {
-                    date: this.date,
-                    task_id: task.task_id,
-                    works: [
-                        {
-                            work_user_id: this.loginInfo.id,
-                            work_minute: task.task_default_minute,
-                        },
-                    ],
-                })
+                .post(`/api/work/create`, apiParam)
                 .then((): void => {
                     this.$emit("fetchData");
                 })

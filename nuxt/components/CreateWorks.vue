@@ -36,7 +36,8 @@ import { PropOptions } from "vue";
 import { mapState } from "vuex";
 import { workType } from "@/types/work";
 import { taskType } from "@/types/task";
-import { vformType } from '@/types/vuetify/vform'
+import { vformType } from "@/types/vuetify/vform";
+import { apiWorkCreateRequestType } from "@/types/api/work/create/request";
 export type userType = {
     id: number;
     name: string;
@@ -103,8 +104,19 @@ export default Vue.extend({
                 return;
             }
             this.saveLoading = true;
+            let apiParam: apiWorkCreateRequestType = {
+                date: this.date,
+                task_id: this.task.task_id,
+                works: [],
+            };
+            this.task.works.forEach((work) => {
+                apiParam.works.push({
+                    work_user_id: work.work_user_id,
+                    work_minute: work.work_minute,
+                });
+            });
             await this.$axios
-                .post(`/api/work/create`, this.task)
+                .post(`/api/work/create`, apiParam)
                 .then((): void => {
                     this.$emit("fetchData");
                 })
