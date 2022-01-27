@@ -29,7 +29,7 @@ import Vue from "vue";
 import { mapState } from "vuex";
 import { responseType } from "@/types/response";
 import { errorType } from "@/types/error";
-import { vformType } from '@/types/vuetify/vform'
+import { vformType } from "@/types/vuetify/vform";
 import { AxiosRequestConfig, AxiosResponse, AxiosError } from "axios";
 export default Vue.extend({
     layout: "login",

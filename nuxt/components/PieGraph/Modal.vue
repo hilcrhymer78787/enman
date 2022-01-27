@@ -19,9 +19,13 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
+import Vue, { PropOptions } from 'vue'
+import { apiWorkReadAnalyticsResponseItemType } from '@/types/api/work/read/analytics/response'
 export default Vue.extend({
-    props: ["focusData", "subttl"],
+    props: {
+        focusData: Object as PropOptions<apiWorkReadAnalyticsResponseItemType>,
+        subttl: String,
+    },
 });
 </script>
 

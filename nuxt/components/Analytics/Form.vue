@@ -26,16 +26,17 @@
 
 <script lang="ts">
 import Vue from 'vue'
+import { apiWorkReadAnalyticsRequestType } from '@/types/api/work/read/analytics/request'
 export default Vue.extend({
     data() {
         return {
-            searchLoading: false,
-            startDateDialog: false,
-            lastDateDialog: false,
+            searchLoading: false as boolean,
+            startDateDialog: false as boolean,
+            lastDateDialog: false as boolean,
             param: {
                 start_date: "",
                 last_date: "",
-            },
+            } as apiWorkReadAnalyticsRequestType,
         };
     },
     methods: {

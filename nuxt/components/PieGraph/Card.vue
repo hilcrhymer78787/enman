@@ -21,23 +21,31 @@
                 </tr>
             </tbody>
         </v-simple-table>
-        <v-dialog @click:outside="focusData = ''" :value="focusData" scrollable>
-            <PieGraphModal v-if="focusData" :focusData="focusData" @onCloseDialog="focusData = ''" :subttl="subttl"/>
+        <v-dialog @click:outside="focusData = null" :value="focusData" scrollable>
+            <PieGraphModal v-if="focusData" :focusData="focusData" @onCloseDialog="focusData = ''" :subttl="subttl" />
         </v-dialog>
     </div>
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
+import Vue, { PropOptions } from "vue";
+import { apiWorkReadAnalyticsResponseItemType } from "@/types/api/work/read/analytics/response";
 export default Vue.extend({
-    props: ["propsDatas", "center", "mode","subttl"],
+    props: {
+        propsDatas: Array as PropOptions<
+            apiWorkReadAnalyticsResponseItemType[]
+        >,
+        center: Number,
+        mode: String,
+        subttl: String,
+    },
     data() {
         return {
-            focusData: "",
+            focusData: null as apiWorkReadAnalyticsResponseItemType | null,
         };
     },
     methods: {
-        onClickData(data: any) {
+        onClickData(data: apiWorkReadAnalyticsResponseItemType) {
             if (data.minute == 0) {
                 return;
             }
@@ -76,8 +84,8 @@ export default Vue.extend({
         color: teal;
     }
 }
-tbody{
-    tr{
+tbody {
+    tr {
         cursor: pointer;
     }
 }
