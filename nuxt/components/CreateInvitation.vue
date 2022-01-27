@@ -25,9 +25,7 @@
 <script lang="ts">
 import Vue from 'vue'
 import { mapState } from "vuex";
-interface VForm extends Vue {
-  validate(): boolean
-}
+import { vformType } from '@/types/vuetify/vform'
 export default Vue.extend({
     data() {
         return {
@@ -52,7 +50,7 @@ export default Vue.extend({
         async CreateInvitation(): Promise<void> {
             this.errorMessage = "";
             this.successMessage = "";
-            const form = this.$refs.form as VForm
+            const form = this.$refs.form as vformType
             form.validate()
             // バリデーションエラー
             if (!this.noError) {

@@ -27,9 +27,7 @@
 import { mapState } from "vuex";
 import Vue, { PropOptions } from 'vue'
 import { taskType } from '@/types/task'
-interface VForm extends Vue {
-  validate(): boolean
-}
+import { vformType } from '@/types/vuetify/vform'
 export default Vue.extend({
     props: {
         focusTask: Object as PropOptions<taskType>,
@@ -50,7 +48,7 @@ export default Vue.extend({
     },
     methods: {
         async submit(): Promise<void> {
-            const form = this.$refs.form as VForm
+            const form = this.$refs.form as vformType
             form.validate()
             if (!this.noError) {
                 return;

@@ -29,12 +29,8 @@ import Vue from "vue";
 import { mapState } from "vuex";
 import { responseType } from "@/types/response";
 import { errorType } from "@/types/error";
+import { vformType } from '@/types/vuetify/vform'
 import { AxiosRequestConfig, AxiosResponse, AxiosError } from "axios";
-
-interface VForm extends Vue {
-    validate(): boolean;
-}
-
 export default Vue.extend({
     layout: "login",
     data() {
@@ -89,7 +85,7 @@ export default Vue.extend({
                 });
         },
         async login(): Promise<void> {
-            const form = this.$refs.form as VForm;
+            const form = this.$refs.form as vformType;
             form.validate();
             if (!this.noError) {
                 return;

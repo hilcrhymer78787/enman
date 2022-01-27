@@ -48,9 +48,7 @@
 import Vue from 'vue'
 import { mapState } from "vuex";
 import moment from "moment";
-interface VForm extends Vue {
-  validate(): boolean
-}
+import { vformType } from '@/types/vuetify/vform'
 export default Vue.extend({
     props: {
         mode: String,
@@ -93,7 +91,7 @@ export default Vue.extend({
         },
         async createRoom(): Promise<void> {
             this.errorMessage = "";
-            const form = this.$refs.form as VForm
+            const form = this.$refs.form as vformType
             form.validate()
             // バリデーションエラー
             if (!this.noError) {

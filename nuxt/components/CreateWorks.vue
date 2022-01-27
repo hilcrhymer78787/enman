@@ -36,9 +36,7 @@ import { PropOptions } from "vue";
 import { mapState } from "vuex";
 import { workType } from "@/types/work";
 import { taskType } from "@/types/task";
-interface VForm extends Vue {
-    validate(): boolean;
-}
+import { vformType } from '@/types/vuetify/vform'
 export type userType = {
     id: number;
     name: string;
@@ -82,7 +80,7 @@ export default Vue.extend({
             return outputData;
         },
         addWork(): void {
-            const form = this.$refs.form as VForm;
+            const form = this.$refs.form as vformType;
             form.validate();
             if (!this.noError) {
                 return;
@@ -99,7 +97,7 @@ export default Vue.extend({
             this.task.works.splice(workIndex, 1);
         },
         async onClickSave(): Promise<void> {
-            const form = this.$refs.form as VForm;
+            const form = this.$refs.form as vformType;
             form.validate();
             if (!this.noError) {
                 return;
