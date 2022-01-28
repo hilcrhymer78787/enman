@@ -86,6 +86,7 @@ import { mapState } from "vuex";
 import { AxiosResponse, AxiosError } from "axios";
 import { apiInvitationUpdateRequestType } from "@/types/api/invitation/update/request";
 import { apiInvitationDeleteRequestType } from "@/types/api/invitation/delete/request";
+import { apiUserBearerAuthenticationResponseType } from "@/types/api/user/bearerAuthentication/response";
 export default Vue.extend({
     data() {
         return {
@@ -99,7 +100,10 @@ export default Vue.extend({
         };
     },
     computed: {
-        ...mapState(["loginInfo"]),
+        ...mapState({
+            loginInfo: (state: any): apiUserBearerAuthenticationResponseType =>
+                state.loginInfo,
+        }),
     },
     methods: {
         logout(): void {

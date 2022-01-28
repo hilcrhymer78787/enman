@@ -73,6 +73,7 @@ import vuedraggable from "vuedraggable";
 import { mapState } from "vuex";
 import { PropOptions } from "vue";
 import { AxiosResponse, AxiosError } from "axios";
+import { apiUserBearerAuthenticationResponseType } from "@/types/api/user/bearerAuthentication/response";
 import { apiTaskReadResponseTaskType } from "@/types/api/task/read/response";
 import { apiWorkCreateRequestType } from "@/types/api/work/create/request";
 import { apiWorkDeleteRequestType } from "@/types/api/work/delete/request";
@@ -105,7 +106,10 @@ export default Vue.extend({
         };
     },
     computed: {
-        ...mapState(["loginInfo"]),
+        ...mapState({
+            loginInfo: (state: any): apiUserBearerAuthenticationResponseType =>
+                state.loginInfo,
+        }),
         year(): number {
             return Number(this.$route.query.year);
         },

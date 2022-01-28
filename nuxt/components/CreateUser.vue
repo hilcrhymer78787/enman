@@ -49,7 +49,8 @@
 import Vue from "vue";
 import { mapState } from "vuex";
 import moment from "moment";
-import { vformType } from '@/types/vuetify/vform'
+import { apiUserBearerAuthenticationResponseType } from "@/types/api/user/bearerAuthentication/response";
+import { vformType } from "@/types/vuetify/vform";
 export default Vue.extend({
     props: {
         mode: String,
@@ -98,7 +99,10 @@ export default Vue.extend({
         };
     },
     computed: {
-        ...mapState(["loginInfo"]),
+        ...mapState({
+            loginInfo: (state: any): apiUserBearerAuthenticationResponseType =>
+                state.loginInfo,
+        }),
         isMatchPassword(): boolean {
             return this.form.password == this.form.passwordAgain;
         },
@@ -205,7 +209,6 @@ export default Vue.extend({
     mounted(): void {
         if (this.mode == "edit") {
             this.passwordEdit = false;
-            this.$set(this.form, "token", this.loginInfo.token);
             this.$set(this.form, "id", this.loginInfo.id);
             this.$set(this.form, "name", this.loginInfo.name);
             this.$set(this.form, "email", this.loginInfo.email);

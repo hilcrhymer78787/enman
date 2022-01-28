@@ -64,7 +64,6 @@ export default Vue.extend({
     },
     computed: {
         ...mapState({
-            loginInfo: (state: any) => state.loginInfo,
             calendars: (state: any) => state.calendars,
             focusTasks: (state: any) => state.task.focusTasks,
             calendarWorks: (state: any): apiWorkReadAnalyticsResponseType =>

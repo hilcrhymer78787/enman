@@ -12,9 +12,13 @@
 
 <script lang="ts">
 import { mapState } from "vuex";
+import { apiUserBearerAuthenticationResponseType } from "@/types/api/user/bearerAuthentication/response";
 export default {
     computed: {
-        ...mapState(["loginInfo"]),
+        ...mapState({
+            loginInfo: (state: any): apiUserBearerAuthenticationResponseType =>
+                state.loginInfo,
+        }),
     },
 };
 </script>

@@ -40,6 +40,7 @@ import {
     apiTaskReadResponseTaskType,
 } from "@/types/api/task/read/response";
 import { apiWorkDeleteRequestType } from "@/types/api/work/delete/request";
+import { apiUserBearerAuthenticationResponseType } from "@/types/api/user/bearerAuthentication/response";
 import { vformType } from "@/types/vuetify/vform";
 import { apiWorkCreateRequestType } from "@/types/api/work/create/request";
 export type userType = {
@@ -65,7 +66,10 @@ export default Vue.extend({
         };
     },
     computed: {
-        ...mapState(["loginInfo"]),
+        ...mapState({
+            loginInfo: (state: any): apiUserBearerAuthenticationResponseType =>
+                state.loginInfo,
+        }),
     },
     methods: {
         users(userId: number): object[] {
@@ -179,7 +183,7 @@ export default Vue.extend({
         }
         if (!this.focusTask.works.length) {
             let obj = {};
-            this.$set(obj, "work_user_id", this.loginInfo["id"]);
+            this.$set(obj, "work_user_id", this.loginInfo.id);
             this.$set(obj, "work_minute", this.focusTask.task_default_minute);
             this.task.works.push(obj as apiTaskReadResponseTaskWorkType);
         }

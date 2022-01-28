@@ -1,6 +1,7 @@
 import { GetterTree, ActionTree, MutationTree } from 'vuex'
 import { apiWorkReadCalendarRequestType } from '@/types/api/work/read/calendar/request'
 import { apiWorkReadAnalyticsResponseType } from '@/types/api/work/read/analytics/response'
+import { apiUserBearerAuthenticationResponseType } from '@/types/api/user/bearerAuthentication/response'
 import { AxiosRequestConfig, AxiosResponse, AxiosError } from "axios";
 import moment from 'moment'
 import axios from 'axios'
@@ -10,7 +11,7 @@ let setLoginInfoByTokenCancel: any = null;
 export type RootState = ReturnType<typeof state>
 
 export const state = () => ({
-    loginInfo: null,
+    loginInfo: null as apiUserBearerAuthenticationResponseType | null,
     calendars: [],
 })
 export const mutations: MutationTree<RootState> = {
@@ -38,8 +39,9 @@ export const actions: ActionTree<RootState, RootState> = {
                 setLoginInfoByTokenCancel = c
             }),
         })
-            .then((res) => {
+            .then((res: AxiosResponse<apiUserBearerAuthenticationResponseType>) => {
                 // トークンが有効
+                console.log(res.data)
                 if (this.$cookies.get("token")) {
                     if ((this.$router.currentRoute.name == 'login' || this.$router.currentRoute.name == 'login-newUser')) {
                         this.$router.push("/");
@@ -47,7 +49,7 @@ export const actions: ActionTree<RootState, RootState> = {
                     commit('setLoginInfo', res.data)
                 }
             })
-            .catch((err) => {
+            .catch((err: AxiosError) => {
                 if (err.response) {
                     dispatch('logout')
                 }
@@ -78,10 +80,10 @@ export const actions: ActionTree<RootState, RootState> = {
                     setCalendarsCancel = c
                 }),
             })
-            .then((res:AxiosResponse) => {
+            .then((res: AxiosResponse) => {
                 commit("setCalendars", res.data.calendars);
             })
-            .catch((err:AxiosError) => {
+            .catch((err: AxiosError) => {
                 console.log(err.response)
             })
     },

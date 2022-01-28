@@ -47,8 +47,9 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
+import Vue from "vue";
 import { mapState } from "vuex";
+import { apiUserBearerAuthenticationResponseType } from "@/types/api/user/bearerAuthentication/response";
 export type navType = {
     ttl: string;
     icon: string;
@@ -58,7 +59,10 @@ export type navType = {
 };
 export default Vue.extend({
     computed: {
-        ...mapState(["loginInfo"]),
+        ...mapState({
+            loginInfo: (state: any): apiUserBearerAuthenticationResponseType =>
+                state.loginInfo,
+        }),
         navs(): navType[] {
             return [
                 {

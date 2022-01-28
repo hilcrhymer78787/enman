@@ -29,6 +29,7 @@ import { vformType } from "@/types/vuetify/vform";
 import { errorType } from "@/types/error";
 import { apiInvitationCreateRequestType } from "@/types/api/invitation/create/request";
 import { apiInvitationCreateResponseType } from "@/types/api/invitation/create/response";
+import { apiUserBearerAuthenticationResponseType } from "@/types/api/user/bearerAuthentication/response";
 import { AxiosResponse, AxiosError } from "axios";
 export default Vue.extend({
     data() {
@@ -48,7 +49,10 @@ export default Vue.extend({
         };
     },
     computed: {
-        ...mapState(["loginInfo"]),
+        ...mapState({
+            loginInfo: (state: any): apiUserBearerAuthenticationResponseType =>
+                state.loginInfo,
+        }),
     },
     methods: {
         async CreateInvitation(): Promise<void> {

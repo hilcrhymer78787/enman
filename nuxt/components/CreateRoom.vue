@@ -50,6 +50,7 @@ import { mapState } from "vuex";
 import moment from "moment";
 import { AxiosResponse, AxiosError } from "axios";
 import { vformType } from "@/types/vuetify/vform";
+import { apiUserBearerAuthenticationResponseType } from "@/types/api/user/bearerAuthentication/response";
 export default Vue.extend({
     props: {
         mode: String,
@@ -74,7 +75,10 @@ export default Vue.extend({
         };
     },
     computed: {
-        ...mapState(["loginInfo"]),
+        ...mapState({
+            loginInfo: (state: any): apiUserBearerAuthenticationResponseType =>
+                state.loginInfo,
+        }),
     },
     methods: {
         fileSelected(e: any) {

@@ -32,6 +32,7 @@ import {
     apiTaskCreateRequestType,
     apiTaskCreateRequestTaskType,
 } from "@/types/api/task/create/request";
+import { apiUserBearerAuthenticationResponseType } from "@/types/api/user/bearerAuthentication/response";
 import { vformType } from "@/types/vuetify/vform";
 export default Vue.extend({
     props: {
@@ -49,7 +50,10 @@ export default Vue.extend({
         } as apiTaskCreateRequestTaskType,
     }),
     computed: {
-        ...mapState(["loginInfo"]),
+        ...mapState({
+            loginInfo: (state: any): apiUserBearerAuthenticationResponseType =>
+                state.loginInfo,
+        }),
     },
     methods: {
         async submit(): Promise<void> {

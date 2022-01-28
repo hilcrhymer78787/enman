@@ -30,6 +30,7 @@ import { mapState } from "vuex";
 import { apiUserTestAuthenticationResponseType } from "@/types/api/user/testAuthentication/response";
 import { apiUserBasicAuthenticationResponseType } from "@/types/api/user/basicAuthentication/response";
 import { apiUserBasicAuthenticationRequestType } from "@/types/api/user/basicAuthentication/request";
+import { apiUserBearerAuthenticationResponseType } from "@/types/api/user/bearerAuthentication/response";
 import { errorType } from "@/types/error";
 import { vformType } from "@/types/vuetify/vform";
 import { AxiosRequestConfig, AxiosResponse, AxiosError } from "axios";
@@ -59,9 +60,6 @@ export default Vue.extend({
             ],
             passwordShow: false as boolean,
         };
-    },
-    computed: {
-        ...mapState(["loginInfo"]),
     },
     methods: {
         async testAuthentication(): Promise<void> {
