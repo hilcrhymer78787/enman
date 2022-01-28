@@ -77,6 +77,10 @@ import { apiTaskReadResponseTaskType } from "@/types/api/task/read/response";
 import { apiWorkCreateRequestType } from "@/types/api/work/create/request";
 import { apiWorkDeleteRequestType } from "@/types/api/work/delete/request";
 import { apiTaskDeleteRequestType } from "@/types/api/task/delete/request";
+import {
+    apiTaskSortsetRequestType,
+    apiTaskSortsetRequestTaskType,
+} from "@/types/api/task/sortset/request";
 
 export default Vue.extend({
     props: {
@@ -117,7 +121,21 @@ export default Vue.extend({
     },
     methods: {
         dragged() {
-            this.$axios.post(`/api/task/sortset`, { tasks: this.displayTasks });
+            let tasks: apiTaskSortsetRequestTaskType[] = [];
+            this.displayTasks.forEach((task) => {
+                tasks.push({
+                    task_id: task.task_id,
+                });
+            });
+            let apiParam: apiTaskSortsetRequestType = {
+                tasks: tasks,
+            };
+            this.$axios
+                .post(`/api/task/sortset`, apiParam)
+                .then((res: AxiosResponse) => {})
+                .catch((err: AxiosError) => {
+                    console.log(err.response);
+                });
         },
         onFocusTask(task: apiTaskReadResponseTaskType) {
             this.dialog = true;
@@ -176,7 +194,7 @@ export default Vue.extend({
             };
             await this.$axios
                 .delete(`/api/work/delete`, { data: apiParam })
-                .then((res:AxiosResponse) => {
+                .then((res: AxiosResponse) => {
                     this.$emit("fetchData");
                 })
                 .catch((err: AxiosError) => {
