@@ -72,8 +72,10 @@ import Vue from "vue";
 import vuedraggable from "vuedraggable";
 import { mapState } from "vuex";
 import { PropOptions } from "vue";
+import { AxiosResponse, AxiosError } from "axios";
 import { apiTaskReadResponseTaskType } from "@/types/api/task/read/response";
 import { apiWorkCreateRequestType } from "@/types/api/work/create/request";
+import { apiTaskDeleteRequestType } from "@/types/api/task/delete/request";
 export default Vue.extend({
     props: {
         mode: String,
@@ -112,7 +114,7 @@ export default Vue.extend({
         },
     },
     methods: {
-        dragged(): void {
+        dragged() {
             this.$axios.post(`/api/task/sortset`, { tasks: this.displayTasks });
         },
         onFocusTask(task: apiTaskReadResponseTaskType) {
@@ -144,10 +146,13 @@ export default Vue.extend({
             };
             await this.$axios
                 .post(`/api/work/create`, apiParam)
-                .then((): void => {
+                .then(() => {
                     this.$emit("fetchData");
                 })
-                .finally((): void => {
+                .catch((err: AxiosError) => {
+                    alert("通信に失敗しました");
+                })
+                .finally(() => {
                     this.$set(this.loadings, taskIndex, false);
                 });
         },
@@ -167,10 +172,13 @@ export default Vue.extend({
                 .delete(
                     `/api/work/delete?date=${this.date}&task_id=${task.task_id}`
                 )
-                .then((): void => {
+                .then(() => {
                     this.$emit("fetchData");
                 })
-                .finally((): void => {
+                .catch((err: AxiosError) => {
+                    alert("通信に失敗しました");
+                })
+                .finally(() => {
                     this.$set(this.loadings, taskIndex, false);
                 });
         },
@@ -181,12 +189,18 @@ export default Vue.extend({
                 return;
             }
             this.deleteTaskLoading = true;
+            let apiParam: apiTaskDeleteRequestType = {
+                task_id: task.task_id,
+            };
             await this.$axios
-                .delete(`/api/task/delete?task_id=${task.task_id}`)
-                .then((): void => {
+                .delete(`/api/task/delete`, { data: apiParam })
+                .then((res:AxiosResponse) => {
                     this.$emit("fetchData");
                 })
-                .finally((): void => {
+                .catch((err: AxiosError) => {
+                    alert("通信に失敗しました");
+                })
+                .finally(() => {
                     this.deleteTaskLoading = false;
                 });
         },
@@ -196,14 +210,14 @@ export default Vue.extend({
         this.$store.commit("task/setFocusTasks", []);
         this.$emit("fetchData");
         // スクロール対応
-        this.$nextTick((): void => {
+        this.$nextTick(() => {
             const scrollArea: any = document.querySelector("#scrollArea");
             const scrollAreaInner: any =
                 document.querySelector("#scrollAreaInner");
             if (!scrollArea) {
                 return;
             }
-            scrollArea.addEventListener("scroll", (): void => {
+            scrollArea.addEventListener("scroll", () => {
                 if (scrollArea.scrollTop == 0) {
                     scrollArea.scrollTo({ top: 1 });
                 }
@@ -217,7 +231,7 @@ export default Vue.extend({
         });
     },
     watch: {
-        tasks(): void {
+        tasks() {
             this.displayTasks = this.tasks;
         },
     },
