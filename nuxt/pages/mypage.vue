@@ -83,7 +83,9 @@
 <script lang="ts">
 import Vue from "vue";
 import { mapState } from "vuex";
+import { AxiosResponse, AxiosError } from "axios";
 import { apiInvitationUpdateRequestType } from "@/types/api/invitation/update/request";
+import { apiInvitationDeleteRequestType } from "@/types/api/invitation/delete/request";
 export default Vue.extend({
     data() {
         return {
@@ -113,13 +115,13 @@ export default Vue.extend({
             this.onChangeRoomloading = true;
             await this.$axios
                 .put(`/api/user/update/room_id?room_id=${this.selectedRoomId}`)
-                .then(async (): Promise<void> => {
+                .then(async (res: AxiosResponse): Promise<void> => {
                     await this.$store.dispatch("setLoginInfoByToken");
                 })
-                .catch((): void => {
+                .catch((err: AxiosError) => {
                     alert("通信に失敗しました");
                 })
-                .finally((): void => {
+                .finally(() => {
                     this.onChangeRoomloading = false;
                 });
         },
@@ -130,13 +132,13 @@ export default Vue.extend({
             };
             await this.$axios
                 .put(`/api/invitation/update`, apiParam)
-                .then(async (): Promise<void> => {
+                .then(async (res: AxiosResponse): Promise<void> => {
                     await this.$store.dispatch("setLoginInfoByToken");
                 })
-                .catch((): void => {
+                .catch((err: AxiosError) => {
                     alert("通信に失敗しました");
                 })
-                .finally((): void => {
+                .finally(() => {
                     this.$set(this.joinRoomloadings, roomIndex, false);
                 });
         },
@@ -149,12 +151,15 @@ export default Vue.extend({
                 return;
             }
             this.$set(this.rejectRoomloadings, roomIndex, true);
+            let apiParam: apiInvitationDeleteRequestType = {
+                invitation_id: invitationId,
+            };
             await this.$axios
-                .delete(`/api/invitation/delete?invitation_id=${invitationId}`)
-                .then(async (): Promise<void> => {
+                .delete(`/api/invitation/delete`, { data: apiParam })
+                .then(async (res: AxiosResponse): Promise<void> => {
                     await this.$store.dispatch("setLoginInfoByToken");
                 })
-                .catch((): void => {
+                .catch((err: AxiosError) => {
                     alert("通信に失敗しました");
                 })
                 .finally((): void => {
