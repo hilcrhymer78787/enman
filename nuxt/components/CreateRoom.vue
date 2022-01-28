@@ -45,10 +45,11 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
+import Vue from "vue";
 import { mapState } from "vuex";
 import moment from "moment";
-import { vformType } from '@/types/vuetify/vform'
+import { AxiosResponse, AxiosError } from "axios";
+import { vformType } from "@/types/vuetify/vform";
 export default Vue.extend({
     props: {
         mode: String,
@@ -91,13 +92,13 @@ export default Vue.extend({
         },
         async createRoom(): Promise<void> {
             this.errorMessage = "";
-            const form = this.$refs.form as vformType
-            form.validate()
+            const form = this.$refs.form as vformType;
+            form.validate();
             // バリデーションエラー
             if (!this.noError) {
                 return;
             }
-            let postData: any = new FormData();
+            let postData: FormData = new FormData();
             if (this.file) {
                 postData.append("file", this.file);
             }
@@ -107,19 +108,19 @@ export default Vue.extend({
             this.loading = true;
             await this.$axios
                 .post(`/api/room/create`, postData)
-                .then((): void => {
+                .then((res: AxiosResponse) => {
                     this.$store.dispatch("setLoginInfoByToken");
                 })
-                .catch((err:any): void => {
-                    console.error(err.response)
+                .catch((err: AxiosError) => {
+                    console.error(err.response);
                     alert("通信に失敗しました");
                 })
-                .finally((): void => {
+                .finally(() => {
                     this.$emit("onCloseDialog");
                     this.loading = false;
                 });
         },
-        onSelectedImg(n: number): void {
+        onSelectedImg(n: number) {
             this.$set(
                 this.form,
                 "room_img",
@@ -127,7 +128,7 @@ export default Vue.extend({
             );
         },
     },
-    mounted(): void {
+    mounted() {
         if (this.mode == "edit") {
             this.$set(this.form, "room_id", this.loginInfo.room_id);
             this.$set(this.form, "room_name", this.loginInfo.room_name);
