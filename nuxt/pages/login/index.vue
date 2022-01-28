@@ -116,6 +116,7 @@ export default Vue.extend({
                     }
                 )
                 .catch((err: AxiosError) => {
+                    console.error(err.response);
                     if (err.response?.data.errorMessage) {
                         this.errorMessage = err.response?.data.errorMessage;
                     } else if (err.response && err.response.status == 429) {

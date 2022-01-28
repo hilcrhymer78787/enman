@@ -138,7 +138,7 @@ export default Vue.extend({
                 .post(`/api/task/sortset`, apiParam)
                 .then((res: AxiosResponse) => {})
                 .catch((err: AxiosError) => {
-                    console.log(err.response);
+                    console.error(err.response);
                 });
         },
         onFocusTask(task: apiTaskReadResponseTaskType) {
@@ -174,6 +174,7 @@ export default Vue.extend({
                     this.$emit("fetchData");
                 })
                 .catch((err: AxiosError) => {
+                    console.error(err.response);
                     alert("通信に失敗しました");
                 })
                 .finally(() => {
@@ -202,6 +203,7 @@ export default Vue.extend({
                     this.$emit("fetchData");
                 })
                 .catch((err: AxiosError) => {
+                    console.error(err.response);
                     alert("通信に失敗しました");
                 })
                 .finally(() => {
@@ -224,6 +226,7 @@ export default Vue.extend({
                     this.$emit("fetchData");
                 })
                 .catch((err: AxiosError) => {
+                    console.error(err.response);
                     alert("通信に失敗しました");
                 })
                 .finally(() => {

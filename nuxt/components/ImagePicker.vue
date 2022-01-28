@@ -25,7 +25,7 @@
 import Vue from 'vue'
 export default Vue.extend({
     methods: {
-        onSelectedImg(n: number): void {
+        onSelectedImg(n: number) {
             this.$emit("onSelectedImg", n);
             this.$emit("onCloseDialog");
         },

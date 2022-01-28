@@ -34,7 +34,6 @@ import { AxiosResponse, AxiosError } from "axios";
 export default Vue.extend({
     data() {
         return {
-            form: {},
             loading: false as boolean,
             noError: false as boolean,
             errorMessage: "" as string,
@@ -85,13 +84,6 @@ export default Vue.extend({
                 .finally(() => {
                     this.loading = false;
                 });
-        },
-        onSelectedImg(n: number) {
-            this.$set(
-                this.form,
-                "invitation_img",
-                `https://picsum.photos/500/300?image=${n}`
-            );
         },
         resetForm() {
             this.successMessage = "";

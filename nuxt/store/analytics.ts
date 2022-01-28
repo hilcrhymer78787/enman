@@ -30,7 +30,9 @@ export const actions: ActionTree<AnotherModuleState, RootState> = {
             .then((res: AxiosResponse<apiWorkReadAnalyticsResponseType>) => {
                 commit("setWorks", res.data);
             })
-            .catch((err: AxiosError) => { })
+            .catch((err: AxiosError) => {
+                console.error(err.response);
+            })
     },
     async setCalendarWorks({ commit }) {
         commit("setCalendarWorks", null);
@@ -52,6 +54,8 @@ export const actions: ActionTree<AnotherModuleState, RootState> = {
             .then((res: AxiosResponse<apiWorkReadAnalyticsResponseType>) => {
                 commit("setCalendarWorks", res.data);
             })
-            .catch((err: AxiosError) => { })
+            .catch((err: AxiosError) => {
+                console.error(err.response);
+            })
     },
 }

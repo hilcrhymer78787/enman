@@ -106,12 +106,12 @@ export default Vue.extend({
         }),
     },
     methods: {
-        logout(): void {
+        logout() {
             if (confirm("ログアウトしますか？")) {
                 this.$store.dispatch("logout");
             }
         },
-        openCreateRoomDialog(mode: string): void {
+        openCreateRoomDialog(mode: string) {
             this.modeCreateRoomDialog = mode;
             this.createRoomDialog = true;
         },
@@ -123,6 +123,7 @@ export default Vue.extend({
                     await this.$store.dispatch("setLoginInfoByToken");
                 })
                 .catch((err: AxiosError) => {
+                    console.error(err.response);
                     alert("通信に失敗しました");
                 })
                 .finally(() => {
@@ -140,6 +141,7 @@ export default Vue.extend({
                     await this.$store.dispatch("setLoginInfoByToken");
                 })
                 .catch((err: AxiosError) => {
+                    console.error(err.response);
                     alert("通信に失敗しました");
                 })
                 .finally(() => {
@@ -164,19 +166,20 @@ export default Vue.extend({
                     await this.$store.dispatch("setLoginInfoByToken");
                 })
                 .catch((err: AxiosError) => {
+                    console.error(err.response);
                     alert("通信に失敗しました");
                 })
-                .finally((): void => {
+                .finally(() => {
                     this.$set(this.rejectRoomloadings, roomIndex, false);
                 });
         },
     },
     watch: {
-        loginInfo(): void {
+        loginInfo() {
             this.selectedRoomId = this.loginInfo.room_id;
         },
     },
-    mounted(): void {
+    mounted() {
         this.selectedRoomId = this.loginInfo.room_id;
     },
 });

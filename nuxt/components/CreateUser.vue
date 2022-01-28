@@ -157,18 +157,18 @@ export default Vue.extend({
                         this.$emit("onCloseDialog");
                     }
                 })
-                .catch((err: any): void => {
+                .catch((err: any) => {
                     if (err.response.data.errorMessage) {
                         this.errorMessage = err.response.data.errorMessage;
                     } else {
                         this.errorMessage = "通信に失敗しました";
                     }
                 })
-                .finally((): void => {
+                .finally(() => {
                     this.loading = false;
                 });
         },
-        onSelectedImg(n: number): void {
+        onSelectedImg(n: number) {
             this.$set(
                 this.form,
                 "user_img",
@@ -193,20 +193,20 @@ export default Vue.extend({
             this.loading = true;
             await this.$axios
                 .delete(`/api/user/delete`)
-                .then((): void => {
+                .then(() => {
                     this.$emit("onCloseDialog");
                 })
-                .catch((): void => {
+                .catch(() => {
                     alert("通信に失敗しました");
                 })
-                .finally((): void => {
+                .finally(() => {
                     // ログアウト
                     this.$store.dispatch("logout");
                     this.loading = false;
                 });
         },
     },
-    mounted(): void {
+    mounted() {
         if (this.mode == "edit") {
             this.passwordEdit = false;
             this.$set(this.form, "id", this.loginInfo.id);
@@ -218,7 +218,7 @@ export default Vue.extend({
             this.$set(this.form, "img_oldname", this.loginInfo.user_img);
         }
     },
-    beforeDestroy(): void {
+    beforeDestroy() {
         this.file = null;
     },
 });

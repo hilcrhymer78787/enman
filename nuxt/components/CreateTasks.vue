@@ -72,6 +72,7 @@ export default Vue.extend({
                     this.$store.dispatch("task/setTodayTasks");
                 })
                 .catch((err: AxiosError) => {
+                    console.error(err.response);
                     alert("通信に失敗しました");
                 })
                 .finally(() => {

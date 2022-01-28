@@ -41,7 +41,6 @@ export const actions: ActionTree<RootState, RootState> = {
         })
             .then((res: AxiosResponse<apiUserBearerAuthenticationResponseType>) => {
                 // トークンが有効
-                console.log(res.data)
                 if (this.$cookies.get("token")) {
                     if ((this.$router.currentRoute.name == 'login' || this.$router.currentRoute.name == 'login-newUser')) {
                         this.$router.push("/");
@@ -50,6 +49,7 @@ export const actions: ActionTree<RootState, RootState> = {
                 }
             })
             .catch((err: AxiosError) => {
+                console.error(err.response);
                 if (err.response) {
                     dispatch('logout')
                 }
@@ -84,7 +84,7 @@ export const actions: ActionTree<RootState, RootState> = {
                 commit("setCalendars", res.data.calendars);
             })
             .catch((err: AxiosError) => {
-                console.log(err.response)
+                console.error(err.response)
             })
     },
 }

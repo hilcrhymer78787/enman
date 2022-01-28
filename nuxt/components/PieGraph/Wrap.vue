@@ -13,14 +13,14 @@ export default Vue.extend({
         };
     },
     methods: {
-        reMount(): void {
+        reMount() {
             // 円グラフ再描画
             this.isShowPieGraph = false;
             this.$nextTick(() => {
                 this.isShowPieGraph = true;
             });
         },
-        onResize(): void {
+        onResize() {
             clearTimeout(this.timeoutId);
             this.timeoutId = window.setTimeout(() => {
                 this.reMount();

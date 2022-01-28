@@ -20,7 +20,7 @@ export default Vue.extend({
         }),
     },
     methods: {
-        fetchData(): void {
+        fetchData() {
             this.$store.dispatch("task/setTodayTasks");
         },
     },

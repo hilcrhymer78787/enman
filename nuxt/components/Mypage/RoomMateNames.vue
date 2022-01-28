@@ -16,7 +16,7 @@ export default {
     methods: {
         roomMateNames(users: userType[]): string {
             let outputData = "";
-            users.forEach((user: userType, index: number): void => {
+            users.forEach((user: userType, index: number) => {
                 if (index != 0) {
                     outputData = outputData + "、";
                 }
