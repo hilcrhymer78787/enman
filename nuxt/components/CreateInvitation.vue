@@ -66,6 +66,7 @@ export default Vue.extend({
                     this.$store.dispatch("setLoginInfoByToken");
                 })
                 .catch((err: AxiosError<errorType>) => {
+                    console.error(err.response);
                     if (err.response?.data.errorMessage) {
                         this.errorMessage = err.response?.data.errorMessage;
                     } else {

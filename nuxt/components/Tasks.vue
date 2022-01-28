@@ -72,19 +72,19 @@ import Vue from "vue";
 import vuedraggable from "vuedraggable";
 import { mapState } from "vuex";
 import { PropOptions } from "vue";
-import { taskType } from "@/types/task";
+import { apiTaskReadResponseTaskType } from "@/types/api/task/read/response";
 import { apiWorkCreateRequestType } from "@/types/api/work/create/request";
 export default Vue.extend({
     props: {
         mode: String,
-        tasks: Array as PropOptions<taskType[]>,
+        tasks: Array as PropOptions<apiTaskReadResponseTaskType[]>,
     },
     components: {
         vuedraggable: vuedraggable,
     },
     data() {
         return {
-            displayTasks: [] as taskType[],
+            displayTasks: [] as apiTaskReadResponseTaskType[],
             swiperOption: {
                 initialSlide: 1 as number,
                 slidesPerView: "auto" as string,
@@ -92,7 +92,7 @@ export default Vue.extend({
             deleteTaskLoading: false as boolean,
             taskDialog: false as boolean,
             dialog: false as boolean,
-            focusTask: {} as taskType | null,
+            focusTask: {} as apiTaskReadResponseTaskType | null,
             loadings: [] as boolean[],
         };
     },
@@ -115,11 +115,11 @@ export default Vue.extend({
         dragged(): void {
             this.$axios.post(`/api/task/sortset`, { tasks: this.displayTasks });
         },
-        onFocusTask(task: taskType) {
+        onFocusTask(task: apiTaskReadResponseTaskType) {
             this.dialog = true;
             this.focusTask = task;
         },
-        openTaskDialog(task: taskType) {
+        openTaskDialog(task: apiTaskReadResponseTaskType) {
             if (task) {
                 this.focusTask = task;
             } else {
@@ -128,7 +128,7 @@ export default Vue.extend({
             this.taskDialog = true;
         },
         async onClickCheckBoxBlank(
-            task: taskType,
+            task: apiTaskReadResponseTaskType,
             taskIndex: number
         ): Promise<void> {
             this.$set(this.loadings, taskIndex, true);
@@ -152,7 +152,7 @@ export default Vue.extend({
                 });
         },
         async onClickCheckBoxMarked(
-            task: taskType,
+            task: apiTaskReadResponseTaskType,
             taskIndex: number
         ): Promise<void> {
             if (
@@ -174,7 +174,7 @@ export default Vue.extend({
                     this.$set(this.loadings, taskIndex, false);
                 });
         },
-        async deleteTask(task: taskType): Promise<void> {
+        async deleteTask(task: apiTaskReadResponseTaskType): Promise<void> {
             if (
                 !confirm(`「${task.name}」に関するデータを全て削除しますか？`)
             ) {
@@ -193,7 +193,7 @@ export default Vue.extend({
     },
     mounted() {
         this.displayTasks = this.tasks;
-        this.$store.commit("setFocusTasks", []);
+        this.$store.commit("task/setFocusTasks", []);
         this.$emit("fetchData");
         // スクロール対応
         this.$nextTick((): void => {

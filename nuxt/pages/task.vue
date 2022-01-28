@@ -15,11 +15,13 @@ export default Vue.extend({
         }
     },
     computed: {
-        ...mapState(["todayTasks"]),
+        ...mapState({
+            todayTasks: (state: any) => state.task.todayTasks,
+        }),
     },
     methods: {
         fetchData(): void {
-            this.$store.dispatch("setTodayTasks");
+            this.$store.dispatch("task/setTodayTasks");
         },
     },
 });

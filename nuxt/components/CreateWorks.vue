@@ -34,8 +34,10 @@
 import Vue from "vue";
 import { PropOptions } from "vue";
 import { mapState } from "vuex";
-import { workType } from "@/types/work";
-import { taskType } from "@/types/task";
+import {
+    apiTaskReadResponseTaskWorkType,
+    apiTaskReadResponseTaskType,
+} from "@/types/api/task/read/response";
 import { vformType } from "@/types/vuetify/vform";
 import { apiWorkCreateRequestType } from "@/types/api/work/create/request";
 export type userType = {
@@ -48,7 +50,7 @@ export type selectType = {
 };
 export default Vue.extend({
     props: {
-        focusTask: Object as PropOptions<taskType>,
+        focusTask: Object as PropOptions<apiTaskReadResponseTaskType>,
         date: String,
         mode: String,
     },
@@ -57,7 +59,7 @@ export default Vue.extend({
             deleteLoading: false as boolean,
             saveLoading: false as boolean,
             noError: false as boolean,
-            task: {} as taskType,
+            task: {} as apiTaskReadResponseTaskType,
         };
     },
     computed: {
@@ -70,7 +72,8 @@ export default Vue.extend({
                 (user: userType) => {
                     const userDuplicateJudge =
                         this.task.works.filter(
-                            (work: workType) => work.work_user_id == user.id
+                            (work: apiTaskReadResponseTaskWorkType) =>
+                                work.work_user_id == user.id
                         ).length == 0;
 
                     if (userDuplicateJudge || userId == user.id) {
@@ -89,7 +92,7 @@ export default Vue.extend({
             this.task.works.push({
                 work_user_id: 0,
                 work_minute: 0,
-            } as workType);
+            } as apiTaskReadResponseTaskWorkType);
         },
         removeWork(workIndex: number): void {
             if (this.task.works.length == 1) {
@@ -168,7 +171,7 @@ export default Vue.extend({
             let obj = {};
             this.$set(obj, "work_user_id", this.loginInfo["id"]);
             this.$set(obj, "work_minute", this.focusTask.task_default_minute);
-            this.task.works.push(obj as workType);
+            this.task.works.push(obj as apiTaskReadResponseTaskWorkType);
         }
     },
 });

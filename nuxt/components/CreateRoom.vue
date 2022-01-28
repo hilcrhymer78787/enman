@@ -110,7 +110,8 @@ export default Vue.extend({
                 .then((): void => {
                     this.$store.dispatch("setLoginInfoByToken");
                 })
-                .catch((): void => {
+                .catch((err:any): void => {
+                    console.error(err.response)
                     alert("通信に失敗しました");
                 })
                 .finally((): void => {

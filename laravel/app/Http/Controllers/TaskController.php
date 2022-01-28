@@ -28,7 +28,9 @@ class TaskController extends Controller
                 ->select('work_id', 'work_date', 'work_minute', 'work_user_id', 'name as work_user_name', 'user_img as work_user_img')
                 ->get();
         }
-        return $tasks;
+        
+        $return['tasks'] = $tasks;
+        return $return;
     }
     public function create(Request $request)
     {

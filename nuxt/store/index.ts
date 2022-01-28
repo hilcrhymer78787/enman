@@ -1,4 +1,3 @@
-import 'vue-universal-cookies/typings/vue'
 import { GetterTree, ActionTree, MutationTree } from 'vuex'
 import { apiWorkReadAnalyticsRequestType } from '@/types/api/work/read/analytics/request'
 import { apiWorkReadAnalyticsResponseType } from '@/types/api/work/read/analytics/response'
@@ -12,19 +11,11 @@ export type RootState = ReturnType<typeof state>
 
 export const state = () => ({
     loginInfo: null,
-    todayTasks: [],
-    focusTasks: [],
     calendars: [],
 })
 export const mutations: MutationTree<RootState> = {
     setLoginInfo(state, loginInfo) {
         state.loginInfo = loginInfo
-    },
-    setTodayTasks(state, todayTasks) {
-        state.todayTasks = todayTasks
-    },
-    setFocusTasks(state, focusTasks) {
-        state.focusTasks = focusTasks
     },
     setCalendars(state, calendars) {
         state.calendars = calendars
@@ -71,31 +62,6 @@ export const actions: ActionTree<RootState, RootState> = {
             this.$router.push("/login");
         }
         commit('setLoginInfo', false)
-    },
-    async setTodayTasks({ commit }) {
-        const today = new Date();
-        const year = today.getFullYear();
-        const month = today.getMonth() + 1;
-        const day = today.getDate();
-        await this.$axios
-            .get(
-                `/api/task/read?year=${year}&month=${month}&day=${day}`
-            )
-            .then((res) => {
-                commit('setTodayTasks', res.data)
-            })
-    },
-    async setFocusTasks({ commit }) {
-        const year = this.$router.currentRoute.query.year
-        const month = this.$router.currentRoute.query.month
-        const day = this.$router.currentRoute.query.day
-        await this.$axios
-            .get(
-                `/api/task/read?year=${year}&month=${month}&day=${day}`
-            )
-            .then((res) => {
-                commit('setFocusTasks', res.data)
-            })
     },
     async setCalendars({ commit }) {
         const year = this.$router.currentRoute.query.year

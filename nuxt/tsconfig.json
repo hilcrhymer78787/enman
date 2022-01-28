@@ -28,7 +28,7 @@
       "@nuxt/types",
       "@nuxtjs/axios",
       "@types/node",
-      "cookie-universal-nuxt"
+      "cookie-universal-nuxt"  //追加
     ]
   },
   "exclude": [

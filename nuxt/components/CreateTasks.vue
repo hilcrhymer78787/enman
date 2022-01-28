@@ -26,11 +26,11 @@
 <script lang="ts">
 import { mapState } from "vuex";
 import Vue, { PropOptions } from 'vue'
-import { taskType } from '@/types/task'
+import { apiTaskReadResponseTaskType } from '@/types/api/task/read/response'
 import { vformType } from '@/types/vuetify/vform'
 export default Vue.extend({
     props: {
-        focusTask: Object as PropOptions<taskType>,
+        focusTask: Object as PropOptions<apiTaskReadResponseTaskType>,
     },
     data: () => ({
         loading: false as boolean,
@@ -41,7 +41,7 @@ export default Vue.extend({
             task_default_minute: "" as string,
             task_is_everyday: 1 as number,
             task_room_id: 1 as number,
-        },
+        }, 
     }),
     computed: {
         ...mapState(["loginInfo"]),
@@ -57,9 +57,10 @@ export default Vue.extend({
             await this.$axios
                 .post(`/api/task/create`, { task: this.form })
                 .then((): void => {
-                    this.$store.dispatch("setTodayTasks");
+                    this.$store.dispatch("task/setTodayTasks");
                 })
-                .catch((): void => {
+                .catch((err:any): void => {
+                    console.error(err.response)
                     alert("通信に失敗しました");
                 })
                 .finally((): void => {

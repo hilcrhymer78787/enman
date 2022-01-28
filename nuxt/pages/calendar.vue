@@ -42,11 +42,6 @@ export type calendarType = {
     minute: string;
     users: userType[];
 };
-export type workType = {
-    minute: number;
-    work_date: string;
-    users: userType;
-};
 export type userType = {
     id: number;
     name: string;
@@ -71,7 +66,7 @@ export default Vue.extend({
         ...mapState({
             loginInfo: (state: any) => state.loginInfo,
             calendars: (state: any) => state.calendars,
-            focusTasks: (state: any) => state.focusTasks,
+            focusTasks: (state: any) => state.task.focusTasks,
             calendarWorks: (state: any): apiWorkReadAnalyticsResponseType =>
                 state.analytics.calendarWorks,
         }),
@@ -118,7 +113,7 @@ export default Vue.extend({
     },
     methods: {
         fetchData() {
-            this.$store.dispatch("setFocusTasks");
+            this.$store.dispatch("task/setFocusTasks");
             this.$store.dispatch("setCalendars");
             this.$store.dispatch("analytics/setCalendarWorks");
         },
