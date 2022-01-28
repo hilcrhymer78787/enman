@@ -25,9 +25,14 @@
 
 <script lang="ts">
 import { mapState } from "vuex";
-import Vue, { PropOptions } from 'vue'
-import { apiTaskReadResponseTaskType } from '@/types/api/task/read/response'
-import { vformType } from '@/types/vuetify/vform'
+import Vue, { PropOptions } from "vue";
+import { AxiosResponse, AxiosError } from "axios";
+import { apiTaskReadResponseTaskType } from "@/types/api/task/read/response";
+import {
+    apiTaskCreateRequestType,
+    apiTaskCreateRequestTaskType,
+} from "@/types/api/task/create/request";
+import { vformType } from "@/types/vuetify/vform";
 export default Vue.extend({
     props: {
         focusTask: Object as PropOptions<apiTaskReadResponseTaskType>,
@@ -41,35 +46,37 @@ export default Vue.extend({
             task_default_minute: "" as string,
             task_is_everyday: 1 as number,
             task_room_id: 1 as number,
-        }, 
+        } as apiTaskCreateRequestTaskType,
     }),
     computed: {
         ...mapState(["loginInfo"]),
     },
     methods: {
         async submit(): Promise<void> {
-            const form = this.$refs.form as vformType
-            form.validate()
+            const form = this.$refs.form as vformType;
+            form.validate();
             if (!this.noError) {
                 return;
             }
             this.loading = true;
+            let apiParam: apiTaskCreateRequestType = {
+                task: this.form,
+            };
             await this.$axios
-                .post(`/api/task/create`, { task: this.form })
-                .then((): void => {
+                .post(`/api/task/create`, apiParam)
+                .then((res:AxiosResponse) => {
                     this.$store.dispatch("task/setTodayTasks");
                 })
-                .catch((err:any): void => {
-                    console.error(err.response)
+                .catch((err: AxiosError) => {
                     alert("通信に失敗しました");
                 })
-                .finally((): void => {
+                .finally(() => {
                     this.loading = false;
                     this.$emit("onCloseTaskDialog");
                 });
         },
     },
-    mounted(): void {
+    mounted() {
         this.$set(this.form, "task_room_id", this.loginInfo.room_id);
         if (this.focusTask) {
             this.$set(this.form, "task_id", this.focusTask.task_id);
