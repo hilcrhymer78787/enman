@@ -1,5 +1,5 @@
 import { GetterTree, ActionTree, MutationTree } from 'vuex'
-import { apiWorkReadAnalyticsRequestType } from '@/types/api/work/read/analytics/request'
+import { apiWorkReadCalendarRequestType } from '@/types/api/work/read/calendar/request'
 import { apiWorkReadAnalyticsResponseType } from '@/types/api/work/read/analytics/response'
 import { AxiosRequestConfig, AxiosResponse, AxiosError } from "axios";
 import moment from 'moment'
@@ -64,19 +64,25 @@ export const actions: ActionTree<RootState, RootState> = {
         commit('setLoginInfo', false)
     },
     async setCalendars({ commit }) {
-        const year = this.$router.currentRoute.query.year
-        const month = this.$router.currentRoute.query.month
         if (setCalendarsCancel) {
             setCalendarsCancel()
         }
+        let apiParam: apiWorkReadCalendarRequestType = {
+            year: Number(this.$router.currentRoute.query.year),
+            month: Number(this.$router.currentRoute.query.month)
+        }
         await this.$axios
-            .get(`/api/work/read/calendar?year=${year}&month=${month}`, {
+            .get(`/api/work/read/calendar`, {
+                params: apiParam,
                 cancelToken: new CancelToken(c => {
                     setCalendarsCancel = c
                 }),
             })
-            .then((res) => {
+            .then((res:AxiosResponse) => {
                 commit("setCalendars", res.data.calendars);
-            });
+            })
+            .catch((err:AxiosError) => {
+                console.log(err.response)
+            })
     },
 }
