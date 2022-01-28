@@ -27,7 +27,9 @@
 <script lang="ts">
 import Vue from "vue";
 import { mapState } from "vuex";
-import { responseType } from "@/types/response";
+import { apiUserTestAuthenticationResponseType } from "@/types/api/user/testAuthentication/response";
+import { apiUserBasicAuthenticationResponseType } from "@/types/api/user/basicAuthentication/response";
+import { apiUserBasicAuthenticationRequestType } from "@/types/api/user/basicAuthentication/request";
 import { errorType } from "@/types/error";
 import { vformType } from "@/types/vuetify/vform";
 import { AxiosRequestConfig, AxiosResponse, AxiosError } from "axios";
@@ -66,9 +68,16 @@ export default Vue.extend({
             this.loading = true;
             await this.$axios
                 .get(`/api/user/test_authentication`)
-                .then((res: AxiosResponse<responseType>) => {
-                    this.$store.dispatch("setTokenRedirect", res.data.token);
-                })
+                .then(
+                    (
+                        res: AxiosResponse<apiUserTestAuthenticationResponseType>
+                    ) => {
+                        this.$store.dispatch(
+                            "setTokenRedirect",
+                            res.data.token
+                        );
+                    }
+                )
                 .catch((err: AxiosError<errorType>) => {
                     if (err.response?.data.errorMessage) {
                         this.errorMessage = err.response?.data.errorMessage;
@@ -92,11 +101,22 @@ export default Vue.extend({
             }
             this.loading = true;
             this.errorMessage = "";
+            let apiParam: apiUserBasicAuthenticationRequestType = {
+                email: this.form.email,
+                password: this.form.password,
+            };
             await this.$axios
-                .post(`/api/user/basic_authentication`, this.form)
-                .then((res: AxiosResponse<responseType>) => {
-                    this.$store.dispatch("setTokenRedirect", res.data.token);
-                })
+                .post(`/api/user/basic_authentication`, apiParam)
+                .then(
+                    (
+                        res: AxiosResponse<apiUserBasicAuthenticationResponseType>
+                    ) => {
+                        this.$store.dispatch(
+                            "setTokenRedirect",
+                            res.data.token
+                        );
+                    }
+                )
                 .catch((err: AxiosError) => {
                     if (err.response?.data.errorMessage) {
                         this.errorMessage = err.response?.data.errorMessage;
