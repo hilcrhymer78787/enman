@@ -1,7 +1,7 @@
-import { GetterTree, ActionTree, MutationTree } from 'vuex'
+import { ActionTree, MutationTree } from 'vuex'
 import { apiWorkReadAnalyticsRequestType } from '@/types/api/work/read/analytics/request'
 import { apiWorkReadAnalyticsResponseType } from '@/types/api/work/read/analytics/response'
-import { AxiosRequestConfig, AxiosResponse, AxiosError } from "axios";
+import { AxiosResponse, AxiosError } from "axios";
 import moment from 'moment'
 import axios from 'axios'
 import { RootState } from '~/store'

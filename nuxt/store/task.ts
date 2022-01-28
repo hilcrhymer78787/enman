@@ -1,6 +1,6 @@
-import { GetterTree, ActionTree, MutationTree } from 'vuex'
+import { ActionTree, MutationTree } from 'vuex'
 import { apiTaskReadResponseType } from '@/types/api/task/read/response'
-import { AxiosRequestConfig, AxiosResponse, AxiosError } from "axios";
+import { AxiosResponse, AxiosError } from "axios";
 import { RootState } from '~/store'
 
 export type AnotherModuleState = ReturnType<typeof state>

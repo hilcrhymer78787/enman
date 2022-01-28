@@ -1,11 +1,9 @@
-import { GetterTree, ActionTree, MutationTree } from 'vuex'
+import { ActionTree, MutationTree } from 'vuex'
 import { apiWorkReadCalendarRequestType } from '@/types/api/work/read/calendar/request'
-import { apiWorkReadAnalyticsResponseType } from '@/types/api/work/read/analytics/response'
 import { apiUserBearerAuthenticationResponseType } from '@/types/api/user/bearerAuthentication/response'
 import { apiWorkReadCalendarResponseType } from '@/types/api/work/read/calendar/response'
 import { apiWorkReadCalendarResponseCalendarType } from '@/types/api/work/read/calendar/response'
-import { AxiosRequestConfig, AxiosResponse, AxiosError } from "axios";
-import moment from 'moment'
+import { AxiosResponse, AxiosError } from "axios";
 import axios from 'axios'
 const CancelToken = axios.CancelToken;
 let setCalendarsCancel: any = null;
