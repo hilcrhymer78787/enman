@@ -54,7 +54,7 @@ export default Vue.extend({
         }),
     },
     methods: {
-        async CreateInvitation(): Promise<void> {
+        async CreateInvitation() {
             this.errorMessage = "";
             this.successMessage = "";
             const form = this.$refs.form as vformType;

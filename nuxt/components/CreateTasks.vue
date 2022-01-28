@@ -56,7 +56,7 @@ export default Vue.extend({
         }),
     },
     methods: {
-        async submit(): Promise<void> {
+        async submit() {
             const form = this.$refs.form as vformType;
             form.validate();
             if (!this.noError) {

@@ -156,7 +156,7 @@ export default Vue.extend({
         async onClickCheckBoxBlank(
             task: apiTaskReadResponseTaskType,
             taskIndex: number
-        ): Promise<void> {
+        ) {
             this.$set(this.loadings, taskIndex, true);
             let apiParam: apiWorkCreateRequestType = {
                 date: this.date,
@@ -184,7 +184,7 @@ export default Vue.extend({
         async onClickCheckBoxMarked(
             task: apiTaskReadResponseTaskType,
             taskIndex: number
-        ): Promise<void> {
+        ) {
             if (
                 !confirm(
                     `${this.date}、「${task.name}」の稼働情報を全て削除しますか？`
@@ -210,7 +210,7 @@ export default Vue.extend({
                     this.$set(this.loadings, taskIndex, false);
                 });
         },
-        async deleteTask(task: apiTaskReadResponseTaskType): Promise<void> {
+        async deleteTask(task: apiTaskReadResponseTaskType) {
             if (
                 !confirm(`「${task.name}」に関するデータを全て削除しますか？`)
             ) {

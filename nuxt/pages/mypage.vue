@@ -86,6 +86,7 @@ import { mapState } from "vuex";
 import { AxiosResponse, AxiosError } from "axios";
 import { apiInvitationUpdateRequestType } from "@/types/api/invitation/update/request";
 import { apiInvitationDeleteRequestType } from "@/types/api/invitation/delete/request";
+import { apiUserUpdateRoomIdResponseType } from "@/types/api/user/update/room_id/response";
 import { apiUserBearerAuthenticationResponseType } from "@/types/api/user/bearerAuthentication/response";
 export default Vue.extend({
     data() {
@@ -115,11 +116,14 @@ export default Vue.extend({
             this.modeCreateRoomDialog = mode;
             this.createRoomDialog = true;
         },
-        async onChangeRoom(): Promise<void> {
+        async onChangeRoom() {
             this.onChangeRoomloading = true;
+            let apiParam: apiUserUpdateRoomIdResponseType = {
+                room_id: this.selectedRoomId,
+            };
             await this.$axios
-                .put(`/api/user/update/room_id?room_id=${this.selectedRoomId}`)
-                .then(async (res: AxiosResponse): Promise<void> => {
+                .put(`/api/user/update/room_id`, apiParam)
+                .then(async (res: AxiosResponse) => {
                     await this.$store.dispatch("setLoginInfoByToken");
                 })
                 .catch((err: AxiosError) => {
@@ -130,14 +134,14 @@ export default Vue.extend({
                     this.onChangeRoomloading = false;
                 });
         },
-        async joinRoom(invitationId: number, roomIndex: number): Promise<void> {
+        async joinRoom(invitationId: number, roomIndex: number) {
             this.$set(this.joinRoomloadings, roomIndex, true);
             let apiParam: apiInvitationUpdateRequestType = {
                 invitation_id: invitationId,
             };
             await this.$axios
                 .put(`/api/invitation/update`, apiParam)
-                .then(async (res: AxiosResponse): Promise<void> => {
+                .then(async (res: AxiosResponse) => {
                     await this.$store.dispatch("setLoginInfoByToken");
                 })
                 .catch((err: AxiosError) => {
@@ -152,7 +156,7 @@ export default Vue.extend({
             invitationId: number,
             roomIndex: number,
             roomName: string
-        ): Promise<void> {
+        ) {
             if (!confirm(`「${roomName}」への招待を拒否しますか？`)) {
                 return;
             }
@@ -162,7 +166,7 @@ export default Vue.extend({
             };
             await this.$axios
                 .delete(`/api/invitation/delete`, { data: apiParam })
-                .then(async (res: AxiosResponse): Promise<void> => {
+                .then(async (res: AxiosResponse) => {
                     await this.$store.dispatch("setLoginInfoByToken");
                 })
                 .catch((err: AxiosError) => {

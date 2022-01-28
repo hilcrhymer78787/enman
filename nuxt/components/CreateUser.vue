@@ -49,8 +49,11 @@
 import Vue from "vue";
 import { mapState } from "vuex";
 import moment from "moment";
+import { AxiosResponse, AxiosError } from "axios";
 import { apiUserBearerAuthenticationResponseType } from "@/types/api/user/bearerAuthentication/response";
+import { apiUserCreateResponseType } from "@/types/api/user/create/response";
 import { vformType } from "@/types/vuetify/vform";
+import { errorType } from "@/types/error";
 export default Vue.extend({
     props: {
         mode: String,
@@ -71,7 +74,6 @@ export default Vue.extend({
                 password: "" as string,
                 passwordAgain: "" as string,
                 user_img: "https://picsum.photos/500/300?image=40" as string,
-                token: "" as string,
             } as any,
             nameRules: [
                 (v: string): string | boolean => !!v || "名前は必須です",
@@ -121,7 +123,7 @@ export default Vue.extend({
             };
             reader.readAsDataURL(this.file);
         },
-        async login(): Promise<void> {
+        async login() {
             this.errorMessage = "";
             const form = this.$refs.form as vformType;
             form.validate();
@@ -135,7 +137,7 @@ export default Vue.extend({
                 return;
             }
             // ログインAPI
-            let postData = new FormData();
+            let postData: FormData = new FormData();
             if (this.file) {
                 postData.append("file", this.file);
             }
@@ -146,7 +148,7 @@ export default Vue.extend({
             this.loading = true;
             await this.$axios
                 .post(`/api/user/create`, postData)
-                .then((res: any) => {
+                .then((res: AxiosResponse<apiUserCreateResponseType>) => {
                     if (this.mode == "create") {
                         this.$store.dispatch(
                             "setTokenRedirect",
@@ -157,8 +159,8 @@ export default Vue.extend({
                         this.$emit("onCloseDialog");
                     }
                 })
-                .catch((err: any) => {
-                    if (err.response.data.errorMessage) {
+                .catch((err: AxiosError<errorType>) => {
+                    if (err.response?.data.errorMessage) {
                         this.errorMessage = err.response.data.errorMessage;
                     } else {
                         this.errorMessage = "通信に失敗しました";
@@ -175,7 +177,7 @@ export default Vue.extend({
                 `https://picsum.photos/500/300?image=${n}`
             );
         },
-        async deleteAccount(): Promise<void> {
+        async deleteAccount() {
             if (
                 !confirm(
                     `「${this.loginInfo.name}」のアカウント情報を全て削除しますか？`

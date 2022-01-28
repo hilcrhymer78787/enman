@@ -62,7 +62,7 @@ export default Vue.extend({
         };
     },
     methods: {
-        async testAuthentication(): Promise<void> {
+        async testAuthentication() {
             this.loading = true;
             await this.$axios
                 .get(`/api/user/test_authentication`)
@@ -91,7 +91,7 @@ export default Vue.extend({
                     this.loading = false;
                 });
         },
-        async login(): Promise<void> {
+        async login() {
             const form = this.$refs.form as vformType;
             form.validate();
             if (!this.noError) {

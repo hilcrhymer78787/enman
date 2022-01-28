@@ -106,7 +106,7 @@ export default Vue.extend({
             }
             this.task.works.splice(workIndex, 1);
         },
-        async onClickSave(): Promise<void> {
+        async onClickSave() {
             const form = this.$refs.form as vformType;
             form.validate();
             if (!this.noError) {
@@ -138,7 +138,7 @@ export default Vue.extend({
                     this.$emit("onCloseModal");
                 });
         },
-        async onClickDelete(): Promise<void> {
+        async onClickDelete() {
             if (
                 !confirm(
                     `${this.date}、「${this.task.name}」の稼働情報を全て削除しますか？`

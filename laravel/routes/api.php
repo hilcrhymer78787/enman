@@ -10,8 +10,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::get('/user/test_authentication', 'UserController@test_authentication');//型付け終了
 Route::post('/user/basic_authentication', 'UserController@basic_authentication');//型付け終了
-Route::get('/user/bearer_authentication', 'UserController@bearer_authentication');
-Route::post('/user/create', 'UserController@create');
+Route::get('/user/bearer_authentication', 'UserController@bearer_authentication');//型付け終了
+Route::post('/user/create', 'UserController@create');//型付け終了
 
 Route::middleware([CheckToken::class])->group(function () {
     Route::post('/task/sortset', 'TaskController@sortset');//型付け終了
@@ -19,7 +19,7 @@ Route::middleware([CheckToken::class])->group(function () {
     Route::get('/task/read', 'TaskController@read');//型付け終了
     Route::delete('/task/delete', 'TaskController@delete');//型付け終了
 
-    Route::put('/user/update/room_id', 'UserController@updateRoomId');
+    Route::put('/user/update/room_id', 'UserController@updateRoomId');//型付け終了
     Route::delete('/user/delete', 'UserController@delete');
 
     Route::post('/work/create', 'WorkController@create');//型付け終了

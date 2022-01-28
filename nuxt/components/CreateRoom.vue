@@ -94,7 +94,7 @@ export default Vue.extend({
             };
             reader.readAsDataURL(this.file);
         },
-        async createRoom(): Promise<void> {
+        async createRoom() {
             this.errorMessage = "";
             const form = this.$refs.form as vformType;
             form.validate();
