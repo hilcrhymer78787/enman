@@ -47,14 +47,13 @@ export default Vue.extend({
                 password: "" as string,
             },
             emailRules: [
-                (v: string): boolean | string =>
-                    !!v || "メールアドレスは必須です",
-                (v: string): boolean | string =>
+                (v: string) => !!v || "メールアドレスは必須です",
+                (v: string) =>
                     /.+@.+\..+/.test(v) || "正しい形式で入力してください",
             ],
             passwordRules: [
-                (v: string): boolean | string => !!v || "パスワードは必須です",
-                (v: string): boolean | string =>
+                (v: string) => !!v || "パスワードは必須です",
+                (v: string) =>
                     (v && v.length >= 8) ||
                     "パスワードは8桁以上で設定してください",
             ],

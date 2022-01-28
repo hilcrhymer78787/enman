@@ -34,15 +34,19 @@ export default Vue.extend({
             startDateDialog: false as boolean,
             lastDateDialog: false as boolean,
             param: {
-                start_date: "",
-                last_date: "",
-            } as apiWorkReadAnalyticsRequestType,
+                start_date: "" as string,
+                last_date: "" as string,
+            },
         };
     },
     methods: {
         async onSearch() {
             this.searchLoading = true;
-            await this.$store.dispatch("analytics/setWorks", this.param);
+            let param :apiWorkReadAnalyticsRequestType = {
+                start_date: this.param.start_date,
+                last_date: this.param.last_date,
+            }
+            await this.$store.dispatch("analytics/setWorks", param);
             this.searchLoading = false;
         },
     },
