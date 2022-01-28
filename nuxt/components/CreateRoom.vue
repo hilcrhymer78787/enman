@@ -142,11 +142,3 @@ export default Vue.extend({
     },
 });
 </script>
-<style lang="scss" scoped>
-.error_message {
-    color: #ff5252;
-    font-size: 12px;
-    margin-top: -27px;
-    margin-left: 12px;
-}
-</style>
