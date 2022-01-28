@@ -88,7 +88,7 @@ export default Vue.extend({
                 "room_img",
                 moment().format("YYYYMMDDHHmmss") + this.file.name
             );
-            let reader: any = new FileReader();
+            let reader: FileReader = new FileReader();
             reader.onload = (e: any) => {
                 this.uploadedImage = e.target.result;
             };
@@ -116,7 +116,7 @@ export default Vue.extend({
                     this.$store.dispatch("setLoginInfoByToken");
                 })
                 .catch((err: AxiosError) => {
-                    console.error(err.response);
+                    console.error(err);
                     alert("通信に失敗しました");
                 })
                 .finally(() => {

@@ -2,21 +2,22 @@
     <v-text-field :value="roomMateNames(users)" readonly color="teal" :prepend-icon="prependIcon" :label="label" dense style="font-size:12px;"></v-text-field>
 </template>
 <script lang="ts">
-import { PropOptions } from "vue";
-export type userType = {
-    id: number;
-    name: string;
-};
-export default {
+import Vue, { PropOptions } from "vue";
+import { apiUserBearerAuthenticationResponseUserType } from "@/types/api/user/bearerAuthentication/response";
+export default Vue.extend({
     props: {
-        users: Array as PropOptions<userType[]>,
+        users: Array as PropOptions<
+            apiUserBearerAuthenticationResponseUserType[]
+        >,
         prependIcon: String,
         label: String,
     },
     methods: {
-        roomMateNames(users: userType[]): string {
+        roomMateNames(
+            users: apiUserBearerAuthenticationResponseUserType[]
+        ): string {
             let outputData = "";
-            users.forEach((user: userType, index: number) => {
+            users.forEach((user, index) => {
                 if (index != 0) {
                     outputData = outputData + "、";
                 }
@@ -25,5 +26,5 @@ export default {
             return outputData;
         },
     },
-};
+});
 </script>

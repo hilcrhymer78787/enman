@@ -75,24 +75,21 @@ export default Vue.extend({
                 passwordAgain: "" as string,
                 user_img: "https://picsum.photos/500/300?image=40" as string,
             } as any,
-            nameRules: [
-                (v: string): string | boolean => !!v || "名前は必須です",
-            ],
+            nameRules: [(v: string) => !!v || "名前は必須です"],
             emailRules: [
-                (v: string): string | boolean =>
-                    !!v || "メールアドレスは必須です",
-                (v: string): string | boolean =>
+                (v: string) => !!v || "メールアドレスは必須です",
+                (v: string) =>
                     /.+@.+\..+/.test(v) || "正しい形式で入力してください",
             ],
             passwordRules: [
-                (v: string): string | boolean => !!v || "パスワードは必須です",
-                (v: string): string | boolean =>
+                (v: string) => !!v || "パスワードは必須です",
+                (v: string) =>
                     (v && v.length >= 8) ||
                     "パスワードは8桁以上で設定してください",
             ],
             passwordAgainRules: [
-                (v: string): string | boolean => !!v || "パスワードは必須です",
-                (v: string): string | boolean =>
+                (v: string) => !!v || "パスワードは必須です",
+                (v: string) =>
                     (v && v.length >= 8) ||
                     "パスワードは8桁以上で設定してください",
             ],
@@ -200,7 +197,7 @@ export default Vue.extend({
                     this.$store.dispatch("logout");
                 })
                 .catch((err: AxiosError) => {
-                    console.error(err.response)
+                    console.error(err.response);
                     alert("通信に失敗しました");
                 })
                 .finally(() => {

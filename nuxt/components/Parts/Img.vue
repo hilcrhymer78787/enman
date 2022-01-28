@@ -4,7 +4,8 @@
 </template>
 
 <script lang="ts">
-export default {
+import Vue from 'vue'
+export default Vue.extend({
     props: {
         src: String,
     },
@@ -13,7 +14,7 @@ export default {
             backUrl: process.env.API_BASE_URL,
         };
     },
-};
+});
 </script>
 
 <style>

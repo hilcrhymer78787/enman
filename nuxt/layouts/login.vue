@@ -11,14 +11,15 @@
 </template>
 
 <script lang="ts">
+import Vue from "vue";
 import { mapState } from "vuex";
 import { apiUserBearerAuthenticationResponseType } from "@/types/api/user/bearerAuthentication/response";
-export default {
+export default Vue.extend({
     computed: {
         ...mapState({
             loginInfo: (state: any): apiUserBearerAuthenticationResponseType =>
                 state.loginInfo,
         }),
     },
-};
+});
 </script>

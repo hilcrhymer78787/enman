@@ -47,7 +47,7 @@ export default Vue.extend({
             task_default_minute: "" as string,
             task_is_everyday: 1 as number,
             task_room_id: 1 as number,
-        } as apiTaskCreateRequestTaskType,
+        },
     }),
     computed: {
         ...mapState({

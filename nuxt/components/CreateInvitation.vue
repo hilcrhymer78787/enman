@@ -40,11 +40,10 @@ export default Vue.extend({
             successMessage: "" as string,
             email: "" as string,
             emailRules: [
-                (v: string): boolean | string =>
-                    !!v || "メールアドレスは必須です",
-                (v: string): boolean | string =>
+                (v: string) => !!v || "メールアドレスは必須です",
+                (v: string) =>
                     /.+@.+\..+/.test(v) || "正しい形式で入力してください",
-            ] as object[],
+            ],
         };
     },
     computed: {

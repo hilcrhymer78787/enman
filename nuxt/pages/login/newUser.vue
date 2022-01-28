@@ -5,7 +5,8 @@
 </template>
 
 <script lang="ts">
-export default {
-    layout:'login',
-};
+import Vue from "vue";
+export default Vue.extend({
+    layout: "login",
+});
 </script>
