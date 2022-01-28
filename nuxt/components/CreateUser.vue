@@ -195,15 +195,15 @@ export default Vue.extend({
             this.loading = true;
             await this.$axios
                 .delete(`/api/user/delete`)
-                .then(() => {
+                .then((res: AxiosResponse) => {
                     this.$emit("onCloseDialog");
+                    this.$store.dispatch("logout");
                 })
-                .catch(() => {
+                .catch((err: AxiosError) => {
+                    console.error(err.response)
                     alert("通信に失敗しました");
                 })
                 .finally(() => {
-                    // ログアウト
-                    this.$store.dispatch("logout");
                     this.loading = false;
                 });
         },

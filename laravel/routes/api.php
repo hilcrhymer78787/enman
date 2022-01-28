@@ -20,7 +20,7 @@ Route::middleware([CheckToken::class])->group(function () {
     Route::delete('/task/delete', 'TaskController@delete');//型付け終了
 
     Route::put('/user/update/room_id', 'UserController@updateRoomId');//型付け終了
-    Route::delete('/user/delete', 'UserController@delete');
+    Route::delete('/user/delete', 'UserController@delete');//型付け終了
 
     Route::post('/work/create', 'WorkController@create');//型付け終了
     Route::get('/work/read/calendar', 'WorkController@read_calendar');//型付け終了
