@@ -34,10 +34,12 @@
 import Vue from "vue";
 import { PropOptions } from "vue";
 import { mapState } from "vuex";
+import { AxiosResponse, AxiosError } from "axios";
 import {
     apiTaskReadResponseTaskWorkType,
     apiTaskReadResponseTaskType,
 } from "@/types/api/task/read/response";
+import { apiWorkDeleteRequestType } from "@/types/api/work/delete/request";
 import { vformType } from "@/types/vuetify/vform";
 import { apiWorkCreateRequestType } from "@/types/api/work/create/request";
 export type userType = {
@@ -83,7 +85,7 @@ export default Vue.extend({
             );
             return outputData;
         },
-        addWork(): void {
+        addWork() {
             const form = this.$refs.form as vformType;
             form.validate();
             if (!this.noError) {
@@ -94,7 +96,7 @@ export default Vue.extend({
                 work_minute: 0,
             } as apiTaskReadResponseTaskWorkType);
         },
-        removeWork(workIndex: number): void {
+        removeWork(workIndex: number) {
             if (this.task.works.length == 1) {
                 return;
             }
@@ -120,10 +122,13 @@ export default Vue.extend({
             });
             await this.$axios
                 .post(`/api/work/create`, apiParam)
-                .then((): void => {
+                .then((res: AxiosResponse) => {
                     this.$emit("fetchData");
                 })
-                .finally((): void => {
+                .catch((err: AxiosError) => {
+                    alert("通信に失敗しました");
+                })
+                .finally(() => {
                     this.saveLoading = false;
                     this.$emit("onCloseModal");
                 });
@@ -137,20 +142,25 @@ export default Vue.extend({
                 return;
             }
             this.deleteLoading = true;
+            let apiParam: apiWorkDeleteRequestType = {
+                date: this.date,
+                task_id: this.task.task_id,
+            };
             await this.$axios
-                .delete(
-                    `/api/work/delete?date=${this.date}&task_id=${this.task.task_id}`
-                )
-                .then((): void => {
+                .delete(`/api/work/delete`, { data: apiParam })
+                .then((res: AxiosResponse) => {
                     this.$emit("fetchData");
                 })
-                .finally((): void => {
+                .catch((err: AxiosError) => {
+                    alert("通信に失敗しました");
+                })
+                .finally(() => {
                     this.deleteLoading = false;
                     this.$emit("onCloseModal");
                 });
         },
     },
-    mounted(): void {
+    mounted() {
         this.$set(this.task, "date", this.date);
         for (const [key, value] of Object.entries(this.focusTask)) {
             if (Array.isArray(value)) {
