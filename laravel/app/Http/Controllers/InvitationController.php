@@ -21,7 +21,7 @@ class InvitationController extends Controller
 
         $loginInfo = (new UserService())->getLoginInfoByToken($request->header('token'));
         $roomData = Room::where('room_id', $loginInfo['user_room_id'])->first();
-        
+
         // 重複判定
         $duplicateJudgment = Invitation::where('invitation_room_id', $loginInfo['user_room_id'])
             ->where('invitation_to_user_id', $toUserData['id'])
@@ -38,7 +38,8 @@ class InvitationController extends Controller
             'invitation_status' => 0,
         ]);
 
-        return $toUserData['name'] . 'さんを' . $roomData['room_name'] . 'へ招待しました';
+        $return['successMessage'] = $toUserData['name'] . 'さんを' . $roomData['room_name'] . 'へ招待しました';
+        return $return;
     }
     public function update(Request $request)
     {

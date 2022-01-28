@@ -27,6 +27,8 @@ import Vue from "vue";
 import { mapState } from "vuex";
 import { vformType } from "@/types/vuetify/vform";
 import { errorType } from "@/types/error";
+import { apiInvitationCreateRequestType } from "@/types/api/invitation/create/request";
+import { apiInvitationCreateResponseType } from "@/types/api/invitation/create/response";
 import { AxiosResponse, AxiosError } from "axios";
 export default Vue.extend({
     data() {
@@ -59,10 +61,13 @@ export default Vue.extend({
                 return;
             }
             this.loading = true;
+            let apiParam: apiInvitationCreateRequestType = {
+                email: this.email,
+            };
             await this.$axios
-                .post(`/api/invitation/create?email=${this.email}`)
-                .then((res: AxiosResponse) => {
-                    this.successMessage = res.data;
+                .post(`/api/invitation/create`, apiParam)
+                .then((res: AxiosResponse<apiInvitationCreateResponseType>) => {
+                    this.successMessage = res.data.successMessage;
                     this.$store.dispatch("setLoginInfoByToken");
                 })
                 .catch((err: AxiosError<errorType>) => {

@@ -81,8 +81,9 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
+import Vue from "vue";
 import { mapState } from "vuex";
+import { apiInvitationUpdateRequestType } from "@/types/api/invitation/update/request";
 export default Vue.extend({
     data() {
         return {
@@ -124,8 +125,11 @@ export default Vue.extend({
         },
         async joinRoom(invitationId: number, roomIndex: number): Promise<void> {
             this.$set(this.joinRoomloadings, roomIndex, true);
+            let apiParam: apiInvitationUpdateRequestType = {
+                invitation_id: invitationId,
+            };
             await this.$axios
-                .put(`/api/invitation/update?invitation_id=${invitationId}`)
+                .put(`/api/invitation/update`, apiParam)
                 .then(async (): Promise<void> => {
                     await this.$store.dispatch("setLoginInfoByToken");
                 })
@@ -166,5 +170,5 @@ export default Vue.extend({
     mounted(): void {
         this.selectedRoomId = this.loginInfo.room_id;
     },
-})
+});
 </script>
