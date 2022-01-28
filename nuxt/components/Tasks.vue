@@ -75,7 +75,9 @@ import { PropOptions } from "vue";
 import { AxiosResponse, AxiosError } from "axios";
 import { apiTaskReadResponseTaskType } from "@/types/api/task/read/response";
 import { apiWorkCreateRequestType } from "@/types/api/work/create/request";
+import { apiWorkDeleteRequestType } from "@/types/api/work/delete/request";
 import { apiTaskDeleteRequestType } from "@/types/api/task/delete/request";
+
 export default Vue.extend({
     props: {
         mode: String,
@@ -168,11 +170,13 @@ export default Vue.extend({
                 return;
             }
             this.$set(this.loadings, taskIndex, true);
+            let apiParam: apiWorkDeleteRequestType = {
+                date: this.date,
+                task_id: task.task_id,
+            };
             await this.$axios
-                .delete(
-                    `/api/work/delete?date=${this.date}&task_id=${task.task_id}`
-                )
-                .then(() => {
+                .delete(`/api/work/delete`, { data: apiParam })
+                .then((res:AxiosResponse) => {
                     this.$emit("fetchData");
                 })
                 .catch((err: AxiosError) => {
@@ -194,7 +198,7 @@ export default Vue.extend({
             };
             await this.$axios
                 .delete(`/api/task/delete`, { data: apiParam })
-                .then((res:AxiosResponse) => {
+                .then((res: AxiosResponse) => {
                     this.$emit("fetchData");
                 })
                 .catch((err: AxiosError) => {
