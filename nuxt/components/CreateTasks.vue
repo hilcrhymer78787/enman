@@ -28,10 +28,7 @@ import { mapState } from "vuex";
 import Vue, { PropOptions } from "vue";
 import { AxiosResponse, AxiosError } from "axios";
 import { apiTaskReadResponseTaskType } from "@/types/api/task/read/response";
-import {
-    apiTaskCreateRequestType,
-    apiTaskCreateRequestTaskType,
-} from "@/types/api/task/create/request";
+import { apiTaskCreateRequestType } from "@/types/api/task/create/request";
 import { apiUserBearerAuthenticationResponseType } from "@/types/api/user/bearerAuthentication/response";
 import { vformType } from "@/types/vuetify/vform";
 export default Vue.extend({
@@ -68,7 +65,7 @@ export default Vue.extend({
             };
             await this.$axios
                 .post(`/api/task/create`, apiParam)
-                .then((res:AxiosResponse) => {
+                .then((res: AxiosResponse) => {
                     this.$store.dispatch("task/setTodayTasks");
                 })
                 .catch((err: AxiosError) => {

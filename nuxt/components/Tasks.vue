@@ -97,7 +97,7 @@ export default Vue.extend({
             swiperOption: {
                 initialSlide: 1 as number,
                 slidesPerView: "auto" as string,
-            } as object,
+            },
             deleteTaskLoading: false as boolean,
             taskDialog: false as boolean,
             dialog: false as boolean,

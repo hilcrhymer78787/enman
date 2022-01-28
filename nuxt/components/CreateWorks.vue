@@ -43,10 +43,6 @@ import { apiWorkDeleteRequestType } from "@/types/api/work/delete/request";
 import { apiUserBearerAuthenticationResponseType } from "@/types/api/user/bearerAuthentication/response";
 import { vformType } from "@/types/vuetify/vform";
 import { apiWorkCreateRequestType } from "@/types/api/work/create/request";
-export type userType = {
-    id: number;
-    name: string;
-};
 export type selectType = {
     val: number;
     txt: string;
@@ -74,8 +70,8 @@ export default Vue.extend({
     methods: {
         users(userId: number): object[] {
             let outputData: selectType[] = [];
-            this.$store.state.loginInfo.room_joined_users.forEach(
-                (user: userType) => {
+            this.loginInfo.room_joined_users.forEach(
+                (user) => {
                     const userDuplicateJudge =
                         this.task.works.filter(
                             (work: apiTaskReadResponseTaskWorkType) =>

@@ -96,7 +96,7 @@ export default Vue.extend({
                     new Date(this.year, this.month - 1, day)
                 ).format("YYYY-MM-DD");
                 let calendar = this.calendars.filter(
-                    (calendar: calendarType): boolean => calendar.date == date
+                    (calendar: calendarType) => calendar.date == date
                 )[0];
                 if (calendar) {
                     outputData.push(calendar);
