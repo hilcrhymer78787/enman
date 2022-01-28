@@ -2,6 +2,8 @@ import { GetterTree, ActionTree, MutationTree } from 'vuex'
 import { apiWorkReadCalendarRequestType } from '@/types/api/work/read/calendar/request'
 import { apiWorkReadAnalyticsResponseType } from '@/types/api/work/read/analytics/response'
 import { apiUserBearerAuthenticationResponseType } from '@/types/api/user/bearerAuthentication/response'
+import { apiWorkReadCalendarResponseType } from '@/types/api/work/read/calendar/response'
+import { apiWorkReadCalendarResponseCalendarType } from '@/types/api/work/read/calendar/response'
 import { AxiosRequestConfig, AxiosResponse, AxiosError } from "axios";
 import moment from 'moment'
 import axios from 'axios'
@@ -12,7 +14,7 @@ export type RootState = ReturnType<typeof state>
 
 export const state = () => ({
     loginInfo: null as apiUserBearerAuthenticationResponseType | null,
-    calendars: [],
+    calendars: [] as apiWorkReadCalendarResponseCalendarType[],
 })
 export const mutations: MutationTree<RootState> = {
     setLoginInfo(state, loginInfo) {
@@ -80,7 +82,7 @@ export const actions: ActionTree<RootState, RootState> = {
                     setCalendarsCancel = c
                 }),
             })
-            .then((res: AxiosResponse) => {
+            .then((res: AxiosResponse<apiWorkReadCalendarResponseType>) => {
                 commit("setCalendars", res.data.calendars);
             })
             .catch((err: AxiosError) => {

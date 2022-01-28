@@ -35,13 +35,9 @@
 <script lang="ts">
 import Vue from "vue";
 import { apiWorkReadAnalyticsResponseType } from "@/types/api/work/read/analytics/response";
+import { apiWorkReadCalendarResponseCalendarType } from "@/types/api/work/read/calendar/response";
 import moment from "moment";
 import { mapState } from "vuex";
-export type calendarType = {
-    date: string;
-    minute: string;
-    users: userType[];
-};
 export type userType = {
     id: number;
     name: string;
@@ -64,7 +60,9 @@ export default Vue.extend({
     },
     computed: {
         ...mapState({
-            calendars: (state: any) => state.calendars,
+            calendars: (
+                state: any
+            ): apiWorkReadCalendarResponseCalendarType[] => state.calendars,
             focusTasks: (state: any) => state.task.focusTasks,
             calendarWorks: (state: any): apiWorkReadAnalyticsResponseType =>
                 state.analytics.calendarWorks,
@@ -79,24 +77,33 @@ export default Vue.extend({
             return Number(this.$route.query.day);
         },
         lastDay(): number {
-            return new Date(this.year, this.month, 0).getDate();
+            return new Date(Number(this.year), Number(this.month), 0).getDate();
         },
         firstDay(): number {
-            return new Date(this.year, this.month - 1, 1).getDay();
+            return new Date(
+                Number(this.year),
+                Number(this.month) - 1,
+                1
+            ).getDay();
         },
         lastDayCount(): number {
             return (
-                6 - new Date(this.year, this.month - 1, this.lastDay).getDay()
+                6 -
+                new Date(
+                    Number(this.year),
+                    Number(this.month) - 1,
+                    Number(this.lastDay)
+                ).getDay()
             );
         },
-        displayCalendars(): calendarType[] {
+        displayCalendars() {
             let outputData = [];
-            for (let day = 1; day <= this.lastDay; day++) {
+            for (let day = 1; day <= Number(this.lastDay); day++) {
                 let date: string = moment(
-                    new Date(this.year, this.month - 1, day)
+                    new Date(Number(this.year), Number(this.month) - 1, day)
                 ).format("YYYY-MM-DD");
                 let calendar = this.calendars.filter(
-                    (calendar: calendarType) => calendar.date == date
+                    (calendar) => calendar.date == date
                 )[0];
                 if (calendar) {
                     outputData.push(calendar);
