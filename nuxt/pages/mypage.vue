@@ -130,9 +130,6 @@ export default Vue.extend({
                 .then(async (res: AxiosResponse) => {
                     await this.$store.dispatch("setLoginInfoByToken");
                 })
-                .catch((err: AxiosError) => {
-                    alert("通信に失敗しました");
-                })
                 .finally(() => {
                     this.onChangeRoomloading = false;
                 });
@@ -150,9 +147,6 @@ export default Vue.extend({
             await this.$axios(requestConfig)
                 .then(async (res: AxiosResponse) => {
                     await this.$store.dispatch("setLoginInfoByToken");
-                })
-                .catch((err: AxiosError) => {
-                    alert("通信に失敗しました");
                 })
                 .finally(() => {
                     this.$set(this.joinRoomloadings, roomIndex, false);
@@ -178,9 +172,6 @@ export default Vue.extend({
             await this.$axios(requestConfig)
                 .then(async (res: AxiosResponse) => {
                     await this.$store.dispatch("setLoginInfoByToken");
-                })
-                .catch((err: AxiosError) => {
-                    alert("通信に失敗しました");
                 })
                 .finally(() => {
                     this.$set(this.rejectRoomloadings, roomIndex, false);

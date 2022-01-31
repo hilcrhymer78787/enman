@@ -203,9 +203,6 @@ export default Vue.extend({
                     this.$emit("onCloseDialog");
                     this.$store.dispatch("logout");
                 })
-                .catch((err: AxiosError) => {
-                    alert("通信に失敗しました");
-                })
                 .finally(() => {
                     this.loading = false;
                 });

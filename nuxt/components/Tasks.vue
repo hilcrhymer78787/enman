@@ -179,9 +179,6 @@ export default Vue.extend({
                 .then(() => {
                     this.$emit("fetchData");
                 })
-                .catch((err: AxiosError) => {
-                    alert("通信に失敗しました");
-                })
                 .finally(() => {
                     this.$set(this.loadings, taskIndex, false);
                 });
@@ -211,9 +208,6 @@ export default Vue.extend({
                 .then((res: AxiosResponse) => {
                     this.$emit("fetchData");
                 })
-                .catch((err: AxiosError) => {
-                    alert("通信に失敗しました");
-                })
                 .finally(() => {
                     this.$set(this.loadings, taskIndex, false);
                 });
@@ -236,9 +230,6 @@ export default Vue.extend({
             await this.$axios(requestConfig)
                 .then((res: AxiosResponse) => {
                     this.$emit("fetchData");
-                })
-                .catch((err: AxiosError) => {
-                    alert("通信に失敗しました");
                 })
                 .finally(() => {
                     this.deleteTaskLoading = false;

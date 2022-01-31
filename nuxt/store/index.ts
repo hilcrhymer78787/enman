@@ -55,9 +55,6 @@ export const actions: ActionTree<RootState, RootState> = {
                 if (err.response) {
                     dispatch('logout')
                 }
-                if (err.response && err.response.status == 429) {
-                    alert('一定時間にアクセスが集中したため、しばらくアクセスできません')
-                }
             })
     },
     logout({ commit }) {

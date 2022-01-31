@@ -81,12 +81,6 @@ export default Vue.extend({
                 .catch((err: AxiosError<errorType>) => {
                     if (err.response?.data.errorMessage) {
                         this.errorMessage = err.response?.data.errorMessage;
-                    } else if (err.response && err.response.status == 429) {
-                        alert(
-                            "一定時間にアクセスが集中したため、しばらくアクセスできません"
-                        );
-                    } else {
-                        alert("通信エラーです");
                     }
                 })
                 .finally(() => {
@@ -124,12 +118,6 @@ export default Vue.extend({
                 .catch((err: AxiosError) => {
                     if (err.response?.data.errorMessage) {
                         this.errorMessage = err.response?.data.errorMessage;
-                    } else if (err.response && err.response.status == 429) {
-                        alert(
-                            "一定時間にアクセスが集中したため、しばらくアクセスできません"
-                        );
-                    } else {
-                        alert("通信エラーです");
                     }
                 })
                 .finally(() => {

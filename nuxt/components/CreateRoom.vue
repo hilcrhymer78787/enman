@@ -119,10 +119,6 @@ export default Vue.extend({
                 .then((res: AxiosResponse) => {
                     this.$store.dispatch("setLoginInfoByToken");
                 })
-                .catch((err: AxiosError) => {
-                    console.error(err);
-                    alert("通信に失敗しました");
-                })
                 .finally(() => {
                     this.$emit("onCloseDialog");
                     this.loading = false;

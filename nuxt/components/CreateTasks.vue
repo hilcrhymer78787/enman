@@ -72,9 +72,6 @@ export default Vue.extend({
                 .then((res: AxiosResponse) => {
                     this.$store.dispatch("task/setTodayTasks");
                 })
-                .catch((err: AxiosError) => {
-                    alert("通信に失敗しました");
-                })
                 .finally(() => {
                     this.loading = false;
                     this.$emit("onCloseTaskDialog");

@@ -127,9 +127,6 @@ export default Vue.extend({
                 .then((res: AxiosResponse) => {
                     this.$emit("fetchData");
                 })
-                .catch((err: AxiosError) => {
-                    alert("通信に失敗しました");
-                })
                 .finally(() => {
                     this.saveLoading = false;
                     this.$emit("onCloseModal");
@@ -156,9 +153,6 @@ export default Vue.extend({
             await this.$axios(requestConfig)
                 .then((res: AxiosResponse) => {
                     this.$emit("fetchData");
-                })
-                .catch((err: AxiosError) => {
-                    alert("通信に失敗しました");
                 })
                 .finally(() => {
                     this.deleteLoading = false;
