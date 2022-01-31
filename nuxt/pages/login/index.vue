@@ -63,8 +63,11 @@ export default Vue.extend({
     methods: {
         async testAuthentication() {
             this.loading = true;
-            await this.$axios
-                .get(`/api/user/test_authentication`)
+            const requestConfig: AxiosRequestConfig = {
+                url: `/api/user/test_authentication`,
+                method: "GET",
+            };
+            await this.$axios(requestConfig)
                 .then(
                     (
                         res: AxiosResponse<apiUserTestAuthenticationResponseType>
@@ -102,8 +105,12 @@ export default Vue.extend({
                 email: this.form.email,
                 password: this.form.password,
             };
-            await this.$axios
-                .post(`/api/user/basic_authentication`, apiParam)
+            const requestConfig: AxiosRequestConfig = {
+                url: `/api/user/basic_authentication`,
+                method: "POST",
+                data: apiParam,
+            };
+            await this.$axios(requestConfig)
                 .then(
                     (
                         res: AxiosResponse<apiUserBasicAuthenticationResponseType>
@@ -115,7 +122,6 @@ export default Vue.extend({
                     }
                 )
                 .catch((err: AxiosError) => {
-                    console.error(err.response);
                     if (err.response?.data.errorMessage) {
                         this.errorMessage = err.response?.data.errorMessage;
                     } else if (err.response && err.response.status == 429) {

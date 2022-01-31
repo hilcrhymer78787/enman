@@ -34,7 +34,7 @@
 import Vue from "vue";
 import { PropOptions } from "vue";
 import { mapState } from "vuex";
-import { AxiosResponse, AxiosError } from "axios";
+import { AxiosRequestConfig, AxiosResponse, AxiosError } from "axios";
 import {
     apiTaskReadResponseTaskWorkType,
     apiTaskReadResponseTaskType,
@@ -70,19 +70,17 @@ export default Vue.extend({
     methods: {
         users(userId: number): object[] {
             let outputData: selectType[] = [];
-            this.loginInfo.room_joined_users.forEach(
-                (user) => {
-                    const userDuplicateJudge =
-                        this.task.works.filter(
-                            (work: apiTaskReadResponseTaskWorkType) =>
-                                work.work_user_id == user.id
-                        ).length == 0;
+            this.loginInfo.room_joined_users.forEach((user) => {
+                const userDuplicateJudge =
+                    this.task.works.filter(
+                        (work: apiTaskReadResponseTaskWorkType) =>
+                            work.work_user_id == user.id
+                    ).length == 0;
 
-                    if (userDuplicateJudge || userId == user.id) {
-                        outputData.push({ val: user.id, txt: user.name });
-                    }
+                if (userDuplicateJudge || userId == user.id) {
+                    outputData.push({ val: user.id, txt: user.name });
                 }
-            );
+            });
             return outputData;
         },
         addWork() {
@@ -120,13 +118,16 @@ export default Vue.extend({
                     work_minute: work.work_minute,
                 });
             });
-            await this.$axios
-                .post(`/api/work/create`, apiParam)
+            const requestConfig: AxiosRequestConfig = {
+                url: `/api/work/create`,
+                method: "POST",
+                data: apiParam,
+            };
+            await this.$axios(requestConfig)
                 .then((res: AxiosResponse) => {
                     this.$emit("fetchData");
                 })
                 .catch((err: AxiosError) => {
-                    console.error(err.response);
                     alert("通信に失敗しました");
                 })
                 .finally(() => {
@@ -147,13 +148,16 @@ export default Vue.extend({
                 date: this.date,
                 task_id: this.task.task_id,
             };
-            await this.$axios
-                .delete(`/api/work/delete`, { data: apiParam })
+            const requestConfig: AxiosRequestConfig = {
+                url: `/api/work/delete`,
+                method: "DELETE",
+                data: apiParam,
+            };
+            await this.$axios(requestConfig)
                 .then((res: AxiosResponse) => {
                     this.$emit("fetchData");
                 })
                 .catch((err: AxiosError) => {
-                    console.error(err.response);
                     alert("通信に失敗しました");
                 })
                 .finally(() => {

@@ -48,7 +48,7 @@
 import Vue from "vue";
 import { mapState } from "vuex";
 import moment from "moment";
-import { AxiosResponse, AxiosError } from "axios";
+import { AxiosRequestConfig, AxiosResponse, AxiosError } from "axios";
 import { vformType } from "@/types/vuetify/vform";
 import { apiUserBearerAuthenticationResponseType } from "@/types/api/user/bearerAuthentication/response";
 export default Vue.extend({
@@ -110,8 +110,12 @@ export default Vue.extend({
                 postData.append(key, this.form[key]);
             });
             this.loading = true;
-            await this.$axios
-                .post(`/api/room/create`, postData)
+            const requestConfig: AxiosRequestConfig = {
+                url: `/api/room/create`,
+                method: "POST",
+                data: postData,
+            };
+            await this.$axios(requestConfig)
                 .then((res: AxiosResponse) => {
                     this.$store.dispatch("setLoginInfoByToken");
                 })

@@ -83,7 +83,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { mapState } from "vuex";
-import { AxiosResponse, AxiosError } from "axios";
+import { AxiosRequestConfig, AxiosResponse, AxiosError } from "axios";
 import { apiInvitationUpdateRequestType } from "@/types/api/invitation/update/request";
 import { apiInvitationDeleteRequestType } from "@/types/api/invitation/delete/request";
 import { apiUserUpdateRoomIdResponseType } from "@/types/api/user/update/room_id/response";
@@ -121,13 +121,16 @@ export default Vue.extend({
             let apiParam: apiUserUpdateRoomIdResponseType = {
                 room_id: this.selectedRoomId,
             };
-            await this.$axios
-                .put(`/api/user/update/room_id`, apiParam)
+            const requestConfig: AxiosRequestConfig = {
+                url: `/api/user/update/room_id`,
+                method: "PUT",
+                data: apiParam,
+            };
+            await this.$axios(requestConfig)
                 .then(async (res: AxiosResponse) => {
                     await this.$store.dispatch("setLoginInfoByToken");
                 })
                 .catch((err: AxiosError) => {
-                    console.error(err.response);
                     alert("通信に失敗しました");
                 })
                 .finally(() => {
@@ -139,13 +142,16 @@ export default Vue.extend({
             let apiParam: apiInvitationUpdateRequestType = {
                 invitation_id: invitationId,
             };
-            await this.$axios
-                .put(`/api/invitation/update`, apiParam)
+            const requestConfig: AxiosRequestConfig = {
+                url: `/api/invitation/update`,
+                method: "PUT",
+                data: apiParam,
+            };
+            await this.$axios(requestConfig)
                 .then(async (res: AxiosResponse) => {
                     await this.$store.dispatch("setLoginInfoByToken");
                 })
                 .catch((err: AxiosError) => {
-                    console.error(err.response);
                     alert("通信に失敗しました");
                 })
                 .finally(() => {
@@ -164,13 +170,16 @@ export default Vue.extend({
             let apiParam: apiInvitationDeleteRequestType = {
                 invitation_id: invitationId,
             };
-            await this.$axios
-                .delete(`/api/invitation/delete`, { data: apiParam })
+            const requestConfig: AxiosRequestConfig = {
+                url: `/api/invitation/delete`,
+                method: "DELETE",
+                data: apiParam,
+            };
+            await this.$axios(requestConfig)
                 .then(async (res: AxiosResponse) => {
                     await this.$store.dispatch("setLoginInfoByToken");
                 })
                 .catch((err: AxiosError) => {
-                    console.error(err.response);
                     alert("通信に失敗しました");
                 })
                 .finally(() => {

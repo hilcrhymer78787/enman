@@ -72,7 +72,7 @@ import Vue from "vue";
 import vuedraggable from "vuedraggable";
 import { mapState } from "vuex";
 import { PropOptions } from "vue";
-import { AxiosResponse, AxiosError } from "axios";
+import { AxiosRequestConfig, AxiosResponse, AxiosError } from "axios";
 import { apiUserBearerAuthenticationResponseType } from "@/types/api/user/bearerAuthentication/response";
 import { apiTaskReadResponseTaskType } from "@/types/api/task/read/response";
 import { apiWorkCreateRequestType } from "@/types/api/work/create/request";
@@ -134,12 +134,14 @@ export default Vue.extend({
             let apiParam: apiTaskSortsetRequestType = {
                 tasks: tasks,
             };
-            this.$axios
-                .post(`/api/task/sortset`, apiParam)
+            const requestConfig: AxiosRequestConfig = {
+                url: `/api/task/sortset`,
+                method: "POST",
+                data: apiParam,
+            };
+            this.$axios(requestConfig)
                 .then((res: AxiosResponse) => {})
-                .catch((err: AxiosError) => {
-                    console.error(err.response);
-                });
+                .catch((err: AxiosError) => {});
         },
         onFocusTask(task: apiTaskReadResponseTaskType) {
             this.dialog = true;
@@ -168,13 +170,16 @@ export default Vue.extend({
                     },
                 ],
             };
-            await this.$axios
-                .post(`/api/work/create`, apiParam)
+            const requestConfig: AxiosRequestConfig = {
+                url: `/api/work/create`,
+                method: "POST",
+                data: apiParam,
+            };
+            await this.$axios(requestConfig)
                 .then(() => {
                     this.$emit("fetchData");
                 })
                 .catch((err: AxiosError) => {
-                    console.error(err.response);
                     alert("通信に失敗しました");
                 })
                 .finally(() => {
@@ -197,13 +202,16 @@ export default Vue.extend({
                 date: this.date,
                 task_id: task.task_id,
             };
-            await this.$axios
-                .delete(`/api/work/delete`, { data: apiParam })
+            const requestConfig: AxiosRequestConfig = {
+                url: `/api/work/delete`,
+                method: "DELETE",
+                data: apiParam,
+            };
+            await this.$axios(requestConfig)
                 .then((res: AxiosResponse) => {
                     this.$emit("fetchData");
                 })
                 .catch((err: AxiosError) => {
-                    console.error(err.response);
                     alert("通信に失敗しました");
                 })
                 .finally(() => {
@@ -220,13 +228,16 @@ export default Vue.extend({
             let apiParam: apiTaskDeleteRequestType = {
                 task_id: task.task_id,
             };
-            await this.$axios
-                .delete(`/api/task/delete`, { data: apiParam })
+            const requestConfig: AxiosRequestConfig = {
+                url: `/api/task/delete`,
+                method: "DELETE",
+                data: apiParam,
+            };
+            await this.$axios(requestConfig)
                 .then((res: AxiosResponse) => {
                     this.$emit("fetchData");
                 })
                 .catch((err: AxiosError) => {
-                    console.error(err.response);
                     alert("通信に失敗しました");
                 })
                 .finally(() => {

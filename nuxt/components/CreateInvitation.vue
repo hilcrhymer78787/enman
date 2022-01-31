@@ -30,7 +30,7 @@ import { errorType } from "@/types/error";
 import { apiInvitationCreateRequestType } from "@/types/api/invitation/create/request";
 import { apiInvitationCreateResponseType } from "@/types/api/invitation/create/response";
 import { apiUserBearerAuthenticationResponseType } from "@/types/api/user/bearerAuthentication/response";
-import { AxiosResponse, AxiosError } from "axios";
+import { AxiosRequestConfig, AxiosResponse, AxiosError } from "axios";
 export default Vue.extend({
     data() {
         return {
@@ -66,14 +66,17 @@ export default Vue.extend({
             let apiParam: apiInvitationCreateRequestType = {
                 email: this.email,
             };
-            await this.$axios
-                .post(`/api/invitation/create`, apiParam)
+            const requestConfig: AxiosRequestConfig = {
+                url: `/api/invitation/create`,
+                method: "POST",
+                data: apiParam,
+            };
+            await this.$axios(requestConfig)
                 .then((res: AxiosResponse<apiInvitationCreateResponseType>) => {
                     this.successMessage = res.data.successMessage;
                     this.$store.dispatch("setLoginInfoByToken");
                 })
                 .catch((err: AxiosError<errorType>) => {
-                    console.error(err.response);
                     if (err.response?.data.errorMessage) {
                         this.errorMessage = err.response?.data.errorMessage;
                     } else {

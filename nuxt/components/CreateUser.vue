@@ -49,7 +49,7 @@
 import Vue from "vue";
 import { mapState } from "vuex";
 import moment from "moment";
-import { AxiosResponse, AxiosError } from "axios";
+import { AxiosRequestConfig, AxiosResponse, AxiosError } from "axios";
 import { apiUserBearerAuthenticationResponseType } from "@/types/api/user/bearerAuthentication/response";
 import { apiUserCreateResponseType } from "@/types/api/user/create/response";
 import { vformType } from "@/types/vuetify/vform";
@@ -143,8 +143,12 @@ export default Vue.extend({
             });
             this.errorMessage = "";
             this.loading = true;
-            await this.$axios
-                .post(`/api/user/create`, postData)
+            const requestConfig: AxiosRequestConfig = {
+                url: `/api/user/create`,
+                method: "POST",
+                data: postData,
+            };
+            await this.$axios(requestConfig)
                 .then((res: AxiosResponse<apiUserCreateResponseType>) => {
                     if (this.mode == "create") {
                         this.$store.dispatch(
@@ -190,14 +194,16 @@ export default Vue.extend({
             }
             // アカウント削除API
             this.loading = true;
-            await this.$axios
-                .delete(`/api/user/delete`)
+            const requestConfig: AxiosRequestConfig = {
+                url: `/api/user/delete`,
+                method: "DELETE",
+            };
+            await this.$axios(requestConfig)
                 .then((res: AxiosResponse) => {
                     this.$emit("onCloseDialog");
                     this.$store.dispatch("logout");
                 })
                 .catch((err: AxiosError) => {
-                    console.error(err.response);
                     alert("通信に失敗しました");
                 })
                 .finally(() => {

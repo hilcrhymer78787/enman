@@ -1,11 +1,9 @@
 import { ActionTree, MutationTree } from 'vuex'
 import { apiWorkReadAnalyticsRequestType } from '@/types/api/work/read/analytics/request'
 import { apiWorkReadAnalyticsResponseType } from '@/types/api/work/read/analytics/response'
-import { AxiosResponse, AxiosError } from "axios";
+import { AxiosRequestConfig, AxiosResponse, AxiosError } from "axios";
 import moment from 'moment'
-import axios from 'axios'
 import { RootState } from '~/store'
-const CancelToken = axios.CancelToken;
 let setCalendarWorksCancel: any = null;
 export type AnotherModuleState = ReturnType<typeof state>
 
@@ -24,38 +22,40 @@ export const mutations: MutationTree<AnotherModuleState> = {
 }
 
 export const actions: ActionTree<AnotherModuleState, RootState> = {
-    async setWorks({ commit }, param: apiWorkReadAnalyticsRequestType) {
-        await this.$axios
-            .post(`/api/work/read/analytics`, param)
+    async setWorks({ commit }, apiParam: apiWorkReadAnalyticsRequestType) {
+        const requestConfig: AxiosRequestConfig = {
+            url: `/api/work/read/analytics`,
+            method: "POST",
+            data: apiParam,
+        };
+        await this.$axios(requestConfig)
             .then((res: AxiosResponse<apiWorkReadAnalyticsResponseType>) => {
                 commit("setWorks", res.data);
             })
             .catch((err: AxiosError) => {
-                console.error(err.response);
             })
     },
     async setCalendarWorks({ commit }) {
         commit("setCalendarWorks", null);
         const year = this.$router.currentRoute.query.year
         const month = this.$router.currentRoute.query.month
-        const param: apiWorkReadAnalyticsRequestType = {
+        const apiParam: apiWorkReadAnalyticsRequestType = {
             start_date: moment(`${year}/${month}/1`).startOf('month').format("YYYY-MM-DD"),
             last_date: moment(`${year}/${month}/1`).endOf('month').format("YYYY-MM-DD"),
         }
         if (setCalendarWorksCancel) {
             setCalendarWorksCancel()
         }
-        await this.$axios
-            .post(`/api/work/read/analytics`, param, {
-                cancelToken: new CancelToken(c => {
-                    setCalendarWorksCancel = c
-                }),
-            })
+        const requestConfig: AxiosRequestConfig = {
+            url: `/api/work/read/analytics`,
+            method: "POST",
+            data: apiParam,
+        };
+        await this.$axios(requestConfig)
             .then((res: AxiosResponse<apiWorkReadAnalyticsResponseType>) => {
                 commit("setCalendarWorks", res.data);
             })
             .catch((err: AxiosError) => {
-                console.error(err.response);
             })
     },
 }

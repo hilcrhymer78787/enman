@@ -3,7 +3,7 @@ import { apiWorkReadCalendarRequestType } from '@/types/api/work/read/calendar/r
 import { apiUserBearerAuthenticationResponseType } from '@/types/api/user/bearerAuthentication/response'
 import { apiWorkReadCalendarResponseType } from '@/types/api/work/read/calendar/response'
 import { apiWorkReadCalendarResponseCalendarType } from '@/types/api/work/read/calendar/response'
-import { AxiosResponse, AxiosError } from "axios";
+import { AxiosRequestConfig, AxiosResponse, AxiosError } from "axios";
 import axios from 'axios'
 const CancelToken = axios.CancelToken;
 let setCalendarsCancel: any = null;
@@ -34,11 +34,14 @@ export const actions: ActionTree<RootState, RootState> = {
         if (setLoginInfoByTokenCancel) {
             setLoginInfoByTokenCancel()
         }
-        this.$axios.get(`/api/user/bearer_authentication`, {
+        const requestConfig: AxiosRequestConfig = {
+            url: `/api/user/bearer_authentication`,
+            method: "GET",
             cancelToken: new CancelToken(c => {
                 setLoginInfoByTokenCancel = c
             }),
-        })
+        };
+        this.$axios(requestConfig)
             .then((res: AxiosResponse<apiUserBearerAuthenticationResponseType>) => {
                 // トークンが有効
                 if (this.$cookies.get("token")) {
@@ -49,7 +52,6 @@ export const actions: ActionTree<RootState, RootState> = {
                 }
             })
             .catch((err: AxiosError) => {
-                console.error(err.response);
                 if (err.response) {
                     dispatch('logout')
                 }
@@ -73,13 +75,15 @@ export const actions: ActionTree<RootState, RootState> = {
             year: Number(this.$router.currentRoute.query.year),
             month: Number(this.$router.currentRoute.query.month)
         }
-        await this.$axios
-            .get(`/api/work/read/calendar`, {
-                params: apiParam,
-                cancelToken: new CancelToken(c => {
-                    setCalendarsCancel = c
-                }),
-            })
+        const requestConfig: AxiosRequestConfig = {
+            url: `/api/work/read/calendar`,
+            method: "GET",
+            params: apiParam,
+            cancelToken: new CancelToken(c => {
+                setCalendarsCancel = c
+            }),
+        };
+        await this.$axios(requestConfig)
             .then((res: AxiosResponse<apiWorkReadCalendarResponseType>) => {
                 commit("setCalendars", res.data.calendars);
             })

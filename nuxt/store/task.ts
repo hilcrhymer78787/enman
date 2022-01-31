@@ -1,6 +1,6 @@
 import { ActionTree, MutationTree } from 'vuex'
 import { apiTaskReadResponseType } from '@/types/api/task/read/response'
-import { AxiosResponse, AxiosError } from "axios";
+import { AxiosRequestConfig, AxiosResponse, AxiosError } from "axios";
 import { RootState } from '~/store'
 
 export type AnotherModuleState = ReturnType<typeof state>
@@ -25,10 +25,11 @@ export const actions: ActionTree<AnotherModuleState, RootState> = {
         const year = today.getFullYear();
         const month = today.getMonth() + 1;
         const day = today.getDate();
-        await this.$axios
-            .get(
-                `/api/task/read?year=${year}&month=${month}&day=${day}`
-            )
+        const requestConfig: AxiosRequestConfig = {
+            url: `/api/task/read?year=${year}&month=${month}&day=${day}`,
+            method: "GET",
+        };
+        await this.$axios(requestConfig)
             .then((res: AxiosResponse<apiTaskReadResponseType>) => {
                 commit('setTodayTasks', res.data.tasks)
             })
