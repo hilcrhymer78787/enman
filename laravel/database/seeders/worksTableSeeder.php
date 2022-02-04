@@ -15,7 +15,7 @@ class worksTableSeeder extends Seeder
     public function run()
     {
         //  \App\Models\Work::factory(100)->create();
-        for ($i = 1; $i  < 20; $i++) {
+        for ($i = -100; $i  < 100; $i++) {
             DB::table('works')->insert([
                 [
                     'work_room_id' => 1,
@@ -26,7 +26,7 @@ class worksTableSeeder extends Seeder
                 ],
             ]);
         }
-        for ($i = 1; $i  < 20; $i = $i + 2) {
+        for ($i = -100; $i  < 100; $i = $i + 2) {
             DB::table('works')->insert([
                 [
                     'work_room_id' => 1,
@@ -37,7 +37,7 @@ class worksTableSeeder extends Seeder
                 ],
             ]);
         }
-        for ($i = 1; $i  < 20; $i++) {
+        for ($i = -100; $i  < 100; $i++) {
             DB::table('works')->insert([
                 [
                     'work_room_id' => 1,
@@ -48,7 +48,7 @@ class worksTableSeeder extends Seeder
                 ],
             ]);
         }
-        for ($i = 1; $i  < 20; $i++) {
+        for ($i = -100; $i  < 100; $i++) {
             DB::table('works')->insert([
                 [
                     'work_room_id' => 1,

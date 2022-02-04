@@ -18,7 +18,7 @@ class usersTableSeeder extends Seeder
         DB::table('users')->insert([
           [
             'id' => 1,
-            'name' => 'user1',
+            'name' => '織田信長',
             'email' => 'user1@gmail.com',
             'password' => 'password',
             'user_img' => 'https://picsum.photos/500/300?image=30',
@@ -27,7 +27,7 @@ class usersTableSeeder extends Seeder
           ],
           [
             'id' => 2,
-            'name' => 'user2',
+            'name' => '豊臣秀吉',
             'email' => 'user2@gmail.com',
             'password' => 'password',
             'user_img' => 'https://picsum.photos/500/300?image=40',
@@ -36,7 +36,7 @@ class usersTableSeeder extends Seeder
           ],
           [
             'id' => 3,
-            'name' => 'user3',
+            'name' => '徳川家康',
             'email' => 'user3@gmail.com',
             'password' => 'password',
             'user_img' => 'https://picsum.photos/500/300?image=10',
@@ -45,7 +45,7 @@ class usersTableSeeder extends Seeder
           ],
           [
             'id' => 4,
-            'name' => 'user4',
+            'name' => '武田信玄',
             'email' => 'user4@gmail.com',
             'password' => 'password',
             'user_img' => 'https://picsum.photos/500/300?image=11',
