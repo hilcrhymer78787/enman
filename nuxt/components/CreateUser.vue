@@ -24,7 +24,7 @@
                 <div v-else class="d-flex justify-end">
                     <v-btn @click="passwordEdit = true">パスワードを変更する</v-btn>
                 </div>
-                <p v-if="errorMessage && noError" class="error_message mb-2">{{errorMessage}}</p>
+                <p v-if="errorMessage" class="error_message mb-2">{{errorMessage}}</p>
             </v-form>
         </v-card-text>
         <v-divider></v-divider>
@@ -124,52 +124,54 @@ export default Vue.extend({
             this.errorMessage = "";
             const form = this.$refs.form as vformType;
             form.validate();
-            // バリデーションエラー
-            if (!this.noError) {
-                return;
-            }
-            // パスワードの不一致
-            if (!this.isMatchPassword) {
-                this.errorMessage = "パスワードが一致しません";
-                return;
-            }
-            // ログインAPI
-            let postData: FormData = new FormData();
-            if (this.file) {
-                postData.append("file", this.file);
-            }
-            Object.keys(this.form).forEach((key: string) => {
-                postData.append(key, this.form[key]);
-            });
-            this.errorMessage = "";
-            this.loading = true;
-            const requestConfig: AxiosRequestConfig = {
-                url: `/api/user/create`,
-                method: "POST",
-                data: postData,
-            };
-            await this.$axios(requestConfig)
-                .then((res: AxiosResponse<apiUserCreateResponseType>) => {
-                    if (this.mode == "create") {
-                        this.$store.dispatch(
-                            "setTokenRedirect",
-                            res.data.token
-                        );
-                    } else {
-                        this.$store.dispatch("setLoginInfoByToken");
-                        this.$emit("onCloseDialog");
-                    }
-                })
-                .catch((err: AxiosError<errorType>) => {
-                    if (err.response?.data.errorMessage) {
-                        this.errorMessage = err.response.data.errorMessage;
-                    } else {
-                        this.errorMessage = "通信に失敗しました";
-                    }
-                })
-                .finally(() => {
-                    this.loading = false;
+            this.$nextTick(async () => {
+                // バリデーションエラー
+                if (!this.noError) {
+                    return;
+                }
+                // パスワードの不一致
+                if (!this.isMatchPassword) {
+                    this.errorMessage = "パスワードが一致しません";
+                    return;
+                }
+                // ログインAPI
+                let postData: FormData = new FormData();
+                if (this.file) {
+                    postData.append("file", this.file);
+                }
+                Object.keys(this.form).forEach((key: string) => {
+                    postData.append(key, this.form[key]);
                 });
+                this.errorMessage = "";
+                this.loading = true;
+                const requestConfig: AxiosRequestConfig = {
+                    url: `/api/user/create`,
+                    method: "POST",
+                    data: postData,
+                };
+                await this.$axios(requestConfig)
+                    .then((res: AxiosResponse<apiUserCreateResponseType>) => {
+                        if (this.mode == "create") {
+                            this.$store.dispatch(
+                                "setTokenRedirect",
+                                res.data.token
+                            );
+                        } else {
+                            this.$store.dispatch("setLoginInfoByToken");
+                            this.$emit("onCloseDialog");
+                        }
+                    })
+                    .catch((err: AxiosError<errorType>) => {
+                        if (err.response?.data.errorMessage) {
+                            this.errorMessage = err.response.data.errorMessage;
+                        } else {
+                            this.errorMessage = "通信に失敗しました";
+                        }
+                    })
+                    .finally(() => {
+                        this.loading = false;
+                    });
+            });
         },
         onSelectedImg(n: number) {
             this.$set(

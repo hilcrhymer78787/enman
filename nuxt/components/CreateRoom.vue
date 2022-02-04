@@ -99,30 +99,32 @@ export default Vue.extend({
             const form = this.$refs.form as vformType;
             form.validate();
             // バリデーションエラー
-            if (!this.noError) {
-                return;
-            }
-            let postData: FormData = new FormData();
-            if (this.file) {
-                postData.append("file", this.file);
-            }
-            Object.keys(this.form).forEach((key: string) => {
-                postData.append(key, this.form[key]);
-            });
-            this.loading = true;
-            const requestConfig: AxiosRequestConfig = {
-                url: `/api/room/create`,
-                method: "POST",
-                data: postData,
-            };
-            await this.$axios(requestConfig)
-                .then((res: AxiosResponse) => {
-                    this.$store.dispatch("setLoginInfoByToken");
-                })
-                .finally(() => {
-                    this.$emit("onCloseDialog");
-                    this.loading = false;
+            this.$nextTick(async () => {
+                if (!this.noError) {
+                    return;
+                }
+                let postData: FormData = new FormData();
+                if (this.file) {
+                    postData.append("file", this.file);
+                }
+                Object.keys(this.form).forEach((key: string) => {
+                    postData.append(key, this.form[key]);
                 });
+                this.loading = true;
+                const requestConfig: AxiosRequestConfig = {
+                    url: `/api/room/create`,
+                    method: "POST",
+                    data: postData,
+                };
+                await this.$axios(requestConfig)
+                    .then((res: AxiosResponse) => {
+                        this.$store.dispatch("setLoginInfoByToken");
+                    })
+                    .finally(() => {
+                        this.$emit("onCloseDialog");
+                        this.loading = false;
+                    });
+            });
         },
         onSelectedImg(n: number) {
             this.$set(

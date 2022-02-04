@@ -86,13 +86,15 @@ export default Vue.extend({
         addWork() {
             const form = this.$refs.form as vformType;
             form.validate();
-            if (!this.noError) {
-                return;
-            }
-            this.task.works.push({
-                work_user_id: 0,
-                work_minute: 0,
-            } as apiTaskReadResponseTaskWorkType);
+            this.$nextTick(() => {
+                if (!this.noError) {
+                    return;
+                }
+                this.task.works.push({
+                    work_user_id: 0,
+                    work_minute: 0,
+                } as apiTaskReadResponseTaskWorkType);
+            });
         },
         removeWork(workIndex: number) {
             if (this.task.works.length == 1) {

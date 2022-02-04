@@ -56,26 +56,28 @@ export default Vue.extend({
         async submit() {
             const form = this.$refs.form as vformType;
             form.validate();
-            if (!this.noError) {
-                return;
-            }
-            this.loading = true;
-            let apiParam: apiTaskCreateRequestType = {
-                task: this.form,
-            };
-            const requestConfig: AxiosRequestConfig = {
-                url: `/api/task/create`,
-                method: "POST",
-                data: apiParam,
-            };
-            await this.$axios(requestConfig)
-                .then((res: AxiosResponse) => {
-                    this.$store.dispatch("task/setTodayTasks");
-                })
-                .finally(() => {
-                    this.loading = false;
-                    this.$emit("onCloseTaskDialog");
-                });
+            this.$nextTick(async () => {
+                if (!this.noError) {
+                    return;
+                }
+                this.loading = true;
+                let apiParam: apiTaskCreateRequestType = {
+                    task: this.form,
+                };
+                const requestConfig: AxiosRequestConfig = {
+                    url: `/api/task/create`,
+                    method: "POST",
+                    data: apiParam,
+                };
+                await this.$axios(requestConfig)
+                    .then((res: AxiosResponse) => {
+                        this.$store.dispatch("task/setTodayTasks");
+                    })
+                    .finally(() => {
+                        this.loading = false;
+                        this.$emit("onCloseTaskDialog");
+                    });
+            });
         },
     },
     mounted() {

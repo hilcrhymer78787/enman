@@ -58,34 +58,40 @@ export default Vue.extend({
             this.successMessage = "";
             const form = this.$refs.form as vformType;
             form.validate();
-            // バリデーションエラー
-            if (!this.noError) {
-                return;
-            }
-            this.loading = true;
-            let apiParam: apiInvitationCreateRequestType = {
-                email: this.email,
-            };
-            const requestConfig: AxiosRequestConfig = {
-                url: `/api/invitation/create`,
-                method: "POST",
-                data: apiParam,
-            };
-            await this.$axios(requestConfig)
-                .then((res: AxiosResponse<apiInvitationCreateResponseType>) => {
-                    this.successMessage = res.data.successMessage;
-                    this.$store.dispatch("setLoginInfoByToken");
-                })
-                .catch((err: AxiosError<errorType>) => {
-                    if (err.response?.data.errorMessage) {
-                        this.errorMessage = err.response?.data.errorMessage;
-                    } else {
-                        this.errorMessage = "通信に失敗しました";
-                    }
-                })
-                .finally(() => {
-                    this.loading = false;
-                });
+            this.$nextTick(async () => {
+                // バリデーションエラー
+                if (!this.noError) {
+                    return;
+                }
+                this.loading = true;
+                let apiParam: apiInvitationCreateRequestType = {
+                    email: this.email,
+                };
+                const requestConfig: AxiosRequestConfig = {
+                    url: `/api/invitation/create`,
+                    method: "POST",
+                    data: apiParam,
+                };
+                await this.$axios(requestConfig)
+                    .then(
+                        (
+                            res: AxiosResponse<apiInvitationCreateResponseType>
+                        ) => {
+                            this.successMessage = res.data.successMessage;
+                            this.$store.dispatch("setLoginInfoByToken");
+                        }
+                    )
+                    .catch((err: AxiosError<errorType>) => {
+                        if (err.response?.data.errorMessage) {
+                            this.errorMessage = err.response?.data.errorMessage;
+                        } else {
+                            this.errorMessage = "通信に失敗しました";
+                        }
+                    })
+                    .finally(() => {
+                        this.loading = false;
+                    });
+            });
         },
         resetForm() {
             this.successMessage = "";

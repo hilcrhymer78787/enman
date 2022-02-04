@@ -90,39 +90,41 @@ export default Vue.extend({
         async login() {
             const form = this.$refs.form as vformType;
             form.validate();
-            if (!this.noError) {
-                return;
-            }
-            this.loading = true;
-            this.errorMessage = "";
-            let apiParam: apiUserBasicAuthenticationRequestType = {
-                email: this.form.email,
-                password: this.form.password,
-            };
-            const requestConfig: AxiosRequestConfig = {
-                url: `/api/user/basic_authentication`,
-                method: "POST",
-                data: apiParam,
-            };
-            await this.$axios(requestConfig)
-                .then(
-                    (
-                        res: AxiosResponse<apiUserBasicAuthenticationResponseType>
-                    ) => {
-                        this.$store.dispatch(
-                            "setTokenRedirect",
-                            res.data.token
-                        );
-                    }
-                )
-                .catch((err: AxiosError) => {
-                    if (err.response?.data.errorMessage) {
-                        this.errorMessage = err.response?.data.errorMessage;
-                    }
-                })
-                .finally(() => {
-                    this.loading = false;
-                });
+            this.$nextTick(async () => {
+                if (!this.noError) {
+                    return;
+                }
+                this.loading = true;
+                this.errorMessage = "";
+                let apiParam: apiUserBasicAuthenticationRequestType = {
+                    email: this.form.email,
+                    password: this.form.password,
+                };
+                const requestConfig: AxiosRequestConfig = {
+                    url: `/api/user/basic_authentication`,
+                    method: "POST",
+                    data: apiParam,
+                };
+                await this.$axios(requestConfig)
+                    .then(
+                        (
+                            res: AxiosResponse<apiUserBasicAuthenticationResponseType>
+                        ) => {
+                            this.$store.dispatch(
+                                "setTokenRedirect",
+                                res.data.token
+                            );
+                        }
+                    )
+                    .catch((err: AxiosError) => {
+                        if (err.response?.data.errorMessage) {
+                            this.errorMessage = err.response?.data.errorMessage;
+                        }
+                    })
+                    .finally(() => {
+                        this.loading = false;
+                    });
+            });
         },
     },
 });
