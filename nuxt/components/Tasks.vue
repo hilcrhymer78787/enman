@@ -13,34 +13,26 @@
                 <div id="scrollAreaInner">
                     <vuedraggable @change="dragged()" :options="{animation: 200,  delay: 50 }" v-model="displayTasks">
                         <div v-for="(task,taskIndex) in displayTasks" :key="taskIndex">
-                            <swiper :options="swiperOption">
-                                <swiper-slide class="swiper_btn" v-if="mode == 'today'">
-                                    <v-btn @click="deleteTask(task)" :loading="deleteTaskLoading" color="error" dark class="pa-0 mr-3">削除</v-btn>
-                                    <v-btn @click="openTaskDialog(task)" color="orange" dark class="pa-0">編集</v-btn>
-                                </swiper-slide>
-                                <swiper-slide>
-                                    <v-list-item class="pl-2 pr-0" style="height:60px;overflow:hidden;cursor:move;">
-                                        <v-list-item-avatar @click="onFocusTask(task)">
-                                            <v-icon v-if="task.works.length == 0">mdi-account</v-icon>
-                                            <PartsImg v-if="task.works.length == 1" :src="task.works[0].work_user_img" />
-                                            <PartsImg v-if="task.works.length >= 2" :src="loginInfo.room_img" />
-                                        </v-list-item-avatar>
-                                        <v-list-item-content @click="onFocusTask(task)">
-                                            <v-list-item-title>{{task.name}}</v-list-item-title>
-                                            <v-list-item-subtitle style="font-size:12px;">
-                                                <span>想定:{{task.task_default_minute}}分</span>
-                                                <span v-if="task.works.length">稼働:{{task.minute}}分</span>
-                                                <span v-if="task.works.length == 1">担当:{{task.works[0].work_user_name}}</span>
-                                                <span v-if="task.works.length >= 2">担当:複数人</span>
-                                            </v-list-item-subtitle>
-                                        </v-list-item-content>
-                                        <v-btn :loading="loadings[taskIndex]" class="check" icon>
-                                            <v-icon @click="onClickCheckBoxMarked(task,taskIndex)" style="font-size: 25px;" v-if="task.works.length">mdi-checkbox-marked-outline</v-icon>
-                                            <v-icon @click="onClickCheckBoxBlank(task,taskIndex)" style="font-size: 25px;" v-else>mdi-checkbox-blank-outline</v-icon>
-                                        </v-btn>
-                                    </v-list-item>
-                                </swiper-slide>
-                            </swiper>
+                            <v-list-item class="pl-2 pr-0" style="height:60px;overflow:hidden;cursor:move;">
+                                <v-list-item-avatar @click="onFocusTask(task)">
+                                    <v-icon v-if="task.works.length == 0">mdi-account</v-icon>
+                                    <PartsImg v-if="task.works.length == 1" :src="task.works[0].work_user_img" />
+                                    <PartsImg v-if="task.works.length >= 2" :src="loginInfo.room_img" />
+                                </v-list-item-avatar>
+                                <v-list-item-content @click="onFocusTask(task)">
+                                    <v-list-item-title>{{task.name}}</v-list-item-title>
+                                    <v-list-item-subtitle style="font-size:12px;">
+                                        <span>想定:{{task.task_default_minute}}分</span>
+                                        <span v-if="task.works.length">稼働:{{task.minute}}分</span>
+                                        <span v-if="task.works.length == 1">担当:{{task.works[0].work_user_name}}</span>
+                                        <span v-if="task.works.length >= 2">担当:複数人</span>
+                                    </v-list-item-subtitle>
+                                </v-list-item-content>
+                                <v-btn :loading="loadings[taskIndex]" class="check" icon>
+                                    <v-icon @click="onClickCheckBoxMarked(task,taskIndex)" style="font-size: 25px;" v-if="task.works.length">mdi-checkbox-marked-outline</v-icon>
+                                    <v-icon @click="onClickCheckBoxBlank(task,taskIndex)" style="font-size: 25px;" v-else>mdi-checkbox-blank-outline</v-icon>
+                                </v-btn>
+                            </v-list-item>
                             <v-divider v-if="taskIndex + 1 != displayTasks.length || mode != 'today'"></v-divider>
                         </div>
                         <div class="pa-5 text-center" v-if="!displayTasks.length">現在登録されているタスクはありません</div>
@@ -57,11 +49,11 @@
         </v-card>
 
         <v-dialog v-model="dialog" scrollable>
-            <CreateWorks @onCloseModal="dialog = false" :date="date" :mode="mode" @fetchData="$emit('fetchData')" :focusTask="focusTask" v-if="dialog" />
+            <CreateWorks @openTaskDialog="openTaskDialog" @onCloseModal="dialog = false" :date="date" :mode="mode" @fetchData="$emit('fetchData')" :focusTask="focusTask" v-if="dialog" />
         </v-dialog>
 
         <v-dialog v-model="taskDialog" scrollable>
-            <CreateTasks @onCloseTaskDialog="taskDialog = false" :focusTask="focusTask" v-if="taskDialog" />
+            <CreateTasks @onCloseTaskDialog="onCloseTaskDialog" :focusTask="focusTask" v-if="taskDialog" />
         </v-dialog>
 
     </div>
@@ -77,7 +69,6 @@ import { apiUserBearerAuthenticationResponseType } from "@/types/api/user/bearer
 import { apiTaskReadResponseTaskType } from "@/types/api/task/read/response";
 import { apiWorkCreateRequestType } from "@/types/api/work/create/request";
 import { apiWorkDeleteRequestType } from "@/types/api/work/delete/request";
-import { apiTaskDeleteRequestType } from "@/types/api/task/delete/request";
 import {
     apiTaskSortsetRequestType,
     apiTaskSortsetRequestTaskType,
@@ -94,11 +85,6 @@ export default Vue.extend({
     data() {
         return {
             displayTasks: [] as apiTaskReadResponseTaskType[],
-            swiperOption: {
-                initialSlide: 1 as number,
-                slidesPerView: "auto" as string,
-            },
-            deleteTaskLoading: false as boolean,
             taskDialog: false as boolean,
             dialog: false as boolean,
             focusTask: {} as apiTaskReadResponseTaskType | null,
@@ -154,6 +140,11 @@ export default Vue.extend({
                 this.focusTask = null;
             }
             this.taskDialog = true;
+        },
+        onCloseTaskDialog(){
+            this.taskDialog = false
+            this.dialog = false;
+            this.$emit("fetchData");
         },
         async onClickCheckBoxBlank(
             task: apiTaskReadResponseTaskType,
@@ -212,29 +203,6 @@ export default Vue.extend({
                     this.$set(this.loadings, taskIndex, false);
                 });
         },
-        async deleteTask(task: apiTaskReadResponseTaskType) {
-            if (
-                !confirm(`「${task.name}」に関するデータを全て削除しますか？`)
-            ) {
-                return;
-            }
-            this.deleteTaskLoading = true;
-            let apiParam: apiTaskDeleteRequestType = {
-                task_id: task.task_id,
-            };
-            const requestConfig: AxiosRequestConfig = {
-                url: `/api/task/delete`,
-                method: "DELETE",
-                data: apiParam,
-            };
-            await this.$axios(requestConfig)
-                .then((res: AxiosResponse) => {
-                    this.$emit("fetchData");
-                })
-                .finally(() => {
-                    this.deleteTaskLoading = false;
-                });
-        },
     },
     mounted() {
         this.displayTasks = this.tasks;
@@ -277,15 +245,5 @@ export default Vue.extend({
     justify-content: center;
     align-items: center;
     background-color: rgba(128, 128, 128, 0.1);
-}
-::v-deep {
-    .swiper_btn {
-        width: 180px;
-        height: 60px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background-color: rgba(128, 128, 128, 0.1);
-    }
 }
 </style>

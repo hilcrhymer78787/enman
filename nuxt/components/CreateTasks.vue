@@ -14,6 +14,7 @@
 
         <v-divider></v-divider>
         <v-card-actions>
+            <v-btn v-if="this.focusTask" @click="deleteTask(focusTask)" :loading="deleteTaskLoading" color="error" dark class="pa-0 mr-3">削除</v-btn>
             <v-spacer></v-spacer>
             <v-btn class="mr-2" @click="$emit('onCloseTaskDialog')">
                 <v-icon>mdi-close</v-icon>
@@ -31,12 +32,14 @@ import { apiTaskReadResponseTaskType } from "@/types/api/task/read/response";
 import { apiTaskCreateRequestType } from "@/types/api/task/create/request";
 import { apiUserBearerAuthenticationResponseType } from "@/types/api/user/bearerAuthentication/response";
 import { vformType } from "@/types/vuetify/vform";
+import { apiTaskDeleteRequestType } from "@/types/api/task/delete/request";
 export default Vue.extend({
     props: {
         focusTask: Object as PropOptions<apiTaskReadResponseTaskType>,
     },
     data: () => ({
         loading: false as boolean,
+        deleteTaskLoading: false as boolean,
         noError: false as boolean,
         form: {
             task_id: 0 as number,
@@ -72,12 +75,42 @@ export default Vue.extend({
                 await this.$axios(requestConfig)
                     .then((res: AxiosResponse) => {
                         this.$store.dispatch("task/setTodayTasks");
+                        this.$emit("onCloseTaskDialog");
                     })
                     .finally(() => {
                         this.loading = false;
-                        this.$emit("onCloseTaskDialog");
                     });
             });
+        },
+        async deleteTask(task: apiTaskReadResponseTaskType) {
+            if (
+                !confirm(`「${task.name}」に関するデータを全て削除しますか？`)
+            ) {
+                return;
+            }
+            if (
+                !confirm(
+                    `「${task.name}」の稼働情報も全て削除されますがよろしいですか？`
+                )
+            ) {
+                return;
+            }
+            this.deleteTaskLoading = true;
+            let apiParam: apiTaskDeleteRequestType = {
+                task_id: task.task_id,
+            };
+            const requestConfig: AxiosRequestConfig = {
+                url: `/api/task/delete`,
+                method: "DELETE",
+                data: apiParam,
+            };
+            await this.$axios(requestConfig)
+                .then((res: AxiosResponse) => {
+                    this.$emit("onCloseTaskDialog");
+                })
+                .finally(() => {
+                    this.deleteTaskLoading = false;
+                });
         },
     },
     mounted() {

@@ -1,6 +1,12 @@
 <template>
     <v-card>
-        <v-card-title>{{task.name}}</v-card-title>
+        <v-card-title class="py-4 pl-4 pr-3">
+            <span>{{task.name}}</span>
+            <v-spacer></v-spacer>
+            <v-btn v-if="$route.name=='task'" @click="$emit('openTaskDialog',focusTask)" light height="35px" width="35px" fab elevation="0">
+                <v-icon color="teal">mdi-cog-outline</v-icon>
+            </v-btn>
+        </v-card-title>
         <v-divider></v-divider>
         <v-card-text class="pa-3" style="min-height:35vh;">
             <v-form ref="form" v-model="noError">
