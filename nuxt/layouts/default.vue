@@ -98,3 +98,8 @@ export default Vue.extend({
     },
 });
 </script>
+<style lang="scss" scoped>
+.v-bottom-navigation{
+    padding: calc(env(safe-area-inset-bottom)) 0 calc(env(safe-area-inset-bottom) * 1.5);
+}
+</style>
