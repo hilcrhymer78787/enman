@@ -89,6 +89,8 @@ export default {
             lang: 'ja',
             short_name: 'enman',
             title: 'enman',
+            background_color: '#00ccaf',
+            color: 'white',
         },
     },
 
