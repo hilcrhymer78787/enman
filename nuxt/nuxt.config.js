@@ -15,6 +15,7 @@ export default {
             { name: 'viewport', content: 'width=device-width, initial-scale=1, viewport-fit=cover' },
             { hid: 'description', name: 'description', content: '' },
             { name: 'format-detection', content: 'telephone=no' },
+            { name: 'apple-mobile-web-app-capable', content: 'yes' },
         ],
         link: [
             { href: '/launch.png', rel: 'apple-touch-startup-image' },
