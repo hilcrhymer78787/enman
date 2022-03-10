@@ -82,13 +82,14 @@ export default {
     },
 
     // PWA module configuration: https://go.nuxtjs.dev/pwa
-    manifest: {
-        name: 'enman',
-        lang: 'ja',
-        short_name: 'enman',
-        title: 'enman',
-        background_color: '#00ccaf',
-        color: 'white',
+
+    pwa: {
+        manifest: {
+            name: 'enman',
+            lang: 'ja',
+            short_name: 'enman',
+            title: 'enman',
+        },
     },
 
     // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
