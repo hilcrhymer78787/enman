@@ -15,8 +15,6 @@ export default {
             { name: 'viewport', content: 'width=device-width, initial-scale=1, viewport-fit=cover' },
             { hid: 'description', name: 'description', content: '' },
             { name: 'format-detection', content: 'telephone=no' },
-            { name: 'apple-mobile-web-app-capable', content: 'yes' },
-            { name: 'apple-mobile-web-app-status-bar-style', content: 'default' },
         ],
         link: [
             { href: '/launch.png', rel: 'apple-touch-startup-image' },
@@ -90,24 +88,19 @@ export default {
 
     // PWA module configuration: https://go.nuxtjs.dev/pwa
 
-    // pwa: {
-    //     meta: {
-    //         theme_color: 'white',
-    //         appleStatusBarStyle: 'black',
-    //     },
-    //     manifest: {
-    //         name: 'enman',
-    //         lang: 'ja',
-    //         short_name: 'enman',
-    //         title: 'enman',
-    //         // background_color: '#00ccaf',
-    //         // color: 'white',
-    //     },
-    // },
     pwa: {
+        meta: {
+            theme_color: 'white',
+            appleStatusBarStyle: 'black',
+        },
         manifest: {
-            lang: 'ja'
-        }
+            name: 'enman',
+            lang: 'ja',
+            short_name: 'enman',
+            title: 'enman',
+            background_color: '#00ccaf',
+            color: 'white',
+        },
     },
 
     // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
