@@ -104,6 +104,11 @@ export default {
     //         // color: 'white',
     //     },
     // },
+    pwa: {
+        manifest: {
+            lang: 'ja'
+        }
+    },
 
     // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
     vuetify: {
