@@ -16,7 +16,6 @@ export default {
             { hid: 'description', name: 'description', content: '' },
             { name: 'format-detection', content: 'telephone=no' },
             { name: 'apple-mobile-web-app-capable', content: 'yes' },
-            { name: 'apple-mobile-web-app-status-bar-style', content: 'white' },
         ],
         link: [
             { href: '/launch.png', rel: 'apple-touch-startup-image' },
@@ -89,8 +88,6 @@ export default {
             lang: 'ja',
             short_name: 'enman',
             title: 'enman',
-            background_color: '#00ccaf',
-            color: 'white',
         },
     },
 
