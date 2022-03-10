@@ -32,7 +32,14 @@ export default {
             { href: "splashscreens/ipadpro2_splash.png", media: "(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2)", rel: "apple-touch-startup-image" },
         ],
         script: [
-            { src: 'https://unpkg.com/pwacompat' }
+            {
+                src:
+                    "https://cdn.jsdelivr.net/npm/pwacompat@2.0.6/pwacompat.min.js",
+                integrity:
+                    "sha384-GOaSLecPIMCJksN83HLuYf9FToOiQ2Df0+0ntv7ey8zjUHESXhthwvq9hXAZTifA",
+                crossorigin: "anonymous",
+                defer: true
+            }
         ]
     },
     server: {
