@@ -73,6 +73,7 @@ import {
     apiTaskSortsetRequestType,
     apiTaskSortsetRequestTaskType,
 } from "@/types/api/task/sortset/request";
+import moment from "moment";
 
 export default Vue.extend({
     props: {
@@ -106,6 +107,12 @@ export default Vue.extend({
             return Number(this.$route.query.day);
         },
         date(): string {
+            if (this.mode == "today") {
+                let year = moment().year();
+                let month = moment().month() + 1;
+                let day = moment().date();
+                return `${year}-${month}-${day}`;
+            }
             return `${this.year}-${this.month}-${this.day}`;
         },
     },
@@ -141,8 +148,8 @@ export default Vue.extend({
             }
             this.taskDialog = true;
         },
-        onCloseTaskDialog(){
-            this.taskDialog = false
+        onCloseTaskDialog() {
+            this.taskDialog = false;
             this.dialog = false;
             this.$emit("fetchData");
         },
