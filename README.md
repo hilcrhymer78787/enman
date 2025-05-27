@@ -25,3 +25,5 @@ npm install
 npm run dev
 
 <!-- node v16.13.2 -->
+
+nvm use v16.13.2;npm install;npm run dev
